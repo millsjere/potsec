@@ -10,8 +10,8 @@ const ResetPassword = lazy(() => import("../pages/student/auth/ResetPassword"));
 
 // Private Routes
 const VerifyAccount = lazy(() => import("../pages/student/auth/VerifyEmail"));
-const Verify2FA = lazy(() => import("../pages/student/auth/Verify2FA"));
-const Dashboard = lazy(() => import("../pages/account/Dashboard"));
+const Verify2FA = lazy(() => import("../pages/staff/auth/Verify2FA"));
+const Dashboard = lazy(() => import("../pages/student/account/Dashboard"));
 
 // Routes
 const LoginRoute = {

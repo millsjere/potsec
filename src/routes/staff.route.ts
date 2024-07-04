@@ -3,8 +3,7 @@ import { RouteProps } from "../components/shared/Interfaces";
 
 // Public Routes
 const Login = lazy(() => import("../pages/staff/auth/Login"));
-const ForgotPassword = lazy(() => import("../pages/staff/auth/ForgotPassword"));
-const ResetPassword = lazy(() => import("../pages/staff/auth/ResetPassword"));
+const VerifyLogin = lazy(() => import("../pages/staff/auth/Verify2FA"));
 
 // Routes
 const LoginRoute = {
@@ -13,21 +12,15 @@ const LoginRoute = {
   isAuth: "no",
 };
 
-const ForgotPasswordRoute = {
-  path: "/staff/forgot-password",
-  component: ForgotPassword,
+const VerifyLoginRoute = {
+  path: "/staff/2fa",
+  component: VerifyLogin,
   isAuth: "no",
-};
-
-const ResetPasswordRoute = {
-  path: "/staff/reset-password",
-  component: ResetPassword,
-  isAuth: "no",
+  isMiddle: true
 };
 
 // export all routes as array
 export const staffRoutes: RouteProps[] = [
   LoginRoute,
-  ForgotPasswordRoute,
-  ResetPasswordRoute,
+  VerifyLoginRoute
 ];

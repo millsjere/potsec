@@ -1,5 +1,5 @@
 import { InputAdornment, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { base, saveData } from '../../../config/appConfig';
 import { ArrowRight01Icon, SquareLock02Icon, UserCircleIcon } from 'hugeicons-react';
@@ -11,16 +11,29 @@ const Login = () => {
     const navigate = useNavigate()
     const { successAlert, errorAlert } = useAlert()
     const [load, setLoad] = React.useState(false)
-    const [value, setValue] = React.useState({ id: '', password: '' })
+    const [value, setValue] = React.useState({ email: '', password: '' })
 
     // console.log(getData('uid'))
+    // const newStaff = async() => {
+    //     try {
+    //         const { data: res } = await base.post('/api/staff/create', value)
+    //         console.log(res)
+    //         alert('Staff created')
+    //     } catch (error) {
+    //         console.log(error?.response)
+    //     }
+
+    // }
+    // useEffect(()=>{
+    //     newStaff()
+    // },[])
 
     const onFormSubmit = async () => {
-        if (value.id === '') return errorAlert('Invalid Student ID')
+        if (value.email === '' || !value?.email?.includes('@') ) return errorAlert('Invalid staff email')
         if (value.password === '') return errorAlert('Invalid password')
         try {
             setLoad(true)
-            const url = '/api/u/login'
+            const url = '/api/staff/login'
             const { data: res } = await base.post(url, value)
             if (res?.status === 'success') {
                 // console.log(res?.data)
@@ -28,7 +41,7 @@ const Login = () => {
                 saveData('uid', res?.data?.user)
                 saveData('exp', res?.data?.expiry)
                 successAlert('User Login successful')
-                navigate('/auth-2fa', { replace: true })
+                navigate('/staff/2fa', { replace: true })
             }
         } catch (error) {
             errorAlert(error?.response?.data?.message)
@@ -47,9 +60,9 @@ const Login = () => {
             >
                 <div>
                     <InputField variant='outlined'
-                        label='Staff ID' type='text'
+                        label='Staff Email' type='email'
                         InputProps={{ endAdornment: <InputAdornment position='start'><UserCircleIcon size={20} color='#acacac' /></InputAdornment> }}
-                        value={value?.id} onChange={(e) => setValue(prev => ({ ...prev, id: e.target.value }))} fullWidth
+                        value={value?.email} onChange={(e) => setValue(prev => ({ ...prev, email: e.target.value }))} fullWidth
                     />
                     <InputField variant='outlined'
                         label='Password' type='password'
@@ -63,7 +76,7 @@ const Login = () => {
                         text='Login' variant={'contained'}
                         color='secondary' disableElevation fullWidth
                     />
-                    <Typography textAlign={'center'} paragraph > <Link to='/staff/forgot-password' style={{ color: '#ee0704' }}>Forgot Password </Link> </Typography>
+                    {/* <Typography textAlign={'center'} paragraph > <Link to='/staff/forgot-password' style={{ color: '#ee0704' }}>Forgot Password </Link> </Typography> */}
 
 
                 </div>

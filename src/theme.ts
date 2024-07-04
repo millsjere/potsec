@@ -3,7 +3,7 @@ import { createTheme } from "@mui/material/styles";
 export const theme = createTheme({
   typography: {
     fontFamily: "Plus Jakarta Sans",
-    fontSize: 14,
+    fontSize: 13,
   },
   palette: {
     primary: {

@@ -29,7 +29,7 @@ const Verify2FA = () => {
         try {
             successAlert('Sending 2FA code...')
             setLoad(true)
-            const { data: res } = await base.get('/api/u/resend-sms')
+            const { data: res } = await base.get('/api/staff/resend-sms')
             if (res?.status === 'success') {
                 successAlert('2FA code sent to your phone')
             }

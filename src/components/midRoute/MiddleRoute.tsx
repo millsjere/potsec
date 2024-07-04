@@ -9,13 +9,12 @@ const MiddleRoute = () => {
     const sessionTime = getData('exp')
     const user = getData('uid')
 
-    if (auth && (Number(sessionTime) > Number(currentTime)) && user?.isEmailVerified && user?.isLoginVerified) {
+    if (auth && (Number(sessionTime) > Number(currentTime)) && user?.isLoginVerified) {
         return (
             <Navigate to={'/dashboard'} replace />
         )
     }
-    if ((auth && (Number(sessionTime) > Number(currentTime)) && user?.isEmailVerified && !user?.isLoginVerified)
-        || (auth && (Number(sessionTime) > Number(currentTime)) && !user?.isEmailVerified)) {
+    if ((auth && (Number(sessionTime) > Number(currentTime)) && !user?.isLoginVerified) ) {
         return (
             <React.Suspense fallback={<Loader />}>
                 <Outlet />
