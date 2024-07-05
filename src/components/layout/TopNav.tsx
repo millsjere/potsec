@@ -1,9 +1,9 @@
 
-import { Cancel01Icon, ImageAdd01Icon, Menu02Icon, Notification01Icon, Search01Icon, UserCircleIcon } from 'hugeicons-react'
-import { AppBar, Toolbar, IconButton, Typography, Button, Badge, Box, Dialog, DialogContent, Slide, SlideProps, InputAdornment } from '@mui/material'
+import { Cancel01Icon, ImageAdd01Icon, Menu02Icon, MessageNotification01Icon, Notification01Icon, Notification02Icon, Search01Icon, UserCircleIcon } from 'hugeicons-react'
+import { AppBar, Toolbar, IconButton, Typography, Button, Badge, Box, Dialog, DialogContent, Slide, SlideProps, InputAdornment, Stack, Avatar } from '@mui/material'
 import React, { useState } from 'react'
-import AddProduct from '../shared/Product/AddProduct'
 import { InputField } from '../shared'
+import { grey } from '@mui/material/colors'
 
 
 const SlideTransition = (props: React.JSX.IntrinsicAttributes & SlideProps) => {
@@ -36,15 +36,14 @@ const TopNav = ({ drawerWidth, handleDrawerToggle }: { drawerWidth: number, hand
             <Menu02Icon />
           </IconButton>
 
-          <Box sx={{ ml: 'auto' }}>
-            <Button size='small' startIcon={<ImageAdd01Icon size={18} />} variant='contained' disableElevation onClick={() => { setUpload(true) }}
-              sx={{ color: '#fff', textTransform: 'none', borderRadius: '10px', height: '2.3rem', mr: 3 }} color='secondary'>
-              Add Product
-            </Button>
-            <IconButton onClick={() => { setOpenSearch(true) }}><Search01Icon /></IconButton>
-            <IconButton><Badge variant='standard' color='primary' overlap='circular' sx={{ '& > span': { color: '#fff' } }} badgeContent={4} > <Notification01Icon /> </Badge></IconButton>
-            <IconButton onClick={() => { }}><UserCircleIcon size={25} /></IconButton>
-          </Box>
+          <Stack direction={'row'} alignItems={'center'} gap={1} sx={{ ml: 'auto' }}>
+            <IconButton sx={{bgcolor: grey[100]}}>
+              <Badge variant='standard' color='primary' overlap='circular' sx={{ '& > span': { color: '#fff', padding: '3px', fontSize: '11px', minWidth: '16px', height: '16px' } }} badgeContent={4} > 
+                <MessageNotification01Icon /> 
+              </Badge>
+            </IconButton>
+            <Avatar sx={{cursor: 'pointer', width: '2rem', height: '2rem', border: '1px solid #fff'}} alt='user-img' />
+          </Stack>
         </Toolbar>
       </AppBar>
 
@@ -68,9 +67,6 @@ const TopNav = ({ drawerWidth, handleDrawerToggle }: { drawerWidth: number, hand
           </Box>
         </DialogContent>
       </Dialog>
-
-      {/* ADD PRODUCT */}
-      <AddProduct open={upload} close={() => setUpload(false)} />
 
     </>
   )

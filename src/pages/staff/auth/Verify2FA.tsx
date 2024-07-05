@@ -25,13 +25,13 @@ const Verify2FA = () => {
     const ref5 = useRef()
     const ref6 = useRef()
 
-    const resendSMS = async () => {
+    const resendToken = async () => {
         try {
             successAlert('Sending 2FA code...')
             setLoad(true)
-            const { data: res } = await base.get('/api/staff/resend-sms')
+            const { data: res } = await base.get('/api/staff/resend-email-token')
             if (res?.status === 'success') {
-                successAlert('2FA code sent to your phone')
+                successAlert('2FA code sent to your email')
             }
         } catch (error) {
             errorAlert(error?.response.data?.message)
@@ -46,11 +46,11 @@ const Verify2FA = () => {
         if (code?.length < 6) return errorAlert('Token must be 6 characters')
         try {
             setLoad(true)
-            const { data: res } = await base.post('/api/u/verify-sms', { code })
+            const { data: res } = await base.post('/api/staff/verify-login', { code })
             if (res?.status === 'success') {
                 saveData('uid', res?.data)
-                successAlert('Account verification successful')
-                navigate('/dashboard')
+                successAlert('User verification successful')
+                navigate('/staff/dashboard')
             }
         } catch (error) {
             errorAlert(error?.response?.data?.message)
@@ -73,7 +73,7 @@ const Verify2FA = () => {
         <>
             <AuthWrapper
                 title={<Typography sx={{ fontWeight: 500, mb: .5 }} variant='h5'>Two-Factor Authentication</Typography>}
-                subtitle={<Typography sx={{ mb: 3 }} paragraph color='textSecondary'>Your account is protected with 2FA. We've sent you a text message. Please check your phone ({user?.phone})</Typography>}
+                subtitle={<Typography sx={{ mb: 3 }} paragraph color='textSecondary'>Your account is protected with 2FA. We've sent you a token. Please check your email ({user?.email})</Typography>}
                 image={Slide} imagePosition={'center'}
                 order={2}
             >
@@ -96,7 +96,7 @@ const Verify2FA = () => {
                     text='Continue' variant={'contained'}
                     color='secondary' disableElevation fullWidth
                 />
-                <Typography textAlign={'center'} variant='body1' paragraph color={'GrayText'} >Didn't get the token? <span onClick={resendSMS} style={{ cursor: 'pointer', color: '#ED8A2F' }}>Resend Token </span> </Typography>
+                <Typography textAlign={'center'} variant='body1' paragraph color={'GrayText'} >Didn't get the token? <span onClick={resendToken} style={{ cursor: 'pointer', color: '#ED8A2F' }}>Resend Token </span> </Typography>
             </AuthWrapper>
         </>
     )

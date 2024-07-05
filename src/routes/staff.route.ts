@@ -5,6 +5,10 @@ import { RouteProps } from "../components/shared/Interfaces";
 const Login = lazy(() => import("../pages/staff/auth/Login"));
 const VerifyLogin = lazy(() => import("../pages/staff/auth/Verify2FA"));
 
+// Private Routes
+const Dashboard = lazy(() => import("../pages/staff/account/Dashboard"));
+
+
 // Routes
 const LoginRoute = {
   path: "/staff",
@@ -15,12 +19,19 @@ const LoginRoute = {
 const VerifyLoginRoute = {
   path: "/staff/2fa",
   component: VerifyLogin,
-  isAuth: "no",
   isMiddle: true
+};
+
+const DashboardRoute = {
+  path: "/staff/dashboard",
+  component: Dashboard,
+  isAuth: "yes",
+  role: 'staff'
 };
 
 // export all routes as array
 export const staffRoutes: RouteProps[] = [
   LoginRoute,
-  VerifyLoginRoute
+  VerifyLoginRoute,
+  DashboardRoute
 ];

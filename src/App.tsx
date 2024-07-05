@@ -5,10 +5,11 @@ import { theme } from './theme'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import PublicRoute from './components/publicRoute/PublicRoute'
 import MiddleRoute from './components/midRoute/MiddleRoute'
-import PrivateRoute from './components/privateRoute/PrivateRoute'
 import { appRoutes } from './routes'
 import { MuiAlert } from './components/shared'
 import { AlertContextProvider } from './context/AlertContext'
+import StudentPrivateRoute from './components/privateRoute/StudentPrivateRoute'
+import StaffPrivateRoute from './components/privateRoute/StaffPrivateRoute'
 
 export const App = () => {
 
@@ -26,7 +27,7 @@ export const App = () => {
                 )
               })
             }
-            <Route path="*" element={<Navigate replace to="/students" />} />
+            <Route path="*" element={<Navigate replace to="/student" />} />
           </Route>
 
           {/* Middle Route */}
@@ -41,10 +42,10 @@ export const App = () => {
             <Route path="*" element={<Navigate replace to="/verify" />} />
           </Route>
 
-          {/* Private Routes */}
-          <Route element={<PrivateRoute />}>
+          {/* Student Private Routes */}
+          <Route element={<StudentPrivateRoute />}>
             {
-              appRoutes?.filter(el => el?.isAuth === 'yes').map((route, index) => {
+              appRoutes?.filter(el => (el?.isAuth === 'yes' && el?.role === 'student')).map((route, index) => {
                 return (
                   <Route key={index} path={route?.path} element={<route.component />} />
                 )
@@ -52,7 +53,22 @@ export const App = () => {
             }
             <Route
               path="*"
-              element={<Navigate replace to="/dashboard" />}
+              element={<Navigate replace to="/student/dashboard" />}
+            />
+          </Route>
+
+          {/* Staff Private Routes */}
+          <Route element={<StaffPrivateRoute />}>
+            {
+              appRoutes?.filter(el => (el?.isAuth === 'yes' && el?.role === 'staff')).map((route, index) => {
+                return (
+                  <Route key={index} path={route?.path} element={<route.component />} />
+                )
+              })
+            }
+            <Route
+              path="*"
+              element={<Navigate replace to="/staff/dashboard" />}
             />
           </Route>
         </Routes>

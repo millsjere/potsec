@@ -1,5 +1,5 @@
-import { Avatar, Box, Collapse, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, Toolbar, Typography } from '@mui/material'
-import { Analytics02Icon, ArrowDown01Icon, ArrowRight01Icon, CreditCardValidationIcon, DashboardSquare01Icon, DashboardSquareAddIcon, HelpCircleIcon, ImageAdd02Icon, InboxDownloadIcon, LogoutSquare01Icon, Settings01Icon, StoreLocation01Icon, TaskAdd02Icon, UserSquareIcon } from 'hugeicons-react';
+import { Avatar, Box, Collapse, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, styled, Toolbar, Typography } from '@mui/material'
+import { AddTeamIcon, Analytics02Icon, ArrowDown01Icon, ArrowRight01Icon, CreditCardValidationIcon, DashboardSquare01Icon, DashboardSquareAddIcon, DocumentValidationIcon, File01Icon, HelpCircleIcon, ImageAdd02Icon, InboxDownloadIcon, LicenseThirdPartyIcon, LogoutSquare01Icon, Settings01Icon, StoreLocation01Icon, StudentCardIcon, TaskAdd02Icon, UserGroupIcon, UserSquareIcon } from 'hugeicons-react';
 import React from 'react'
 import Logo from '../../assets/images/logo.png'
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +18,15 @@ type SideBarMenuProps = {
     subMenus?: any[]
 }
 
+const StyledMenuTitle = styled(Typography)({
+    fontSize: '.75rem',
+    color: '#ffffff90',
+    marginLeft: '1rem',
+    marginBottom: '1rem',
+    
+    
+})
+
 
 const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mobileOpen }: Props) => {
     const [open, setOpen] = React.useState({ name: '', status: false })
@@ -26,44 +35,45 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
 
 
     const primaryMenu: SideBarMenuProps[] = [
-        { name: 'Dashboard', icon: <DashboardSquare01Icon size={20} />, path: '/dashboard' },
+        { name: 'Dashboard', icon: <DashboardSquare01Icon size={20} />, path: '/staff/dashboard' },
         {
-            name: 'Inventory', icon: <InboxDownloadIcon size={20} />, hasSubMenu: true, subMenus: [
-                { name: 'Product', icon: <TaskAdd02Icon size={20} />, path: '/products' },
-                { name: 'Categories', icon: <DashboardSquareAddIcon size={20} />, path: '/categories' },
-                { name: 'Brands', icon: <ImageAdd02Icon size={20} />, path: '/brands' },
+            name: 'Students', icon: <UserGroupIcon size={20} />, hasSubMenu: true, subMenus: [
+                { name: 'All Students', icon: <TaskAdd02Icon size={20} />, path: '/staff/all-students' },
+                { name: 'Add Student', icon: <DashboardSquareAddIcon size={20} />, path: '/staff/add-student' },
             ]
         },
-        { name: 'Analytics', icon: <Analytics02Icon size={20} />, path: '/analytics' },
         {
-            name: 'Stores', icon: <StoreLocation01Icon size={20} />, hasSubMenu: true, subMenus: [
-                { name: 'All Stores', icon: <TaskAdd02Icon size={20} />, path: '/stores' },
-                { name: 'Add Store', icon: <DashboardSquareAddIcon size={20} />, path: '/stores/add' },
+            name: 'Staff', icon: <UserGroupIcon size={20} />, hasSubMenu: true, subMenus: [
+                { name: 'All Staff', icon: <TaskAdd02Icon size={20} />, path: '/staff/all-staff' },
+                { name: 'Add Staff', icon: <AddTeamIcon size={20} />, path: '/staff/new-staff' },
             ]
         },
-        { name: 'Account', icon: <UserSquareIcon size={20} />, path: '/account' },
+        { name: 'Courses', icon: <LicenseThirdPartyIcon size={20} />, path: '/staff/courses' },
+        { name: 'Registration', icon: <DocumentValidationIcon size={20} />, path: '/staff/registration' },
+        { name: 'Account', icon: <UserSquareIcon size={21} />, path: '/staff/account' },
     ]
 
     const extraMenu: SideBarMenuProps[] = [
-        { name: 'Subscription', icon: <CreditCardValidationIcon size={20} />, path: '/pricing' },
-        { name: 'Help Centre', icon: <HelpCircleIcon size={20} />, path: '/help' },
+        { name: 'Transcripts', icon: <File01Icon size={20} />, path: '/staff/transcript' },
+        { name: 'ID Cards', icon: <StudentCardIcon size={20} />, path: '/staff/cards' },
     ]
 
     const drawer = (
         <Box display={'flex'} flexDirection={'column'} height={'100vh'} bgcolor={'secondary.main'}>
             <Toolbar sx={{ gap: 1 }}>
                 <img src={Logo} alt='logo' width={'30%'} />
-                <Typography fontWeight={500} variant='h6' fontSize={'1.0rem'} sx={{ color: '#fff' }}>Hive Afrika</Typography>
+                <Typography fontWeight={600} variant='h6' fontSize={'1.1rem'} sx={{ color: '#fff' }}>POTSEC</Typography>
             </Toolbar>
-            <Divider sx={{ bgcolor: '#ffffff30' }} />
+            <Divider sx={{ mb: 2, bgcolor: '#ffffff30' }} />
             <List >
+                <StyledMenuTitle>GENERAL</StyledMenuTitle>
                 {primaryMenu?.map((menu, index) => {
                     return (
                         menu?.hasSubMenu ?
                             <>
-                                <ListItem key={index} disablePadding sx={{ color: '#fff' }}>
+                                <ListItem key={index} disablePadding sx={{ color: '#fff',  ':hover':{ bgcolor: '#c2b5ff4a'} }}>
                                     <ListItemButton onClick={() => setOpen({ status: !open.status, name: menu?.name })}>
-                                        <ListItemIcon color='primary.main' sx={{ minWidth: '40px', color: '#ED8A2F' }}>{menu?.icon}</ListItemIcon>
+                                        <ListItemIcon sx={{ minWidth: '40px', color: '#fff' }}>{menu?.icon}</ListItemIcon>
                                         <ListItemText sx={{ '& span': { fontSize: '.9rem' } }} primary={menu?.name} />
                                         {(open.status && open.name === menu?.name) ? <ArrowDown01Icon size={18} /> : <ArrowRight01Icon size={18} />}
                                     </ListItemButton>
@@ -72,9 +82,9 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
                                     <List >
                                         {
                                             menu?.subMenus?.map((sub, i) => (
-                                                <ListItem sx={{ color: '#fff' }} key={i} dense onClick={() => navigate(sub?.path)}>
+                                                <ListItem sx={{ color: '#fff',  ':hover':{ bgcolor: '#c2b5ff4a'} }} key={i} dense onClick={() => navigate(sub?.path)}>
                                                     <ListItemButton>
-                                                        <ListItemIcon sx={{ minWidth: '30px', color: '#ED8A2F' }}>{sub?.icon}</ListItemIcon>
+                                                        <ListItemIcon sx={{ minWidth: '30px', color: '#fff' }}>{sub?.icon}</ListItemIcon>
                                                         <ListItemText sx={{ '& span': { fontSize: '.9rem' } }} primary={sub?.name} />
                                                     </ListItemButton>
                                                 </ListItem>
@@ -83,11 +93,10 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
                                     </List>
                                 </Collapse>
                             </>
-
                             :
-                            <ListItem sx={{ color: '#fff' }} key={index} disablePadding>
+                            <ListItem sx={{ color: '#fff', ':hover':{ bgcolor: '#c2b5ff4a'} }} key={index} disablePadding>
                                 <ListItemButton onClick={() => navigate(menu?.path!)}>
-                                    <ListItemIcon sx={{ minWidth: '40px', color: '#ED8A2F' }}>{menu?.icon}</ListItemIcon>
+                                    <ListItemIcon sx={{ minWidth: '40px', color: '#fff' }}>{menu?.icon}</ListItemIcon>
                                     <ListItemText sx={{ '& span': { fontSize: '.9rem' } }} primary={menu?.name} />
                                 </ListItemButton>
                             </ListItem>
@@ -95,28 +104,28 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
                 }
                 )}
             </List>
-            <Divider sx={{ bgcolor: '#ffffff30' }} />
+            <Divider sx={{ my: 2, bgcolor: '#ffffff30' }} />
             <List>
+                <StyledMenuTitle>DOCUMENTS</StyledMenuTitle>
                 {extraMenu?.map((menu, index) => (
-                    <ListItem key={index} disablePadding sx={{ color: '#fff' }}>
+                    <ListItem key={index} disablePadding sx={{ color: '#fff',  ':hover':{ bgcolor: '#c2b5ff4a'} }}>
                         <ListItemButton onClick={() => navigate(menu?.path!)}>
-                            <ListItemIcon sx={{ minWidth: '40px', color: '#ED8A2F' }}>{menu?.icon}</ListItemIcon>
+                            <ListItemIcon sx={{ minWidth: '40px', color: '#fff' }}>{menu?.icon}</ListItemIcon>
                             <ListItemText sx={{ '& span': { fontSize: '.9rem' } }} primary={menu?.name} />
                         </ListItemButton>
                     </ListItem>
                 ))}
             </List>
             {/* User Profile */}
-            <Box padding='1rem' textAlign={'center'} bgcolor='#256d945c' color='#fff' margin={'1rem'} marginTop='auto' borderRadius='15px' style={{ backgroundImage: 'linear-gradient(181deg, #0969ab, #083554)' }}>
-                <Avatar sx={{ width: '4rem', height: '4rem', m: '0 auto', mb: '.5rem', mt: '-3rem', border: theme => `6px solid ${theme.palette.secondary.main}` }} src={currentUser?.photo || null} alt='user-img' />
-                <Typography noWrap>{currentUser?.firstname}</Typography>
-                <Typography noWrap variant='body2'>{currentUser?.email}</Typography>
-                <Typography variant='body2' style={{ color: '#ffffff70' }}>Administrator</Typography>
-                <Stack direction={'row'} gap={0} justifyContent={'center'} mt={2}>
-                    <IconButton color='primary'><Settings01Icon /></IconButton>
-                    <IconButton onClick={() => { sessionTimeout(); navigate('/') }} color='primary'><LogoutSquare01Icon /></IconButton>
-                </Stack>
-                {/* <Button variant='contained' startIcon={<ExitToApp />} disableElevation onClick={Logout} style={{background: '#0271bd80', textTransform: 'none', marginTop: '1rem', borderRadius: '8px', color: '#e7e7e7'}} > Sign Out </Button> */}
+            <Box padding='.6rem .8rem' onClick={() => { 
+                sessionTimeout(); 
+                currentUser?.role === 'student' ? navigate('/') : navigate('/staff') }} bgcolor='#c2b5ff4a' color='#fff' margin={'.8rem'} marginTop='auto' borderRadius='10px' sx={{ cursor: 'pointer', display: 'flex', gap: 1, alignItems: 'center' }}>
+                <Avatar variant='rounded' sx={{ width: '2rem', height: '2rem', borderRadius: '8px', border: '1px solid #fff'}} src={currentUser?.photo || null} alt='user-img' />
+                <span style={{ width: '60%'}}>
+                    <Typography fontWeight={500} mb={-.5} noWrap>{currentUser?.othernames}</Typography>
+                    <Typography variant='body2' style={{ color: '#ffffff90' }}>{currentUser?.role}</Typography>
+                </span>
+               <LogoutSquare01Icon style={{marginLeft: 'auto'}} />
             </Box>
         </Box>
     );
