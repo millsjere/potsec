@@ -2,24 +2,25 @@ import { TextField } from '@mui/material'
 import { styled } from '@mui/styles'
 import React from 'react'
 
-const StyledInputField = styled(TextField)({
+const StyledInputField = styled(TextField)(({ size }) => ({
     marginBottom: '1rem',
     '& *': {
-        borderRadius: '10px'
+        borderRadius: size === 'medium' ? '10px' : '5px'
     },
     '& label.Mui-focused': {
         color: '#ee0704'
     },
     "& .MuiOutlinedInput-root": {
-        borderRadius: '10px',
+        borderRadius: size === 'medium' ? '10px' : '5px',
         "&.Mui-focused fieldset": {
             border: `1px solid #ee0704`
         }
     }
-})
+}))
 
 type InputFieldProps = {
     sx?: object,
+    size?: any,
     isSelect?: boolean,
     variant?: any,
     value?: string,
@@ -35,10 +36,10 @@ type InputFieldProps = {
     fullWidth?: boolean
 }
 
-export const InputField = ({ sx, isSelect, variant, value, onChange, isRequired, label, error, children, type, InputProps, inputProps, placeholder, fullWidth }: InputFieldProps) => {
+export const InputField = ({ size = 'medium', sx, isSelect, variant, value, onChange, isRequired, label, error, children, type, InputProps, inputProps, placeholder, fullWidth }: InputFieldProps) => {
     return (
         <StyledInputField sx={sx}
-            type={type} size='medium'
+            type={type} size={size}
             variant={variant}
             value={value}
             onChange={onChange}
@@ -51,6 +52,7 @@ export const InputField = ({ sx, isSelect, variant, value, onChange, isRequired,
             InputProps={InputProps}
             inputProps={inputProps}
             placeholder={placeholder}
+            defaultValue={isSelect && ''}
         >
             {children}
         </StyledInputField>

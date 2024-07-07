@@ -5,6 +5,7 @@ import Toolbar from '@mui/material/Toolbar';
 import TopNav from './TopNav';
 import SideNav from './SideNav';
 import Footer from './Footer';
+import { grey } from '@mui/material/colors';
 
 
 const drawerWidth = 240;
@@ -45,7 +46,7 @@ function Layout({ children }: { children: React.ReactNode }) {
       {/* main Content */}
       <Box component="main" sx={{ flexGrow: 1, width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
         <Toolbar />
-        <Box height={'100vh'} p={3}>
+        <Box minHeight={'100vh'} bgcolor={grey[100]} p={'2rem 3rem'}>
           {children}
         </Box>
         <Footer />

@@ -1,5 +1,5 @@
 import { Avatar, Box, Collapse, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, styled, Toolbar, Typography } from '@mui/material'
-import { AddTeamIcon, Analytics02Icon, ArrowDown01Icon, ArrowRight01Icon, CreditCardValidationIcon, DashboardSquare01Icon, DashboardSquareAddIcon, DocumentValidationIcon, File01Icon, HelpCircleIcon, ImageAdd02Icon, InboxDownloadIcon, LicenseThirdPartyIcon, LogoutSquare01Icon, Settings01Icon, StoreLocation01Icon, StudentCardIcon, TaskAdd02Icon, UserGroupIcon, UserSquareIcon } from 'hugeicons-react';
+import { AddTeamIcon, Analytics02Icon, ArrowDown01Icon, ArrowRight01Icon, Building03Icon, CreditCardValidationIcon, DashboardSquare01Icon, DashboardSquareAddIcon, DocumentValidationIcon, File01Icon, HelpCircleIcon, ImageAdd02Icon, InboxDownloadIcon, LibraryIcon, LicenseThirdPartyIcon, LogoutSquare01Icon, Settings01Icon, StoreLocation01Icon, StudentCardIcon, TaskAdd02Icon, UserGroupIcon, UserSquareIcon } from 'hugeicons-react';
 import React from 'react'
 import Logo from '../../assets/images/logo.png'
 import { useNavigate } from 'react-router-dom';
@@ -23,8 +23,8 @@ const StyledMenuTitle = styled(Typography)({
     color: '#ffffff90',
     marginLeft: '1rem',
     marginBottom: '1rem',
-    
-    
+
+
 })
 
 
@@ -37,19 +37,19 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
     const primaryMenu: SideBarMenuProps[] = [
         { name: 'Dashboard', icon: <DashboardSquare01Icon size={20} />, path: '/staff/dashboard' },
         {
-            name: 'Students', icon: <UserGroupIcon size={20} />, hasSubMenu: true, subMenus: [
+            name: 'Students', icon: <LicenseThirdPartyIcon size={20} />, hasSubMenu: true, subMenus: [
                 { name: 'All Students', icon: <TaskAdd02Icon size={20} />, path: '/staff/all-students' },
-                { name: 'Add Student', icon: <DashboardSquareAddIcon size={20} />, path: '/staff/add-student' },
+                { name: 'Add Student', icon: <AddTeamIcon size={20} />, path: '/staff/add-students' },
             ]
         },
         {
             name: 'Staff', icon: <UserGroupIcon size={20} />, hasSubMenu: true, subMenus: [
-                { name: 'All Staff', icon: <TaskAdd02Icon size={20} />, path: '/staff/all-staff' },
+                { name: 'All Staff', icon: <TaskAdd02Icon size={20} />, path: '/staff/all-staffs' },
                 { name: 'Add Staff', icon: <AddTeamIcon size={20} />, path: '/staff/new-staff' },
             ]
         },
-        { name: 'Courses', icon: <LicenseThirdPartyIcon size={20} />, path: '/staff/courses' },
-        { name: 'Registration', icon: <DocumentValidationIcon size={20} />, path: '/staff/registration' },
+        { name: 'Programmes', icon: <LibraryIcon size={20} />, path: '/staff/courses' },
+        { name: 'Departments', icon: <Building03Icon size={20} />, path: '/staff/departments' },
         { name: 'Account', icon: <UserSquareIcon size={21} />, path: '/staff/account' },
     ]
 
@@ -70,11 +70,11 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
                 {primaryMenu?.map((menu, index) => {
                     return (
                         menu?.hasSubMenu ?
-                            <>
-                                <ListItem key={index} disablePadding sx={{ color: '#fff',  ':hover':{ bgcolor: '#c2b5ff4a'} }}>
-                                    <ListItemButton onClick={() => setOpen({ status: !open.status, name: menu?.name })}>
-                                        <ListItemIcon sx={{ minWidth: '40px', color: '#fff' }}>{menu?.icon}</ListItemIcon>
-                                        <ListItemText sx={{ '& span': { fontSize: '.9rem' } }} primary={menu?.name} />
+                            <div key={index}>
+                                <ListItem disablePadding sx={{ color: '#fff', ':hover': { bgcolor: '#c2b5ff4a' } }}>
+                                    <ListItemButton disableRipple onClick={() => setOpen({ status: !open.status, name: menu?.name })}>
+                                        <ListItemIcon sx={{ minWidth: '40px', color: '#ffffff90' }}>{menu?.icon}</ListItemIcon>
+                                        <ListItemText sx={{ '& span': { fontSize: '1rem' } }} primary={menu?.name} />
                                         {(open.status && open.name === menu?.name) ? <ArrowDown01Icon size={18} /> : <ArrowRight01Icon size={18} />}
                                     </ListItemButton>
                                 </ListItem>
@@ -82,22 +82,22 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
                                     <List >
                                         {
                                             menu?.subMenus?.map((sub, i) => (
-                                                <ListItem sx={{ color: '#fff',  ':hover':{ bgcolor: '#c2b5ff4a'} }} key={i} dense onClick={() => navigate(sub?.path)}>
-                                                    <ListItemButton>
-                                                        <ListItemIcon sx={{ minWidth: '30px', color: '#fff' }}>{sub?.icon}</ListItemIcon>
-                                                        <ListItemText sx={{ '& span': { fontSize: '.9rem' } }} primary={sub?.name} />
+                                                <ListItem sx={{ color: '#fff', ':hover': { bgcolor: '#c2b5ff4a' } }} key={i} dense onClick={() => navigate(sub?.path)}>
+                                                    <ListItemButton disableRipple>
+                                                        <ListItemIcon sx={{ minWidth: '30px', color: '#ffffff90' }}>{sub?.icon}</ListItemIcon>
+                                                        <ListItemText sx={{ '& span': { fontSize: '1rem' } }} primary={sub?.name} />
                                                     </ListItemButton>
                                                 </ListItem>
                                             ))
                                         }
                                     </List>
                                 </Collapse>
-                            </>
+                            </div>
                             :
-                            <ListItem sx={{ color: '#fff', ':hover':{ bgcolor: '#c2b5ff4a'} }} key={index} disablePadding>
-                                <ListItemButton onClick={() => navigate(menu?.path!)}>
-                                    <ListItemIcon sx={{ minWidth: '40px', color: '#fff' }}>{menu?.icon}</ListItemIcon>
-                                    <ListItemText sx={{ '& span': { fontSize: '.9rem' } }} primary={menu?.name} />
+                            <ListItem sx={{ color: '#fff', ':hover': { bgcolor: '#c2b5ff4a' } }} key={index} disablePadding>
+                                <ListItemButton disableRipple onClick={() => navigate(menu?.path!)}>
+                                    <ListItemIcon sx={{ minWidth: '40px', color: '#ffffff90' }}>{menu?.icon}</ListItemIcon>
+                                    <ListItemText sx={{ '& span': { fontSize: '1rem' } }} primary={menu?.name} />
                                 </ListItemButton>
                             </ListItem>
                     )
@@ -108,24 +108,25 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
             <List>
                 <StyledMenuTitle>DOCUMENTS</StyledMenuTitle>
                 {extraMenu?.map((menu, index) => (
-                    <ListItem key={index} disablePadding sx={{ color: '#fff',  ':hover':{ bgcolor: '#c2b5ff4a'} }}>
-                        <ListItemButton onClick={() => navigate(menu?.path!)}>
-                            <ListItemIcon sx={{ minWidth: '40px', color: '#fff' }}>{menu?.icon}</ListItemIcon>
-                            <ListItemText sx={{ '& span': { fontSize: '.9rem' } }} primary={menu?.name} />
+                    <ListItem key={index} disablePadding sx={{ color: '#fff', ':hover': { bgcolor: '#c2b5ff4a' } }}>
+                        <ListItemButton disableRipple onClick={() => navigate(menu?.path!)}>
+                            <ListItemIcon sx={{ minWidth: '40px', color: '#ffffff90' }}>{menu?.icon}</ListItemIcon>
+                            <ListItemText sx={{ '& span': { fontSize: '1rem' } }} primary={menu?.name} />
                         </ListItemButton>
                     </ListItem>
                 ))}
             </List>
             {/* User Profile */}
-            <Box padding='.6rem .8rem' onClick={() => { 
-                sessionTimeout(); 
-                currentUser?.role === 'student' ? navigate('/') : navigate('/staff') }} bgcolor='#c2b5ff4a' color='#fff' margin={'.8rem'} marginTop='auto' borderRadius='10px' sx={{ cursor: 'pointer', display: 'flex', gap: 1, alignItems: 'center' }}>
-                <Avatar variant='rounded' sx={{ width: '2rem', height: '2rem', borderRadius: '8px', border: '1px solid #fff'}} src={currentUser?.photo || null} alt='user-img' />
-                <span style={{ width: '60%'}}>
+            <Box padding='.6rem .8rem' onClick={() => {
+                sessionTimeout();
+                currentUser?.role === 'student' ? navigate('/') : navigate('/staff')
+            }} bgcolor='#c2b5ff4a' color='#fff' margin={'.8rem'} marginTop='auto' borderRadius='10px' sx={{ cursor: 'pointer', display: 'flex', gap: 1, alignItems: 'center' }}>
+                <Avatar variant='rounded' sx={{ width: '2rem', height: '2rem', borderRadius: '8px', border: '1px solid #fff' }} src={currentUser?.photo || null} alt='user-img' />
+                <span style={{ width: '60%' }}>
                     <Typography fontWeight={500} mb={-.5} noWrap>{currentUser?.othernames}</Typography>
                     <Typography variant='body2' style={{ color: '#ffffff90' }}>{currentUser?.role}</Typography>
                 </span>
-               <LogoutSquare01Icon style={{marginLeft: 'auto'}} />
+                <LogoutSquare01Icon style={{ marginLeft: 'auto' }} />
             </Box>
         </Box>
     );

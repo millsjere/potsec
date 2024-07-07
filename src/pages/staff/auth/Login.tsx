@@ -1,6 +1,6 @@
 import { InputAdornment, Typography } from '@mui/material';
-import React, { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { base, saveData } from '../../../config/appConfig';
 import { ArrowRight01Icon, SquareLock02Icon, UserCircleIcon } from 'hugeicons-react';
 import { AuthWrapper, InputField, RoundButton } from '../../../components/shared'
@@ -29,7 +29,7 @@ const Login = () => {
     // },[])
 
     const onFormSubmit = async () => {
-        if (value.email === '' || !value?.email?.includes('@') ) return errorAlert('Invalid staff email')
+        if (value.email === '' || !value?.email?.includes('@')) return errorAlert('Invalid staff email')
         if (value.password === '') return errorAlert('Invalid password')
         try {
             setLoad(true)

@@ -2,20 +2,20 @@ import React from 'react'
 import { styled } from '@mui/material'
 import LoadingButton from '@mui/lab/LoadingButton';
 
-const StyledButton = styled(LoadingButton)({
-    padding: '.65rem 1rem',
-    borderRadius: '10px',
+const StyledButton = styled(LoadingButton)(({ size }) => ({
+    padding: size === 'medium' ? '.65rem 1rem' : '.3rem .8rem',
+    borderRadius: size === 'medium' ? '10px' : '8px',
     textTransform: 'none',
     ':hover': {
         '#end-icon': {
             transform: 'translateX(10px)'
         }
     }
-})
+}))
 
 type RoundButtonProps = {
     text: string,
-    onClick: () => void,
+    onClick: (e?: any) => void,
     variant: any,
     disableElevation: boolean,
     fullWidth?: boolean,
