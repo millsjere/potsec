@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 import { RoundButton } from '../shared'
 import { grey } from '@mui/material/colors'
 import BulkUpload from '../upload/BulkUpload'
+import NotificationBar from '../shared/Notify/NotificationBar'
 
 
 const SlideTransition = (props: React.JSX.IntrinsicAttributes & SlideProps) => {
@@ -14,6 +15,7 @@ const SlideTransition = (props: React.JSX.IntrinsicAttributes & SlideProps) => {
 
 const TopNav = ({ drawerWidth, handleDrawerToggle }: { drawerWidth: number, handleDrawerToggle: () => void }) => {
   const [openSearch, setOpenSearch] = useState(false)
+  const [notify, setNotify] = useState(false)
 
   return (
     <>
@@ -42,7 +44,7 @@ const TopNav = ({ drawerWidth, handleDrawerToggle }: { drawerWidth: number, hand
               color={'primary'} onClick={() => { setOpenSearch(true) }}
               disableElevation
             />
-            <IconButton sx={{ bgcolor: grey[100], ml: 2 }}>
+            <IconButton disableRipple onClick={()=>setNotify(true)} sx={{ bgcolor: grey[100], ml: 2 }}>
               <Badge variant='standard' color='primary' overlap='circular' sx={{ '& > span': { color: '#fff', padding: '3px', fontSize: '11px', minWidth: '16px', height: '16px' } }} badgeContent={4} >
                 <MessageNotification01Icon />
               </Badge>
@@ -58,6 +60,9 @@ const TopNav = ({ drawerWidth, handleDrawerToggle }: { drawerWidth: number, hand
           <BulkUpload onClose={(val) => setOpenSearch(val)} />
         </DialogContent>
       </Dialog>
+
+        {/* Notification */}
+        <NotificationBar open={notify} onClose={()=>setNotify(false)} />
 
     </>
   )
