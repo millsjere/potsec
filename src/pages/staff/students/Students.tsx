@@ -15,7 +15,7 @@ const Students = () => {
     const navigate = useNavigate()
     const [data, setData] = useState([])
     const [isLoading, setIsLoading] = useState(false)
-    const [view, setView] = useState('list')
+    const [view, setView] = useState('grid')
 
     const fetchAllStudents = async () => {
         try {
@@ -40,50 +40,50 @@ const Students = () => {
     return (
         <div>
             <PageHeader title={'All Students'} breadcrumbs={[{ label: 'Students', link: '#' }]} />
-            
+
             {
                 isLoading ? <LoadingState /> :
-                (!isLoading && data?.length > 0) ? (
-                    <>
-                        <Box px={3} pb={1} pt={2} mb={3} bgcolor='#fff' borderRadius={'15px'}>
-                            <FilterBar view={view} onViewChange={(val)=>setView(val)} />
-                        </Box>
-                        {
-                            view === 'list' &&
-                            Array(8).fill(0)?.map((_el, i)=> {
-                                return <StudentCard key={i} variant={view} />
-                            })
-                        }
-                        {
-                            view === 'grid' && (
-                                <Grid container>
-                                    {
-                                         Array(8).fill(0)?.map((_el, i)=> {
-                                            return <StudentCard key={i} variant={view} />
-                                        })
-                                    }
-                                </Grid>
-                            )
-                        }
-                    </>
+                    (!isLoading && data?.length > 0) ? (
+                        <>
+                            <Box px={3} pb={1} pt={2} mb={4} bgcolor='#fff' borderRadius={'15px'}>
+                                <FilterBar view={view} onViewChange={(val) => setView(val)} />
+                            </Box>
+                            {
+                                view === 'list' &&
+                                Array(8).fill(0)?.map((_el, i) => {
+                                    return <StudentCard key={i} variant={view} />
+                                })
+                            }
+                            {
+                                view === 'grid' && (
+                                    <Grid container spacing={3}>
+                                        {
+                                            Array(8).fill(0)?.map((_el, i) => {
+                                                return <Grid item sm={3} key={i}><StudentCard variant={view} /></Grid>
+                                            })
+                                        }
+                                    </Grid>
+                                )
+                            }
+                        </>
 
-                ):
-                (
-                <Box height={'80vh'} display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={'center'}>
-                        <img src={NoStudent} width={'15%'} alt='no_students' />
-                        <Typography mt={3} fontWeight={500}>No Students</Typography>
-                        <Typography mb={2} color={'GrayText'} variant='body2'>There is no student data available</Typography>
-                        <RoundButton
-                            text={'Add Student'} sx={{ padding: '.5rem .8rem' }}
-                            onClick={() => navigate('/staff/add-students')} variant={'contained'}
-                            disableElevation size={'small'} startIcon={<AddTeamIcon size={18} />}
-                        />
-                    </Box>
+                    ) :
+                        (
+                            <Box height={'80vh'} display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={'center'}>
+                                <img src={NoStudent} width={'15%'} alt='no_students' />
+                                <Typography mt={3} fontWeight={500}>No Students</Typography>
+                                <Typography mb={2} color={'GrayText'} variant='body2'>There is no student data available</Typography>
+                                <RoundButton
+                                    text={'Add Student'} sx={{ padding: '.5rem .8rem' }}
+                                    onClick={() => navigate('/staff/add-students')} variant={'contained'}
+                                    disableElevation size={'small'} startIcon={<AddTeamIcon size={18} />}
+                                />
+                            </Box>
 
-                )
+                        )
 
             }
-            
+
         </div>
     )
 }

@@ -4,7 +4,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 const StyledButton = styled(LoadingButton)(({ size }) => ({
     padding: size === 'medium' ? '.65rem 1rem' : '.3rem .8rem',
-    borderRadius: size === 'medium' ? '10px' : '8px',
+    borderRadius: size === 'medium' ? '10px' : '50px',
     textTransform: 'none',
     ':hover': {
         '#end-icon': {

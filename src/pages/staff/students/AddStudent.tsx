@@ -2,28 +2,13 @@ import React, { useReducer, useRef, useState } from 'react'
 import PageHeader from '../../../components/shared/PageHeader'
 import { Avatar, Box, Grid, MenuItem, Stack, Typography } from '@mui/material'
 import { InputField, RoundButton } from '../../../components/shared'
-import { allMonths, certifications, getYearRange, initState, programmeSessions, programmeTrainings, programmes, studentReducerFn, validateFile } from '../../../utils'
+import { certifications, getApplicationForm, initState, studentReducerFn, validateFile } from '../../../utils'
 import UploadComp from '../../../components/upload/UploadComp'
 import swal from 'sweetalert'
 import { useLoader } from '../../../context/LoaderContext'
 import { base } from '../../../config/appConfig'
 import { useNavigate } from 'react-router-dom'
 
-interface FieldProps {
-    type: string
-    label: string,
-    action: string,
-    options?: Array<any>
-    placeholder?: string
-    isRequired?: boolean | undefined
-}
-
-interface FormDataProps {
-    title: string,
-    check?: string,
-    fields: Array<FieldProps>
-
-}
 
 const AddStudent = () => {
     const ref = useRef()
@@ -33,90 +18,6 @@ const AddStudent = () => {
     const [preview, setPreview] = useState<any>(null)
     const [photo, setPhoto] = useState<File>()
 
-    const formData: FormDataProps[] = [
-        {
-            title: 'Application', fields: [
-                { type: 'select', label: 'Application Type', action: 'ENROLL_TYPE', options: ['Local (Ghana)', 'Foreign'], isRequired: true },
-                { type: 'select', label: 'Month of Enrollment', action: 'ENROLL_MONTH', options: allMonths, isRequired: true },
-                { type: 'select', label: 'Year of Enrollment', action: 'ENROLL_YEAR', options: getYearRange(2019 - 19), isRequired: true },
-                { type: 'text', label: 'Index No.', action: 'ENROLL_INDEX', isRequired: true },
-            ]
-        },
-        {
-            title: 'Personal Details', fields: [
-                { type: 'text', label: 'Surname', action: 'SURNAME', isRequired: true },
-                { type: 'text', label: 'Othernames', action: 'OTHERNAMES', isRequired: true },
-                { type: 'email', label: 'Email', action: 'EMAIL', isRequired: true },
-                { type: 'tel', label: 'Phone', action: 'PHONE_MOBILE', isRequired: true },
-                { type: 'tel', label: 'WhatsApp', action: 'PHONE_WHATSAPP', isRequired: true },
-                { type: 'select', label: 'Gender', action: 'GENDER', options: ['Male', 'Female'], isRequired: true },
-                { type: 'date', label: 'Date of Birth', action: 'DOB', isRequired: true },
-                { type: 'number', label: 'Age', action: 'AGE', isRequired: true },
-                { type: 'select', label: 'Educational Level', action: 'EDU_LEVEL', options: ['Graduate', 'SHS Leaver', 'JHS Leaver', 'Mature Applicant', 'Others'], isRequired: true },
-                { type: 'text', label: 'Language Spoken', action: 'LANGUAGE_SPOKEN', placeholder: 'English, Fante, Ewe', isRequired: true },
-                { type: 'text', label: 'Language Written', action: 'LANGUAGE_WRITTEN', placeholder: 'English, Fante, Ewe', isRequired: true },
-                { type: 'select', label: 'National ID', action: 'NATIONAL_ID', options: ['Ghana Card', 'Drivers License', 'Passport'], isRequired: true },
-                { type: 'text', label: 'ID Number', action: 'NATIONAL_ID_NUMBER', isRequired: true },
-                { type: 'text', label: 'Residence Address', action: 'RESIDENCE', isRequired: true },
-                { type: 'text', label: 'Town', action: 'RESIDENCE_TOWN', isRequired: true },
-                { type: 'text', label: 'District', action: 'RESIDENCE_DISTRICT', isRequired: true },
-                { type: 'select', label: 'Region', action: 'RESIDENCE_REGION', options: ['Ashanti', 'Brong Ahafo', 'Central', 'Eastern', 'Greater Accra', 'Volta', 'Western', 'Northern', 'Upper East', 'Upper West', 'Oti', 'Savannah', 'Bono East', 'Ahafo', 'North East'], isRequired: true },
-
-            ]
-        },
-        {
-            title: 'Payment Method', fields: [
-                { type: 'select', label: 'Payment', action: 'PAYMENT', options: ['Mobile Money'], isRequired: true },
-                { type: 'text', label: 'Reference', action: 'PAYMENT_REF', isRequired: true },
-                { type: 'text', label: 'Transaction ID', action: 'PAYMENT_TRANSACTION_ID', isRequired: true },
-            ]
-        },
-        {
-            title: 'Employment', fields: [
-                { type: 'select', label: 'Are you currently employed?', action: 'EMPLOYMENT', options: ['Yes', 'No'], isRequired: true },
-                { type: 'text', label: 'What is your current job', action: 'CURRENT_EMPLOYMENT', isRequired: true },
-                { type: 'select', label: 'Do you need employment after completion', action: 'EMPLOYMENT_NEEDED', options: ['Yes', 'No'], isRequired: true },
-            ]
-        },
-        {
-            title: 'Health', fields: [
-                { type: 'select', label: 'Do you have any health conditions?', action: 'HEALTH_CONDITION', options: ['Yes', 'No'], isRequired: true },
-                { type: 'textarea', label: 'If yes, please provide details of the condition', action: 'HEALTH_DETAILS', isRequired: false },
-            ]
-        },
-        {
-            title: 'Guardian', fields: [
-                { type: 'text', label: 'Name', action: 'GUARDIAN_NAME', isRequired: true },
-                { type: 'text', label: 'Phone Number', action: 'GUARDIAN_PHONE', isRequired: true },
-                { type: 'text', label: 'Relationship', action: 'GUARDIAN_RELATIONSHIP', isRequired: false },
-            ]
-        },
-        {
-            title: 'Sponsor', check: 'Same as Guardian', fields: [
-                { type: 'text', label: 'Name', action: 'SPONSOR_NAME', isRequired: false },
-                { type: 'text', label: 'Phone Number', action: 'SPONSOR_PHONE', isRequired: false },
-                { type: 'text', label: 'Relationship', action: 'SPONSOR_RELATIONSHIP', isRequired: false },
-            ]
-        },
-        {
-            title: 'Emergency', check: 'Same as Guardian', fields: [
-                { type: 'text', label: 'Name', action: 'EMERGENCY_NAME', isRequired: false },
-                { type: 'text', label: 'Phone Number', action: 'EMERGENCY_PHONE', isRequired: false },
-                // { type: 'text', label: 'Location', action: 'EMERGENCY_LOCATION', isRequired: false },
-            ]
-        },
-        {
-            title: 'Programme & Certification', fields: [
-                { type: 'select', label: 'Certification', action: 'ENROLL_CERTIFICATION', options: ['HND/DIPLOMA', 'ADVANCED CERTIFICATE', 'CERTIFICATE'], isRequired: true },
-                { type: 'select', label: 'Certification Level', action: 'ENROLL_CERTIFICATION_LEVEL', options: ['BEGINNER - (has no Foundation)', 'INTER-MEDIATE - (has the Basic knowledge)', 'ADVANCED - (has at least 50% knowledge)'], isRequired: true },
-                { type: 'select', label: 'Select Programme', action: 'ENROLL_PROGRAMME', options: selectProgrammes, isRequired: true },
-                { type: 'select', label: 'Mode of Education', action: 'ENROLL_TUITION_MODE', options: programmeTrainings, isRequired: true },
-                { type: 'select', label: 'Select Session', action: 'ENROLL_SESSION', options: programmeSessions, isRequired: true },
-                { type: 'select', label: 'Campus', action: 'CAMPUS', options: ['Accra', 'Kumasi'], isRequired: true },
-            ]
-        },
-
-    ]
     const [formInput, dispatch] = useReducer(studentReducerFn, initState)
 
     const uploadPhoto = async (file: File) => {
@@ -219,7 +120,7 @@ const AddStudent = () => {
                 <Grid container columnSpacing={4}>
                     <Grid item sm={8.5}>
                         {
-                            formData?.map((data, i) => {
+                            getApplicationForm(selectProgrammes)?.map((data, i) => {
                                 return (
                                     <Box key={i} bgcolor={'#fff'} borderRadius={'10px'} mb={4}>
                                         <Typography mt={2} variant='h6' px={3} py={2} mb={2} fontWeight={600} bgcolor={'lightblue'} fontSize={'1.1rem'}>{data?.title}</Typography>

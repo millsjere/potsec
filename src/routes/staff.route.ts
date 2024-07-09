@@ -8,6 +8,9 @@ const VerifyLogin = lazy(() => import("../pages/staff/auth/Verify2FA"));
 // Private Routes
 const Dashboard = lazy(() => import("../pages/staff/dashboard/Dashboard"));
 const AllStudents = lazy(() => import("../pages/staff/students/Students"));
+const StudentDetails = lazy(
+  () => import("../pages/staff/students/StudentDetails")
+);
 const AddStudents = lazy(() => import("../pages/staff/students/AddStudent"));
 const AllStaffs = lazy(() => import("../pages/staff/staffs/Staffs"));
 
@@ -38,6 +41,13 @@ const StudentsRoute = {
   role: "staff",
 };
 
+const StudentsDetailsRoute = {
+  path: "/staff/all-students/:id",
+  component: StudentDetails,
+  isAuth: "yes",
+  role: "staff",
+};
+
 const AddStudentsRoute = {
   path: "/staff/add-students",
   component: AddStudents,
@@ -59,5 +69,6 @@ export const staffRoutes: RouteProps[] = [
   DashboardRoute,
   StudentsRoute,
   AddStudentsRoute,
+  StudentsDetailsRoute,
   StaffsRoute,
 ];

@@ -37,10 +37,10 @@ type InputFieldProps = {
     showTopLabel?: boolean
 }
 
-export const InputField = ({showTopLabel = false, size = 'medium', sx, isSelect, variant, value, onChange, isRequired, label, error, children, type, InputProps, inputProps, placeholder, fullWidth }: InputFieldProps) => {
+export const InputField = ({ showTopLabel = false, size = 'medium', sx, isSelect, variant, value, onChange, isRequired, label, error, children, type, InputProps, inputProps, placeholder, fullWidth }: InputFieldProps) => {
     return (
         <Box>
-            { showTopLabel &&  <Typography variant='body2' fontSize={'.8rem'} mb={.5} color={'GrayText'}>{label}</Typography>}
+            {showTopLabel && <Typography variant='body2' fontSize={'.9rem'} mb={.5} color={'GrayText'}>{label}</Typography>}
             <StyledInputField sx={sx}
                 type={type} size={size}
                 variant={variant}
