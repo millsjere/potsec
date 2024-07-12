@@ -1,5 +1,5 @@
 import { Avatar, Box, Collapse, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, styled, Toolbar, Typography } from '@mui/material'
-import { AddTeamIcon, Analytics02Icon, ArrowDown01Icon, ArrowRight01Icon, Building03Icon, CreditCardValidationIcon, DashboardSquare01Icon, DashboardSquareAddIcon, DocumentValidationIcon, File01Icon, HelpCircleIcon, ImageAdd02Icon, InboxDownloadIcon, LibraryIcon, LicenseThirdPartyIcon, LogoutSquare01Icon, Settings01Icon, StoreLocation01Icon, StudentCardIcon, TaskAdd02Icon, UserGroupIcon, UserSquareIcon } from 'hugeicons-react';
+import { AddTeamIcon, Analytics02Icon, ArrowDown01Icon, ArrowRight01Icon, Building03Icon, CreditCardValidationIcon, DashboardSquare01Icon, DashboardSquareAddIcon, DocumentValidationIcon, File01Icon, HelpCircleIcon, ImageAdd02Icon, InboxDownloadIcon, LibraryIcon, LicenseThirdPartyIcon, LogoutSquare01Icon, Settings01Icon, StoreLocation01Icon, StudentCardIcon, TaskAdd02Icon, Ticket02Icon, UserGroupIcon, UserSquareIcon, VideoReplayIcon } from 'hugeicons-react';
 import React from 'react'
 import Logo from '../../assets/images/logo.png'
 import { useNavigate } from 'react-router-dom';
@@ -39,18 +39,14 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
         {
             name: 'Students', icon: <LicenseThirdPartyIcon size={20} />, hasSubMenu: true, subMenus: [
                 { name: 'All Students', icon: <TaskAdd02Icon size={20} />, path: '/staff/all-students' },
-                { name: 'Add Student', icon: <AddTeamIcon size={20} />, path: '/staff/add-students' },
+                { name: 'Add Student', icon: <AddTeamIcon size={20} />, path: '/staff/add-student' },
             ]
         },
         {
-            name: 'Staff', icon: <UserGroupIcon size={20} />, hasSubMenu: true, subMenus: [
-                { name: 'All Staff', icon: <TaskAdd02Icon size={20} />, path: '/staff/all-staffs' },
-                { name: 'Add Staff', icon: <AddTeamIcon size={20} />, path: '/staff/new-staff' },
-            ]
+            name: 'Staff', icon: <UserGroupIcon size={20} />, path: '/staff/all-staff'
         },
-        { name: 'Programmes', icon: <LibraryIcon size={20} />, path: '/staff/courses' },
+        { name: 'Programmes', icon: <LibraryIcon size={20} />, path: '/staff/programmes' },
         { name: 'Departments', icon: <Building03Icon size={20} />, path: '/staff/departments' },
-        { name: 'Account', icon: <UserSquareIcon size={21} />, path: '/staff/account' },
     ]
 
     const extraMenu: SideBarMenuProps[] = [
@@ -58,8 +54,13 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
         { name: 'ID Cards', icon: <StudentCardIcon size={20} />, path: '/staff/cards' },
     ]
 
+    const supportMenu: SideBarMenuProps[] = [
+        { name: 'Tickets', icon: <Ticket02Icon size={20} />, path: '/staff/suppport' },
+        { name: 'FAQs', icon: <VideoReplayIcon size={20} />, path: '/staff/help' },
+    ]
+
     const drawer = (
-        <Box display={'flex'} flexDirection={'column'} height={'100vh'} bgcolor={'secondary.main'}>
+        <Box display={'flex'} flexDirection={'column'} height={'100%'}>
             <Toolbar sx={{ gap: 1 }}>
                 <img src={Logo} alt='logo' width={'30%'} />
                 <Typography fontWeight={600} variant='h6' fontSize={'1.1rem'} sx={{ color: '#fff' }}>POTSEC</Typography>
@@ -116,17 +117,29 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
                     </ListItem>
                 ))}
             </List>
+            <Divider sx={{ my: 2, bgcolor: '#ffffff30' }} />
+            <List>
+                <StyledMenuTitle>SUPPORT</StyledMenuTitle>
+                {supportMenu?.map((menu, index) => (
+                    <ListItem key={index} disablePadding sx={{ color: '#fff', ':hover': { bgcolor: '#c2b5ff4a' } }}>
+                        <ListItemButton disableRipple onClick={() => navigate(menu?.path!)}>
+                            <ListItemIcon sx={{ minWidth: '40px', color: '#ffffff90' }}>{menu?.icon}</ListItemIcon>
+                            <ListItemText sx={{ '& span': { fontSize: '1rem' } }} primary={menu?.name} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
             {/* User Profile */}
             <Box padding='.6rem .8rem' onClick={() => {
                 sessionTimeout();
                 currentUser?.role === 'student' ? navigate('/') : navigate('/staff')
-            }} bgcolor='#c2b5ff4a' color='#fff' margin={'.8rem'} marginTop='auto' borderRadius='10px' sx={{ cursor: 'pointer', display: 'flex', gap: 1, alignItems: 'center' }}>
+            }} bgcolor='#c2b5ff4a' color='#fff' margin={'.8rem'} marginTop='auto' borderRadius='10px' mb={2} sx={{ cursor: 'pointer', display: 'flex', gap: 1, alignItems: 'center' }}>
                 <Avatar variant='rounded' sx={{ width: '2rem', height: '2rem', borderRadius: '8px', border: '1px solid #fff' }} src={currentUser?.photo || null} alt='user-img' />
                 <span style={{ width: '60%' }}>
                     <Typography fontWeight={500} mb={-.5} noWrap>{currentUser?.othernames}</Typography>
                     <Typography variant='body2' style={{ color: '#ffffff90' }}>{currentUser?.role}</Typography>
                 </span>
-                <LogoutSquare01Icon style={{ marginLeft: 'auto' }} />
+                <Settings01Icon size={19} style={{ marginLeft: 'auto' }} />
             </Box>
         </Box>
     );
@@ -141,7 +154,7 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
             {/* Mobile View */}
             <Drawer
                 variant="temporary"
-                open={mobileOpen}
+                open={mobileOpen} pa
                 onTransitionEnd={handleDrawerTransitionEnd}
                 onClose={handleDrawerClose}
                 ModalProps={{
@@ -149,7 +162,7 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
                 }}
                 sx={{
                     display: { xs: 'block', sm: 'none' },
-                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, bgcolor: 'secondary.main' },
                 }}
             >
                 {drawer}
@@ -160,7 +173,7 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
                 variant="permanent"
                 sx={{
                     display: { xs: 'none', sm: 'flex' },
-                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+                    '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, bgcolor: 'secondary.main' },
                 }}
                 open
             >

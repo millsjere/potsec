@@ -3,24 +3,43 @@ import { Calendar03Icon, ProfileIcon } from 'hugeicons-react'
 import React from 'react'
 import { RoundButton } from '../Inputs/RoundButton'
 import UserBg from '../../../assets/images/user_bg.jpg'
+import UserPic from '../../../assets/images/user.png'
 
 interface Props {
     variant?: 'grid' | 'list' | string
+    role?: 'student' | 'staff'
+    onClick?: () => void
+    user: any
 }
 
-const StudentCard = ({ variant }: Props) => {
+const UserCard = ({ variant, role = 'student', onClick, user }: Props) => {
+    console.log(user)
     return (
         <>
             {
-                variant === 'grid' &&
-                <Box bgcolor={'#fff'} sx={{ transition: 'all .2s ease-in-out', cursor: 'pointer', ':hover': { border: theme => `1px solid ${theme.palette.primary.main}` } }} overflow={'hidden'} border={'1px solid lightgrey'} borderRadius={'10px'}>
+                (variant === 'grid' && role === 'student') &&
+                <Box bgcolor={'#fff'} onClick={onClick} sx={{ transition: 'all .2s ease-in-out', cursor: 'pointer', ':hover': { border: theme => `1px solid ${theme.palette.primary.main}` } }} overflow={'hidden'} border={'1px solid lightgrey'} borderRadius={'10px'}>
                     <Box sx={{ backgroundImage: `url(${UserBg})`, backgroundSize: 'cover' }} height={'5rem'} />
                     <Box p={3} textAlign={'left'}>
-                        <Avatar sx={{ width: '4.5rem', height: '4.5rem', mt: -8, border: '2px solid #fff' }} />
-                        <Typography mt={1} variant='h6' noWrap>Jeremiah Mills</Typography>
-                        <Typography color={'GrayText'}>POTSEC24010000</Typography>
-                        <Typography variant='body2' color={'GrayText'}>JANUARY 2024</Typography>
+                        <Avatar src={user?.photo || UserPic} sx={{ width: '4.5rem', height: '4.5rem', mt: -8, border: '2px solid #fff', boxShadow: '0 2px 8px rgba(0,0,0,15%)' }} />
+                        <Typography mt={1} variant='h6' noWrap>{user?.fullname}</Typography>
+                        <Typography color={'GrayText'}>{user?.enrollment?.index}</Typography>
+                        <Typography variant='body2' color={'GrayText'} >{user?.enrollment?.month} {user?.enrollment?.year}</Typography>
                     </Box>
+                </Box>
+            }
+            {
+                (variant === 'grid' && role === 'staff') &&
+                <Box bgcolor={'#fff'} px={3} py={4} textAlign={'center'} onClick={onClick}
+                    sx={{
+                        transition: 'all .2s ease-in-out', cursor: 'pointer',
+                        ':hover': { border: theme => `1px solid ${theme.palette.primary.main}` }
+                    }}
+                    overflow={'hidden'} border={'1px solid white'} borderRadius={'10px'}
+                >
+                    <Avatar src={UserPic} sx={{ width: '6rem', height: '6rem', mx: 'auto', boxShadow: '0 2px 8px rgba(0,0,0,15%)' }} />
+                    <Typography mt={2} noWrap fontWeight={600}>{user?.fullname}</Typography>
+                    <Typography variant='body2' color={'GrayText'}>{user?.email}</Typography>
                 </Box>
             }
             {
@@ -63,8 +82,10 @@ const StudentCard = ({ variant }: Props) => {
                     </Stack>
                 </Box>
             }
+
+
         </>
     )
 }
 
-export default StudentCard
+export default UserCard

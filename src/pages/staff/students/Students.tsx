@@ -4,12 +4,13 @@ import { Box, Grid, Typography } from '@mui/material'
 import { RoundButton } from '../../../components/shared'
 import NoStudent from '../../../assets/images/student_data.png'
 import { useNavigate } from 'react-router-dom'
-import { AddTeamIcon } from 'hugeicons-react'
+import { AddCircleIcon, AddTeamIcon } from 'hugeicons-react'
 import { base } from '../../../config/appConfig'
 import swal from 'sweetalert'
 import FilterBar from '../../../components/filter/FilterBar'
-import StudentCard from '../../../components/shared/Cards/StudentCard'
+import UserCard from '../../../components/shared/Cards/UserCard'
 import LoadingState from '../../../components/shared/Loaders/LoadingState'
+import NullState from '../../../components/shared/NullState/NullState'
 
 const Students = () => {
     const navigate = useNavigate()
@@ -40,26 +41,37 @@ const Students = () => {
     return (
         <div>
             <PageHeader title={'All Students'} breadcrumbs={[{ label: 'Students', link: '#' }]} />
+            <FilterBar
+                isLoading={isLoading}
+                view={view}
+                onViewChange={(val) => setView(val)}
+                onSearch={() => { }}
+                moreBtns={
+                    <RoundButton
+                        variant={'contained'} sx={{ borderRadius: '10px', py: .8, mt: 1 }}
+                        color={'primary'} disableElevation
+                        text='Student' startIcon={<AddCircleIcon size={18} color='#fff' />}
+                        onClick={() => navigate('/staff/add-student')}
+                    />
+                }
+            />
 
             {
-                isLoading ? <LoadingState /> :
+                isLoading ? <LoadingState state='students' /> :
                     (!isLoading && data?.length > 0) ? (
                         <>
-                            <Box px={3} pb={1} pt={2} mb={4} bgcolor='#fff' borderRadius={'15px'}>
-                                <FilterBar view={view} onViewChange={(val) => setView(val)} />
-                            </Box>
                             {
                                 view === 'list' &&
-                                Array(8).fill(0)?.map((_el, i) => {
-                                    return <StudentCard key={i} variant={view} />
+                                data?.map((el, i) => {
+                                    return <UserCard key={i} user={el} variant={view} />
                                 })
                             }
                             {
                                 view === 'grid' && (
                                     <Grid container spacing={3}>
                                         {
-                                            Array(8).fill(0)?.map((_el, i) => {
-                                                return <Grid item sm={3} key={i}><StudentCard variant={view} /></Grid>
+                                            data?.map((el, i) => {
+                                                return <Grid item sm={3} key={i}><UserCard variant={view} user={el} /></Grid>
                                             })
                                         }
                                     </Grid>
@@ -69,16 +81,14 @@ const Students = () => {
 
                     ) :
                         (
-                            <Box height={'80vh'} display={'flex'} flexDirection={'column'} alignItems={'center'} justifyContent={'center'}>
-                                <img src={NoStudent} width={'15%'} alt='no_students' />
-                                <Typography mt={3} fontWeight={500}>No Students</Typography>
-                                <Typography mb={2} color={'GrayText'} variant='body2'>There is no student data available</Typography>
-                                <RoundButton
-                                    text={'Add Student'} sx={{ padding: '.5rem .8rem' }}
-                                    onClick={() => navigate('/staff/add-students')} variant={'contained'}
-                                    disableElevation size={'small'} startIcon={<AddTeamIcon size={18} />}
-                                />
-                            </Box>
+                            <NullState
+                                title='No Programmes'
+                                subtext={`Oops. No student records were found`}
+                                image={NoStudent}
+                                btnText={'Add Student'}
+                                onClick={() => { }}
+                                opacity={0.5}
+                            />
 
                         )
 

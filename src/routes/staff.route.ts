@@ -13,6 +13,8 @@ const StudentDetails = lazy(
 );
 const AddStudents = lazy(() => import("../pages/staff/students/AddStudent"));
 const AllStaffs = lazy(() => import("../pages/staff/staffs/Staffs"));
+const Programmes = lazy(() => import("../pages/staff/programmes/Programmes"));
+const Departments = lazy(() => import("../pages/staff/department/Departments"));
 
 // Routes
 const LoginRoute = {
@@ -49,15 +51,29 @@ const StudentsDetailsRoute = {
 };
 
 const AddStudentsRoute = {
-  path: "/staff/add-students",
+  path: "/staff/add-student",
   component: AddStudents,
   isAuth: "yes",
   role: "staff",
 };
 
 const StaffsRoute = {
-  path: "/staff/all-staffs",
+  path: "/staff/all-staff",
   component: AllStaffs,
+  isAuth: "yes",
+  role: "staff",
+};
+
+const ProgrammeRoute = {
+  path: "/staff/programmes",
+  component: Programmes,
+  isAuth: "yes",
+  role: "staff",
+};
+
+const DepartmentRoute = {
+  path: "/staff/departments",
+  component: Departments,
   isAuth: "yes",
   role: "staff",
 };
@@ -71,4 +87,6 @@ export const staffRoutes: RouteProps[] = [
   AddStudentsRoute,
   StudentsDetailsRoute,
   StaffsRoute,
+  ProgrammeRoute,
+  DepartmentRoute,
 ];

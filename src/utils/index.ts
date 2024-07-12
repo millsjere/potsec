@@ -25,6 +25,29 @@ export const getYearRange = (startYear: number) => {
   return years;
 };
 
+export const emailValidation = (email: string): boolean => {
+  const isValid = email?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
+  return Boolean(isValid);
+};
+
+export const getRegions = () => [
+  "Ashanti",
+  "Brong Ahafo",
+  "Central",
+  "Eastern",
+  "Greater Accra",
+  "Volta",
+  "Western",
+  "Northern",
+  "Upper East",
+  "Upper West",
+  "Oti",
+  "Savannah",
+  "Bono East",
+  "Ahafo",
+  "North East",
+];
+
 export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
   return [
     {
@@ -158,23 +181,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           type: "select",
           label: "Region",
           action: "RESIDENCE_REGION",
-          options: [
-            "Ashanti",
-            "Brong Ahafo",
-            "Central",
-            "Eastern",
-            "Greater Accra",
-            "Volta",
-            "Western",
-            "Northern",
-            "Upper East",
-            "Upper West",
-            "Oti",
-            "Savannah",
-            "Bono East",
-            "Ahafo",
-            "North East",
-          ],
+          options: getRegions(),
           isRequired: true,
         },
       ],
@@ -365,6 +372,134 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
     },
   ];
 };
+
+export const getStaffForm = (): FormDataProps[] => [
+  {
+    title: "Academics",
+    fields: [
+      {
+        type: "text",
+        label: "Department",
+        action: "DEPARTMENT",
+        options: ["HND/DIPLOMA", "ADVANCED CERTIFICATE", "CERTIFICATE"],
+        isRequired: true,
+      },
+      {
+        type: "select",
+        label: "Programme",
+        action: "PROGRAMME",
+        options: programmes,
+        isRequired: true,
+      },
+      {
+        type: "email",
+        label: "Staff Email",
+        action: "STAFF_EMAIL",
+        isRequired: true,
+      },
+      {
+        type: "text",
+        label: "Staff ID",
+        action: "STAFF_ID",
+        isRequired: true,
+      },
+      {
+        type: "select",
+        label: "Campus",
+        action: "CAMPUS",
+        options: ["Accra", "Kumasi"],
+        isRequired: true,
+      },
+      {
+        type: "select",
+        label: "Role",
+        action: "ROLE",
+        options: ["Staff", "Admin"],
+        isRequired: true,
+      },
+    ],
+  },
+  {
+    title: "Personal Details",
+    fields: [
+      {
+        type: "text",
+        label: "Surname",
+        action: "SURNAME",
+        isRequired: true,
+      },
+      {
+        type: "text",
+        label: "Other Names",
+        action: "OTHER_NAMES",
+        isRequired: true,
+      },
+      {
+        type: "email",
+        label: "Email",
+        action: "EMAIL",
+        isRequired: true,
+      },
+      {
+        type: "tel",
+        label: "Phone",
+        action: "PHONE_MOBILE",
+        isRequired: true,
+      },
+      {
+        type: "tel",
+        label: "WhatsApp",
+        action: "PHONE_WHATSAPP",
+        isRequired: true,
+      },
+      {
+        type: "select",
+        label: "Gender",
+        action: "GENDER",
+        options: ["Male", "Female"],
+        isRequired: true,
+      },
+      {
+        type: "text",
+        label: "Language Spoken",
+        action: "LANGUAGE_SPOKEN",
+        isRequired: true,
+      },
+      {
+        type: "text",
+        label: "Language Written",
+        action: "LANGUAGE_WRITTEN",
+        isRequired: true,
+      },
+      {
+        type: "select",
+        label: "National ID",
+        action: "NATIONAL_ID",
+        options: ["Ghana Card", "Drivers License", "Passport"],
+        isRequired: true,
+      },
+      {
+        type: "text",
+        label: "ID Number",
+        action: "NATIONAL_ID_NUMBER",
+        isRequired: true,
+      },
+      {
+        type: "text",
+        label: "Residence Address",
+        action: "RESIDENCE",
+        isRequired: true,
+      },
+      {
+        type: "select",
+        label: "Region",
+        action: "RESIDENCE_REGION",
+        options: getRegions(),
+        isRequired: true,
+      },
+    ],
+  },
+];
 
 export const allMonths = [
   "January",
@@ -779,6 +914,118 @@ export const studentReducerFn = (state: typeof initState, action: any) => {
       };
     case "RESET":
       return initState;
+    default:
+      return state;
+  }
+};
+
+export const staffData = {
+  role: "",
+  surname: "",
+  othernames: "",
+  email: "",
+  phone: {
+    mobile: "",
+    whatsapp: "",
+  },
+  gender: "",
+  language: {
+    spoken: "",
+    written: "",
+  },
+  nationalID: {
+    type: "",
+    number: "",
+  },
+  address: {
+    residence: "",
+    region: "",
+  },
+  academics: {
+    department: "",
+    programme: "",
+    staffID: "",
+    staffEmail: "",
+    campus: "",
+  },
+};
+
+export const staffReducerFn = (state: typeof staffData, action: any) => {
+  switch (action?.type) {
+    case "ROLE":
+      return { ...state, role: action?.payload?.toLowerCase() };
+    case "SURNAME":
+      return { ...state, surname: action?.payload };
+    case "OTHER_NAMES":
+      return { ...state, othernames: action?.payload };
+    case "EMAIL":
+      return { ...state, email: action?.payload };
+    case "PHONE_MOBILE":
+      return { ...state, phone: { ...state?.phone, mobile: action?.payload } };
+    case "PHONE_WHATSAPP":
+      return {
+        ...state,
+        phone: { ...state?.phone, whatsapp: action?.payload },
+      };
+    case "PHONE_MOBILE":
+      return { ...state, phone: { ...state?.phone, mobile: action?.payload } };
+    case "GENDER":
+      return { ...state, gender: action?.payload };
+    case "LANGUAGE_SPOKEN":
+      return {
+        ...state,
+        language: { ...state?.language, spoken: action?.payload },
+      };
+    case "LANGUAGE_WRITTEN":
+      return {
+        ...state,
+        language: { ...state?.language, written: action?.payload },
+      };
+    case "NATIONAL_ID":
+      return {
+        ...state,
+        nationalID: { ...state?.nationalID, type: action?.payload },
+      };
+    case "NATIONAL_ID_NUMBER":
+      return {
+        ...state,
+        nationalID: { ...state?.nationalID, number: action?.payload },
+      };
+    case "RESIDENCE":
+      return {
+        ...state,
+        address: { ...state?.address, residence: action?.payload },
+      };
+    case "RESIDENCE_REGION":
+      return {
+        ...state,
+        address: { ...state?.address, region: action?.payload },
+      };
+    case "DEPARTMENT":
+      return {
+        ...state,
+        academics: { ...state?.academics, department: action?.payload },
+      };
+    case "STAFF_EMAIL":
+      return {
+        ...state,
+        academics: { ...state?.academics, staffEmail: action?.payload },
+      };
+    case "STAFF_ID":
+      return {
+        ...state,
+        academics: { ...state?.academics, staffID: action?.payload },
+      };
+    case "PROGRAMME":
+      return {
+        ...state,
+        academics: { ...state?.academics, programme: action?.payload },
+      };
+    case "CAMPUS":
+      return {
+        ...state,
+        academics: { ...state?.academics, campus: action?.payload },
+      };
     default:
       return state;
   }

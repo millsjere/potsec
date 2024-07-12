@@ -28,7 +28,7 @@ type RoundButtonProps = {
 
 export const RoundButton = ({ text, onClick, startIcon, endIcon, variant = 'contained', disableElevation, fullWidth, size = 'medium', sx, color = 'secondary', loading, disable }: RoundButtonProps) => {
     return (
-        <StyledButton
+        <StyledButton disableRipple
             loading={loading}
             sx={sx} color={color}
             onClick={onClick} variant={variant}
@@ -36,7 +36,7 @@ export const RoundButton = ({ text, onClick, startIcon, endIcon, variant = 'cont
             fullWidth={fullWidth}
             size={size}
             disabled={disable}
-            startIcon={startIcon}
+            startIcon={loading ? null : startIcon}
             endIcon={loading ? null : endIcon}
         >
             {text}
