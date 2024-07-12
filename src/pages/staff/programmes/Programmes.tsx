@@ -6,9 +6,10 @@ import FilterBar from '../../../components/filter/FilterBar'
 // import LoadingState from '../../../components/shared/Loaders/LoadingState'
 import { RoundButton } from '../../../components/shared'
 import { AddCircleIcon } from 'hugeicons-react'
+import useAxiosFetch from '../../../hooks/useAxiosFetch'
 
 const Programmes = () => {
-    const [isLoading, setIsLoading] = useState(false)
+    const {isLoading, error, response} = useAxiosFetch('/api/staff/department','GET');
 
     return (
         <div>

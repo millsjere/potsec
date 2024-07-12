@@ -17,12 +17,12 @@ const Departments = () => {
                 showView={false}
                 onSearch={() => { }}
                 moreBtns={
-                    <RoundButton
-                        variant={'contained'} sx={{ borderRadius: '10px', py: .8, mt: 1 }}
-                        color={'primary'} disableElevation
-                        text='Department' startIcon={<AddCircleIcon size={18} color='#fff' />}
-                        onClick={() => { }}
-                    />
+                  <RoundButton
+                      variant={'contained'} sx={{ borderRadius: '10px', py: .8, mt: 1 }}
+                      color={'primary'} disableElevation
+                      text='Department' startIcon={<AddCircleIcon size={18} color='#fff' />}
+                      onClick={() => { }}
+                  />
                 }
             />
             <NullState
