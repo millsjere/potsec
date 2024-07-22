@@ -31,7 +31,13 @@ const ProgrammeDetails = () => {
     const { isLoading, response, fetchData } = useAxiosFetch(`/api/staff/programmes/${params?.id}`);
     const [data, setData] = useState<DetailsProps>()
     const [open, setOpen] = useState(false)
-    const [input, setInput] = useState({ name: '', code: '', level: 'month_six', })
+    const [input, setInput] = useState({ name: '', code: '', level: '', })
+
+    const year1 = data?.courses!?.length > 0 ? data?.courses?.filter((el => el?.level === 'Year 1')) : []
+    const year2 = data?.courses!?.length > 0 ? data?.courses?.filter((el => el?.level === 'Year 2')) : []
+    const year3 = data?.courses!?.length > 0 ? data?.courses?.filter((el => el?.level === 'Year 3')) : []
+    const year4 = data?.courses!?.length > 0 ? data?.courses?.filter((el => el?.level === 'Year 4')) : []
+    const months = data?.courses!?.length > 0 ? data?.courses?.filter((el => el?.level?.includes('Months'))) : []
 
     useEffect(() => {
         if (!isLoading && response) {
@@ -40,11 +46,12 @@ const ProgrammeDetails = () => {
     }, [isLoading])
 
     const onFormSubmit = async () => {
+        if (input?.level === '') return swal('Invalid', 'Please select a level', 'warning')
         if (input?.name === '') return swal('Invalid', 'Please provide a course name', 'warning')
         if (input?.code === '') return swal('Invalid', 'Please select a course code', 'warning')
         try {
             startLoading('Creating new course. Please wait..')
-            const { data: res } = await base.post('/api/staff/programmes/new', { name, department, duration })
+            const { data: res } = await base.patch('/api/staff/course/add', { id: params?.id, course: input })
             if (res?.status === 'success') {
                 resetForm()
                 swal('Success', 'Course created successfully', 'success').then(fetchData)
@@ -59,12 +66,32 @@ const ProgrammeDetails = () => {
 
     const resetForm = () => {
         setOpen(false)
-        setInput({ name: '', code: '' })
+        setInput({ name: '', code: '', level: '' })
+    }
+
+    const removeCourse = (course: any)=>{
+        swal('Are You Sure!','This action will delete this course','warning', {buttons:['Cancel','Delete'], dangerMode: true})
+        .then(async(del)=>{
+            if(del){
+                try {
+                    startLoading('Creating new course. Please wait..')
+                    await base.patch('/api/staff/course/delete', { id: params?.id, course })
+                    swal('Success', 'Course deleted successfully', 'success').then(fetchData)
+                    
+                } catch (error: any) {
+                    console.log(error?.response)
+                    swal('Error', 'Sorry could not delete course', 'error')
+                }finally {
+                    stopLoading()
+                }
+            }
+        })
     }
 
     return (
         <Box>
-            <PageHeader title={'Programme Details'} breadcrumbs={[{ label: 'Programmes', link: '/staff/programmes' }, { label: 'Details', link: '#' }]} />
+            <PageHeader title={'Programme Details'} backOption
+                breadcrumbs={[{ label: 'Programmes', link: '/staff/programmes' }, { label: 'Details', link: '#' }]} />
 
             {
                 isLoading ?
@@ -107,10 +134,60 @@ const ProgrammeDetails = () => {
                                 </Box>
                                 <TabPanel value='1' sx={{ border: 1, borderTopWidth: 0, borderColor: 'divider', minHeight: '20rem' }}>
                                     {
-                                        data?.courses!?.length > 0 ?
-                                            data?.courses?.map((course: any, i: number) => (
+                                        data?.duration?.type?.toLowerCase() === 'years' ?
+                                        <>
+                                        {
+                                                year1!?.length > 0 ?
+                                                year1?.map((course: any, i: number) => (
+                                                    <Stack key={i}>
+                                                        <CourseItem course={course} onRemove={()=>removeCourse(course)} />
+                                                    </Stack>
+                                                ))
+                                                :
+                                                <NullState
+                                                    title='All Courses'
+                                                    subtext={`No course records added yet`}
+                                                    image={Empty}
+                                                    btnText={'Add Course'}
+                                                    onClick={() => { }}
+                                                    opacity={0.2}
+                                                    height='25rem'
+                                                    btnSize='small'
+                                                    showBtn={false}
+                                                />
+                                        }
+                                        </>
+                                        :
+                                        <>
+                                            {
+                                                months!?.length > 0 ?
+                                                months?.map((course: any, i: number) => (
+                                                    <Stack key={i}>
+                                                        <CourseItem course={course} onRemove={()=>removeCourse(course)} />
+                                                    </Stack>
+                                                ))
+                                                :
+                                                <NullState
+                                                    title='All Courses'
+                                                    subtext={`No course records added yet`}
+                                                    image={Empty}
+                                                    btnText={'Add Course'}
+                                                    onClick={() => { }}
+                                                    opacity={0.2}
+                                                    height='25rem'
+                                                    btnSize='small'
+                                                    showBtn={false}
+                                                />
+                                        }
+                                        </>
+                                    }
+                                </TabPanel>
+                                <TabPanel value='2' sx={{ border: 1, borderTopWidth: 0, borderColor: 'divider', minHeight: '20rem' }}>
+                                {
+                                        year2!?.length > 0 ?
+                                            year2?.map((course: any, i: number) => (
                                                 <Stack key={i}>
-                                                    <CourseItem course={course} />
+                                                    <CourseItem course={course} onRemove={()=>removeCourse(course)} />
                                                 </Stack>
                                             ))
                                             :
@@ -127,14 +204,55 @@ const ProgrammeDetails = () => {
                                             />
                                     }
                                 </TabPanel>
-                                <TabPanel value='2' sx={{ border: 1, borderTopWidth: 0, borderColor: 'divider', minHeight: '20rem' }}>
-
+                                <TabPanel value='3' sx={{ border: 1, borderTopWidth: 0, borderColor: 'divider', minHeight: '20rem' }}>
+                                {
+                                        year3!?.length > 0 ?
+                                            year3?.map((course: any, i: number) => (
+                                                <Stack key={i}>
+                                                    <CourseItem course={course} onRemove={()=>removeCourse(course)} />
+                                                </Stack>
+                                            ))
+                                            :
+                                            <NullState
+                                                title='All Courses'
+                                                subtext={`No course records added yet`}
+                                                image={Empty}
+                                                btnText={'Add Course'}
+                                                onClick={() => { }}
+                                                opacity={0.2}
+                                                height='25rem'
+                                                btnSize='small'
+                                                showBtn={false}
+                                            />
+                                    }
                                 </TabPanel>
-                                <TabPanel value='3' sx={{ border: 1, borderTopWidth: 0, borderColor: 'divider', minHeight: '20rem' }}>Panel 3</TabPanel>
-                                <TabPanel value='4' sx={{ border: 1, borderTopWidth: 0, borderColor: 'divider', minHeight: '20rem' }}>Panel 4</TabPanel>
+                                <TabPanel value='4' sx={{ border: 1, borderTopWidth: 0, borderColor: 'divider', minHeight: '20rem' }}>
+                                {
+                                        year4!?.length > 0 ?
+                                            year4?.map((course: any, i: number) => (
+                                                <Stack key={i}>
+                                                    <CourseItem course={course} onRemove={()=>removeCourse(course)} />
+                                                </Stack>
+                                            ))
+                                            :
+                                            <NullState
+                                                title='All Courses'
+                                                subtext={`No course records added yet`}
+                                                image={Empty}
+                                                btnText={'Add Course'}
+                                                onClick={() => { }}
+                                                opacity={0.2}
+                                                height='25rem'
+                                                btnSize='small'
+                                                showBtn={false}
+                                            />
+                                    }
+                                </TabPanel>
                             </TabContext>
                         </Box>
+                        
 
+                        {/* ADD COURSE MODAL */}
                         <ModalItem
                             onSubmit={onFormSubmit}
                             actionBtn={'Create'}
@@ -154,7 +272,7 @@ const ProgrammeDetails = () => {
                                     data?.duration?.type?.toLowerCase() === 'years' ?
                                         Array(data?.duration?.number).fill(1)?.map((_el, i) => `Year ${i + 1}`)?.map((el, i) => <MenuItem key={i} value={el}>{el}</MenuItem>)
                                         :
-                                        <MenuItem value={data?.duration?.type}>{`${data?.duration?.number} ${data?.duration?.type}`}</MenuItem>
+                                        <MenuItem value={data?.duration?.type+' '+data?.duration?.number}>{`${data?.duration?.number} ${data?.duration?.type}`}</MenuItem>
                                 }
                             </InputField>
                             <InputField

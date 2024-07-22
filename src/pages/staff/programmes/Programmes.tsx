@@ -114,17 +114,6 @@ const Programmes = () => {
                                                 setType({ label: 'edit', value: 1 });
                                                 setOpen(true)
                                             }}
-                                            // addCourse={(e) => {
-                                            //     e.stopPropagation()
-                                            //     setValue({
-                                            //         id: el?.id, name: el?.name,
-                                            //         department: el?.department?.name,
-                                            //         duration: el?.duration,
-                                            //         courses: el?.courses
-                                            //     });
-                                            //     setType({ label: 'edit', value: 2 });
-                                            //     setOpen(true)
-                                            // }}
                                             addCourse={() => navigate(`/staff/programmes/${el?.id}/edit`)}
                                         />
                                     </Grid>

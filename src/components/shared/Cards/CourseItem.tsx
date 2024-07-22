@@ -6,17 +6,19 @@ interface Props {
     course: {
         name: string,
         code: string
-    }
+    },
+    onRemove: ()=>void
 }
-const CourseItem = ({ course }: Props) => {
+const CourseItem = ({ course, onRemove }: Props) => {
+
     return (
-        <Stack direction={'row'} p={1} mb={1} gap={1.5} alignItems={'center'} sx={{ border: 1, borderColor: 'divider' }}>
+        <Stack direction={'row'} p={1} px={1.5} mb={2} gap={1.5} alignItems={'center'} sx={{ border: 1, borderColor: 'divider', borderRadius: '8px' }}>
             <Avatar variant='rounded'>T</Avatar>
             <span>
                 <Typography>{course?.name}</Typography>
                 <Typography variant='body2' color={'GrayText'} textTransform={'uppercase'}>{course?.code}</Typography>
             </span>
-            <IconButton sx={{ bgcolor: '#f7f7f7', ml: 'auto' }}><Delete01Icon size={18} /></IconButton>
+            <IconButton onClick={onRemove} sx={{ bgcolor: '#f7f7f7', ml: 'auto', ':hover': {bgcolor: 'red', color: '#fff'} }}><Delete01Icon size={18} /></IconButton>
         </Stack>
     )
 }

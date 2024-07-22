@@ -7,7 +7,7 @@ export interface SummaryProps {
     title: string
     subtitle: string
     bgcolor: string
-    path: string
+    path?: string
 }
 
 const SummaryCard = ({ title, icon, subtitle, bgcolor, path }: SummaryProps) => {

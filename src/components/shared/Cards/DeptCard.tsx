@@ -33,8 +33,8 @@ const DeptCard = ({ title, subText, extraText, onClick, onDelete, showBtn, addCo
             </Box>
             <Avatar sx={{ bgcolor: '#03A9F4' }} variant='rounded'>{title?.charAt(0)?.toUpperCase()}</Avatar>
             <Typography mt={2} variant='h6' noWrap>{title}</Typography>
-            <Typography mt={-.5} variant='body1' color={'GrayText'} noWrap>{subText}</Typography>
-            {extraText && <Typography mt={-.5} variant='body1' color={'GrayText'} textTransform={'capitalize'}>{extraText}</Typography>}
+            <Typography mt={0} variant='body1' color={'GrayText'} noWrap>{subText}</Typography>
+            {extraText && <Typography mb={2} variant='body1' color={'GrayText'} textTransform={'capitalize'}>{extraText}</Typography>}
             {
                 showBtn &&
                 <>

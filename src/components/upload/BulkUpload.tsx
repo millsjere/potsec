@@ -69,12 +69,16 @@ const BulkUpload = ({ onClose }: Props) => {
                             title='STAFF'
                         />
                         <UploadCard onClick={(val) => onUploadTypeSelect(val, 'excel')}
+                            icon={<Building03Icon id='icon' style={{ transition: 'all .2s ease-in' }} color='#acacac' size={70} />}
+                            title='DEPARTMENTS'
+                        />
+                        <UploadCard onClick={(val) => onUploadTypeSelect(val, 'excel')}
                             icon={<LibraryIcon id='icon' style={{ transition: 'all .2s ease-in' }} color='#acacac' size={70} />}
                             title='PROGRAMMES'
                         />
                         <UploadCard onClick={(val) => onUploadTypeSelect(val, 'excel')}
-                            icon={<Building03Icon id='icon' style={{ transition: 'all .2s ease-in' }} color='#acacac' size={70} />}
-                            title='DEPARTMENTS'
+                            icon={<LibraryIcon id='icon' style={{ transition: 'all .2s ease-in' }} color='#acacac' size={70} />}
+                            title='COURSES'
                         />
                         <UploadCard onClick={(val) => onUploadTypeSelect(val, 'image')}
                             icon={<UserIdVerificationIcon id='icon' style={{ transition: 'all .2s ease-in' }} color='#acacac' size={70} />}
