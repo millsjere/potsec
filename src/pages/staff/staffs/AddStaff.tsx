@@ -93,7 +93,7 @@ const AddStaff = ({ open, onClose, type, callBack }: Props) => {
                             resetForm();
                             await swal('Success', 'Staff account created successfully', 'success').then(() => { callBack() })
                         }
-                    } catch (error) {
+                    } catch (error: any) {
                         console.log(error?.response)
                         swal('Error', error?.response?.data?.message, 'error')
                     } finally {

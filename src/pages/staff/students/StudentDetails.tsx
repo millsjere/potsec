@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import PageHeader from '../../../components/shared/PageHeader'
-import { Avatar, Box, Divider, Grid, List, ListItem, ListItemButton, ListItemText, MenuItem, Stack, Typography } from '@mui/material'
+import { Avatar, Box, Divider, Grid, List, ListItem, ListItemButton, MenuItem, Stack, Typography } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { InputField, RoundButton } from '../../../components/shared'
 import { Cancel01Icon, FloppyDiskIcon, PencilEdit01Icon } from 'hugeicons-react'

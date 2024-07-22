@@ -9,24 +9,27 @@ interface Props {
     subtext: string
     image: any
     btnText: string
+    btnSize?: string
     onClick: () => void
     opacity: number
+    height?: string
+    showBtn?: boolean
 }
 
-const NullState = ({ title, subtext, image, btnText, onClick, opacity }: Props) => {
+const NullState = ({ title, subtext, image, btnText, btnSize = 'medium', onClick, opacity, height, showBtn = true }: Props) => {
     return (
-        <Box display={'flex'} flexDirection={'column'} height={'35rem'} borderRadius={'10px'} bgcolor={'#fff'} justifyContent={'center'} alignItems={'center'}>
+        <Box display={'flex'} flexDirection={'column'} height={height || '35rem'} borderRadius={'10px'} bgcolor={'#fff'} justifyContent={'center'} alignItems={'center'}>
             <img src={image} alt='null-state' width={'12%'} style={{ opacity: opacity }} />
             <Typography mt={3} variant='h6'>{title}</Typography>
             <Typography variant='body1' mb={2} color={'GrayText'}>{subtext}</Typography>
-            <RoundButton variant={'contained'}
+            {showBtn && <RoundButton variant={'contained'}
                 disableElevation
                 onClick={onClick}
-                text={btnText}
+                text={btnText} size={btnSize}
                 color={'secondary'}
                 sx={{ borderRadius: '50px' }}
                 startIcon={<AddCircleIcon size={18} color='#fff' />}
-            />
+            />}
         </Box>
     )
 }

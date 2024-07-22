@@ -66,6 +66,17 @@ const Verify2FA = () => {
         nextSibling ? nextSibling.focus() : element.blur();
     };
 
+    const pasteHandler = (e: Event) => {
+        console.log(typeof e)
+        e.stopPropagation();
+        e.preventDefault();
+        // Get pasted data via clipboard API
+        ref1.current
+        const clipboardData = e?.clipboardData || new window.clipboardData;
+        const pastedData = clipboardData.getData('Text');
+        console.log(pastedData)
+    }
+
 
 
 
@@ -85,6 +96,7 @@ const Verify2FA = () => {
                                     ref={i === 0 ? ref1 : i === 1 ? ref2 : i === 2 ? ref3 : i === 3 ? ref4 : i === 4 ? ref5 : ref6}
                                     type='text' maxLength={1}
                                     onChange={(e) => autoFocusHandler(e)}
+                                    onPaste={(e) => pasteHandler(e)}
                                     style={{ textAlign: 'center', height: '5rem', fontSize: '2rem', fontFamily: "Plus Jakarta Sans", width: '100%', borderRadius: '15px', border: '1px solid lightgrey' }}
                                 />
                             )

@@ -1,4 +1,38 @@
 import swal from "sweetalert";
+import { base } from "../config/appConfig";
+
+export const onDeleteHandler = async (
+  id: string,
+  text: string,
+  urlString: string,
+  startLoading: (val: string) => void,
+  stopLoading: () => void,
+  fetchData: () => void
+) => {
+  swal({
+    title: "Are You Sure?",
+    text: `This action will delete this ${text?.toLowerCase()}`,
+    icon: "warning",
+    buttons: ["Cancel", "Delete"],
+    dangerMode: true,
+    closeOnClickOutside: false,
+  }).then(async (del) => {
+    if (del) {
+      try {
+        startLoading(`Removing ${text?.toLowerCase()}. Please wait..`);
+        await base.delete(`/api/staff/${urlString}/${id}`);
+        swal("Success", `${text} deleted successfully`, "success").then(
+          fetchData
+        );
+      } catch (error: any) {
+        console.log(error?.response);
+        swal("Error", `Sorry could not delete ${text}`, "error");
+      } finally {
+        stopLoading();
+      }
+    }
+  });
+};
 
 interface FieldProps {
   type: string;
@@ -94,13 +128,13 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
         },
         { type: "email", label: "Email", action: "EMAIL", isRequired: true },
         {
-          type: "tel",
+          type: "number",
           label: "Phone",
           action: "PHONE_MOBILE",
           isRequired: true,
         },
         {
-          type: "tel",
+          type: "number",
           label: "WhatsApp",
           action: "PHONE_WHATSAPP",
           isRequired: true,

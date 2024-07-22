@@ -1,6 +1,7 @@
 import { Box, TextField, Typography } from '@mui/material'
 import { styled } from '@mui/styles'
 import React from 'react'
+import swal from 'sweetalert'
 
 const StyledInputField = styled(TextField)(({ size }) => ({
     marginBottom: '1rem',
@@ -23,8 +24,9 @@ type InputFieldProps = {
     size?: any,
     isSelect?: boolean,
     variant?: any,
-    value?: string,
+    value?: string | number,
     onChange?: (e: any) => void,
+    onKeyDown?: (e: any) => void,
     isRequired?: boolean,
     label?: string,
     error?: any,
@@ -40,12 +42,17 @@ type InputFieldProps = {
 export const InputField = ({ showTopLabel = false, size = 'medium', sx, isSelect, variant, value, onChange, isRequired, label, error, children, type, InputProps, inputProps, placeholder, fullWidth }: InputFieldProps) => {
     return (
         <Box>
-            {showTopLabel && <Typography variant='body2' fontSize={'.9rem'} mb={.5} color={'GrayText'}>{label}</Typography>}
+            {showTopLabel && <Typography variant='body2' textTransform={'capitalize'} fontSize={'.9rem'} mb={.5} color={'GrayText'}>{label}</Typography>}
             <StyledInputField sx={sx}
                 type={type} size={size}
                 variant={variant}
                 value={value}
                 onChange={onChange}
+                onKeyDown={(e) => {
+                    if (type === 'number') {
+                        if (e.key === '-' || e?.key === '+') return swal('Invalid', 'You have entered an invalid input', 'warning')
+                    }
+                }}
                 required={isRequired}
                 label={!showTopLabel ? label : null}
                 helperText={error?.text}
