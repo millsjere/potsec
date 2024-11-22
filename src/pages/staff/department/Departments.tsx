@@ -52,7 +52,7 @@ const Departments = () => {
                 onSearch={() => { }}
                 moreBtns={
                     <RoundButton
-                        variant={'contained'} sx={{ borderRadius: '10px', py: .8, mt: 1 }}
+                        variant={'contained'} sx={{ borderRadius: '8px', py: .8, mt: 1 }}
                         color={'primary'} disableElevation
                         text='Department' startIcon={<AddCircleIcon size={18} color='#fff' />}
                         onClick={() => { setOpen(true) }} loading={isLoading}

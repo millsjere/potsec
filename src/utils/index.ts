@@ -39,6 +39,7 @@ interface FieldProps {
   label: string;
   action: string;
   options?: Array<any>;
+  keys: Array<string>;
   placeholder?: string;
   isRequired?: boolean | undefined;
 }
@@ -93,6 +94,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "ENROLL_TYPE",
           options: ["Local (Ghana)", "Foreign"],
           isRequired: true,
+          keys: ['enrollment','type']
         },
         {
           type: "select",
@@ -100,6 +102,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "ENROLL_MONTH",
           options: allMonths,
           isRequired: true,
+          keys: ['enrollment','month']
         },
         {
           type: "select",
@@ -107,37 +110,53 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "ENROLL_YEAR",
           options: getYearRange(2019 - 19),
           isRequired: true,
+          keys: ['enrollment','year']
         },
         {
           type: "text",
           label: "Index No.",
           action: "ENROLL_INDEX",
           isRequired: true,
+          keys: ['enrollment','index']
         },
       ],
     },
     {
       title: "Personal Details",
       fields: [
-        { type: "text", label: "Surname", action: "SURNAME", isRequired: true },
+        { 
+          type: "text", 
+          label: "Surname", 
+          action: "SURNAME", 
+          isRequired: true,
+          keys: ['surname']
+        },
         {
           type: "text",
           label: "Othernames",
           action: "OTHERNAMES",
           isRequired: true,
+          keys: ['othernames']
         },
-        { type: "email", label: "Email", action: "EMAIL", isRequired: true },
+        { type: "email", 
+          label: "Email", 
+          action: "EMAIL", 
+          isRequired: true,
+          keys: ['email']
+        },
         {
           type: "number",
           label: "Phone",
           action: "PHONE_MOBILE",
           isRequired: true,
+          keys: ['phone','mobile']
         },
         {
           type: "number",
           label: "WhatsApp",
           action: "PHONE_WHATSAPP",
           isRequired: true,
+          keys: ['phone','whatsapp']
         },
         {
           type: "select",
@@ -145,14 +164,21 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "GENDER",
           options: ["Male", "Female"],
           isRequired: true,
+          keys: ['gender']
         },
         {
           type: "date",
           label: "Date of Birth",
           action: "DOB",
           isRequired: true,
+          keys: ['dob']
         },
-        { type: "number", label: "Age", action: "AGE", isRequired: true },
+        { 
+          type: "number", 
+          label: "Age", action: "AGE", 
+          isRequired: true,  
+          keys: ['age']
+        },
         {
           type: "select",
           label: "Educational Level",
@@ -165,6 +191,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
             "Others",
           ],
           isRequired: true,
+          keys: ['educationalLevel']
         },
         {
           type: "text",
@@ -172,6 +199,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "LANGUAGE_SPOKEN",
           placeholder: "English, Fante, Ewe",
           isRequired: true,
+          keys: ['language','spoken']
         },
         {
           type: "text",
@@ -179,6 +207,8 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "LANGUAGE_WRITTEN",
           placeholder: "English, Fante, Ewe",
           isRequired: true,
+          keys: ['language','written']
+
         },
         {
           type: "select",
@@ -186,30 +216,36 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "NATIONAL_ID",
           options: ["Ghana Card", "Drivers License", "Passport"],
           isRequired: true,
+          keys: ['nationalID','type']
+
         },
         {
           type: "text",
           label: "ID Number",
           action: "NATIONAL_ID_NUMBER",
           isRequired: true,
+          keys: ['nationalID','number']
         },
         {
           type: "text",
           label: "Residence Address",
           action: "RESIDENCE",
           isRequired: true,
+          keys: ['address','residence']
         },
         {
           type: "text",
           label: "Town",
           action: "RESIDENCE_TOWN",
           isRequired: true,
+          keys: ['address','town']
         },
         {
           type: "text",
           label: "District",
           action: "RESIDENCE_DISTRICT",
           isRequired: true,
+          keys: ['address','district']
         },
         {
           type: "select",
@@ -217,6 +253,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "RESIDENCE_REGION",
           options: getRegions(),
           isRequired: true,
+          keys: ['address','region']
         },
       ],
     },
@@ -229,18 +266,21 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "PAYMENT",
           options: ["Mobile Money"],
           isRequired: true,
+          keys: ['payment','type']
         },
         {
           type: "text",
           label: "Reference",
           action: "PAYMENT_REF",
           isRequired: true,
+          keys: ['payment','reference']
         },
         {
           type: "text",
           label: "Transaction ID",
           action: "PAYMENT_TRANSACTION_ID",
           isRequired: true,
+          keys: ['payment','transactionID']
         },
       ],
     },
@@ -253,12 +293,14 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "EMPLOYMENT",
           options: ["Yes", "No"],
           isRequired: true,
+          keys: ['employment','isEmployed']
         },
         {
           type: "text",
           label: "What is your current job",
           action: "CURRENT_EMPLOYMENT",
           isRequired: true,
+          keys: ['employment','currentJob']
         },
         {
           type: "select",
@@ -266,6 +308,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "EMPLOYMENT_NEEDED",
           options: ["Yes", "No"],
           isRequired: true,
+          keys: ['employment','afterCompletion']
         },
       ],
     },
@@ -278,12 +321,14 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "HEALTH_CONDITION",
           options: ["Yes", "No"],
           isRequired: true,
+          keys: ['health','anyCondition']
         },
         {
           type: "textarea",
           label: "If yes, please provide details of the condition",
           action: "HEALTH_DETAILS",
           isRequired: false,
+          keys: ['health','details']
         },
       ],
     },
@@ -295,18 +340,21 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           label: "Name",
           action: "GUARDIAN_NAME",
           isRequired: true,
+          keys: ['guardian','name']
         },
         {
           type: "text",
           label: "Phone Number",
           action: "GUARDIAN_PHONE",
           isRequired: true,
+          keys: ['guardian','phone']
         },
         {
           type: "text",
           label: "Relationship",
           action: "GUARDIAN_RELATIONSHIP",
           isRequired: false,
+          keys: ['guardian','relationship']
         },
       ],
     },
@@ -319,18 +367,21 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           label: "Name",
           action: "SPONSOR_NAME",
           isRequired: false,
+          keys: ['sponsor','name']
         },
         {
           type: "text",
           label: "Phone Number",
           action: "SPONSOR_PHONE",
           isRequired: false,
+          keys: ['sponsor','phone']
         },
         {
           type: "text",
           label: "Relationship",
           action: "SPONSOR_RELATIONSHIP",
           isRequired: false,
+          keys: ['sponsor','relationship']
         },
       ],
     },
@@ -343,12 +394,14 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           label: "Name",
           action: "EMERGENCY_NAME",
           isRequired: false,
+          keys: ['emergency','name']
         },
         {
           type: "text",
           label: "Phone Number",
           action: "EMERGENCY_PHONE",
           isRequired: false,
+          keys: ['emergency','phone']
         },
         // { type: 'text', label: 'Location', action: 'EMERGENCY_LOCATION', isRequired: false },
       ],
@@ -362,6 +415,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "ENROLL_CERTIFICATION",
           options: ["HND/DIPLOMA", "ADVANCED CERTIFICATE", "CERTIFICATE"],
           isRequired: true,
+          keys: ['enrollment','certification']
         },
         {
           type: "select",
@@ -373,6 +427,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
             "ADVANCED - (has at least 50% knowledge)",
           ],
           isRequired: true,
+          keys: ['enrollment','certificationLevel']
         },
         {
           type: "select",
@@ -380,6 +435,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "ENROLL_PROGRAMME",
           options: selectProgrammes || [],
           isRequired: true,
+          keys: ['enrollment','programme']
         },
         {
           type: "select",
@@ -387,6 +443,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "ENROLL_TUITION_MODE",
           options: programmeTrainings,
           isRequired: true,
+          keys: ['enrollment','modeofTuition']
         },
         {
           type: "select",
@@ -394,6 +451,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "ENROLL_SESSION",
           options: programmeSessions,
           isRequired: true,
+          keys: ['enrollment','session']
         },
         {
           type: "select",
@@ -401,6 +459,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "CAMPUS",
           options: ["Accra", "Kumasi"],
           isRequired: true,
+          keys: ['campus']
         },
       ],
     },
@@ -652,7 +711,7 @@ export const initState = {
   payment: {
     type: "",
     reference: "",
-    transaction_id: "",
+    transactionID: "",
   },
   language: {
     spoken: "",
@@ -793,7 +852,7 @@ export const studentReducerFn = (state: typeof initState, action: any) => {
     case "PAYMENT_TRANSACTION_ID":
       return {
         ...state,
-        payment: { ...state?.payment, transaction_id: action?.payload },
+        payment: { ...state?.payment, transactionID: action?.payload },
       };
     case "RESIDENCE":
       return {
@@ -946,6 +1005,77 @@ export const studentReducerFn = (state: typeof initState, action: any) => {
           index: action?.payload?.toUpperCase(),
         },
       };
+    case "UPDATE":
+      return {
+        surname: action?.payload?.surname || "",
+        othernames: action?.payload?.othernames || "",
+        email: action?.payload?.email || "",
+        phone: {
+          mobile: action?.payload?.phone?.mobile || "",
+          whatsapp: action?.payload?.phone?.whatsapp || "",
+        },
+        gender: action?.payload?.gender || "",
+        dob: action?.payload?.dob || "",
+        age: action?.payload?.age || "",
+        educationalLevel: action?.payload?.educationalLevel || "",
+        payment: {
+          type: action?.payload?.payment?.type || "",
+          reference: action?.payload?.payment?.reference || "",
+          transactionID: action?.payload?.payment?.transactionID || "",
+        },
+        language: {
+          spoken: action?.payload?.language?.spoken || "",
+          written: action?.payload?.language?.written || "",
+        },
+        nationalID: {
+          type: action?.payload?.nationalID?.type || "",
+          number: action?.payload?.nationalID?.number || "",
+        },
+        address: {
+          residence: action?.payload?.address?.residence || "",
+          town: action?.payload?.address?.town || "",
+          district: action?.payload?.address?.district || "",
+          region: action?.payload?.address?.region || "",
+        },
+        employment: {
+          isEmployed: action?.payload?.employment?.isEmployed || "",
+          currentJob: action?.payload?.employment?.currentJob || "",
+          afterCompletion: action?.payload?.employment?.afterCompletion || "",
+        },
+        health: {
+          anyCondition: action?.payload?.health?.anyCondition || "",
+          details: action?.payload?.health?.details || "",
+        },
+        guardian: {
+          name: action?.payload?.guardian?.name || "",
+          phone: action?.payload?.guardian?.phone || "",
+          relationship: action?.payload?.guardian?.relationship || "",
+        },
+        sponsor: {
+          name: action?.payload?.sponsor?.name || "",
+          phone: action?.payload?.sponsor?.phone || "",
+          relationship: action?.payload?.sponsor?.relationship || "",
+        },
+        emergency: {
+          name: action?.payload?.emergency?.name || "",
+          phone: action?.payload?.emergency?.phone || "",
+          // location: "",
+        },
+        enrollment: {
+          index: action?.payload?.enrollment?.index || "",
+          type: action?.payload?.enrollment?.type || "",
+          month: action?.payload?.enrollment?.month || "",
+          year: action?.payload?.enrollment?.year || "",
+          duration: action?.payload?.enrollment?.duration || "",
+          programme: action?.payload?.enrollment?.programme || "",
+          department: action?.payload?.enrollment?.department || "",
+          modeofTuition: action?.payload?.enrollment?.modeofTuition || "",
+          certification: action?.payload?.enrollment?.certification || "",
+          certificationLevel: action?.payload?.enrollment?.certificationLevel || "",
+          session: action?.payload?.enrollment?.session || "",
+        },
+        campus: action?.payload?.campus || "",
+      }
     case "RESET":
       return initState;
     default:
@@ -1060,6 +1190,37 @@ export const staffReducerFn = (state: typeof staffData, action: any) => {
         ...state,
         academics: { ...state?.academics, campus: action?.payload },
       };
+    case 'UPDATE':
+      return {
+        role: action?.payload?.role || '',
+        surname: action?.payload?.surname || '',
+        othernames: action?.payload?.othernames || '',
+        email: action?.payload?.email || '',
+        phone: {
+          mobile: action?.payload?.phone?.mobile || '',
+          whatsapp: action?.payload?.phone?.whatsapp || '',
+        },
+        gender: action?.payload?.gender || '',
+        language: {
+          spoken: action?.payload?.language?.spoken || '',
+          written: action?.payload?.language?.written || '',
+        },
+        nationalID: {
+          type: action?.payload?.nationalID?.type || '',
+          number: action?.payload?.nationalID?.number || '',
+        },
+        address: {
+          residence: action?.payload?.address?.residence || "",
+          region: action?.payload?.address?.region || "",
+        },
+        academics: {
+          department: action?.payload?.academics?.department || "",
+          programme: action?.payload?.academics?.programme || "",
+          staffID: action?.payload?.academics?.staffID || "",
+          staffEmail: action?.payload?.academics?.staffEmail || "",
+          campus: action?.payload?.academics?.campus || "",
+        }
+      }
     default:
       return state;
   }
@@ -1109,3 +1270,60 @@ export const validateFile = (file: File, type: string) => {
   }
   return file;
 };
+
+export const validateFormData = (formInput: typeof initState) => {
+  if (formInput?.enrollment?.type === ''
+      || formInput?.enrollment?.month === ''
+      || formInput?.enrollment?.year === ''
+      || formInput?.enrollment?.index === ''
+  ) return swal('Invalid', 'Provide all required fields under Application', 'error').then(() => false)
+  if (formInput?.surname === ''
+      || formInput?.othernames === ''
+      || (formInput?.email === '' || !formInput?.email?.includes('@'))
+      || formInput?.phone?.mobile === '' || formInput?.phone?.whatsapp === ''
+      || formInput?.gender === '' || formInput?.dob === '' || formInput?.age === '' || formInput?.educationalLevel === ''
+      || formInput?.language?.spoken === '' || formInput?.language?.written === ''
+      || formInput?.nationalID?.type === '' || formInput?.nationalID?.number === ''
+      || formInput?.address?.residence === '' || formInput?.address?.town === '' || formInput?.address?.district === '' || formInput?.address?.region === ''
+  ) return swal('Invalid', 'Provide all required fields under Personal Details', 'error').then(() => false)
+  if (formInput?.payment?.type === ''
+      || formInput?.payment?.reference === ''
+      || formInput?.payment?.transaction_id === ''
+  ) return swal('Invalid', 'Provide all required fields under Payment', 'error').then(() => false)
+  if (formInput?.employment?.isEmployed === ''
+      || formInput?.employment?.currentJob === ''
+      || formInput?.employment?.afterCompletion === ''
+  ) return swal('Invalid', 'Provide all required fields under Employment', 'error').then(() => false)
+  if (
+      formInput?.health?.anyCondition === ''
+      || formInput?.employment?.currentJob === ''
+  ) return swal('Invalid', 'Provide all required fields under Health', 'error').then(() => false)
+  if (formInput?.guardian?.name === ''
+      || formInput?.guardian?.phone === ''
+      || formInput?.guardian?.relationship === ''
+  ) return swal('Invalid', 'Provide all required fields under Guardian', 'error').then(() => false)
+  if (formInput?.emergency?.name === ''
+      || formInput?.emergency?.phone === ''
+  ) return swal('Invalid', 'Provide all required fields under Emergency', 'error').then(() => false)
+  if (formInput?.enrollment?.certification === '' || formInput?.campus === ''
+      || formInput?.enrollment?.certificationLevel === '' || formInput?.enrollment?.programme === ''
+      || formInput?.enrollment?.session === '' || formInput?.enrollment?.modeofTuition === ''
+  ) return swal('Invalid', 'Provide all required fields under Programme & Certification', 'error').then(() => false)
+  // if (!photo) return swal('Invalid', 'Provide profile photo', 'error').then(() => false)
+
+  return true
+}
+
+export const uploadPhoto = async (file: File, setPreview: (val:any)=>void, setPhoto: (val: any)=>void) => {
+  // console.log(file)
+  const res = await validateFile(file, 'image')
+  if (res) {
+      var reader = new FileReader();
+      reader.onload = function () {
+          const dataURL = reader.result;
+          setPreview(dataURL)
+      };
+      reader.readAsDataURL(file);
+      setPhoto(file)
+  }
+}

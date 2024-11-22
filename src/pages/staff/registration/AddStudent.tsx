@@ -72,7 +72,7 @@ const AddStudent = () => {
             || formInput?.enrollment?.certificationLevel === '' || formInput?.enrollment?.programme === ''
             || formInput?.enrollment?.session === '' || formInput?.enrollment?.modeofTuition === ''
         ) return swal('Invalid', 'Provide all required fields under Programme & Certification', 'error').then(() => false)
-        if (!photo) return swal('Invalid', 'Provide profile photo', 'error').then(() => false)
+        // if (!photo) return swal('Invalid', 'Provide profile photo', 'error').then(() => false)
 
         return true
     }
@@ -93,13 +93,15 @@ const AddStudent = () => {
                     startLoading('Creating student account. Please wait')
                     try {
                         const { data: res } = await base.post('/api/student/create', formInput)
-                        if (res?.responseCode === 200) {
+                        if (res?.responseCode === 200 && photo) {
                             const payload = new FormData()
                             payload.append('photo', photo!)
                             startLoading('Uploading profile photo..')
                             await base.patch(`/api/student/photo/${res?.data?.enrollment?.index}`, payload, {
                                 headers: { 'content-type': 'multipart/form-data' }
                             })
+                            await swal('Success', 'Student account created successfully', 'success').then(() => navigate('/staff/all-students'))
+                        }else{
                             await swal('Success', 'Student account created successfully', 'success').then(() => navigate('/staff/all-students'))
                         }
                     } catch (error) {
@@ -115,7 +117,7 @@ const AddStudent = () => {
 
     return (
         <div>
-            <PageHeader title={'Add Students'} breadcrumbs={[{ label: 'Add Students', link: '#' }]} />
+            <PageHeader title={'New Registration'} breadcrumbs={[{ label: 'Registration', link: '#' }]} />
             <Box>
                 <Grid container columnSpacing={4}>
                     <Grid item sm={8.5}>

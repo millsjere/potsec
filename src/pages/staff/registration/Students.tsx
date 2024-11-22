@@ -21,7 +21,7 @@ const Students = () => {
     const fetchAllStudents = async () => {
         try {
             setIsLoading(true)
-            const url = '/api/student/all'
+            const url = '/api/all-students'
             const { data: res } = await base.get(url)
             if (res?.responseCode === 200) {
                 setData(res?.data)
@@ -50,8 +50,8 @@ const Students = () => {
                     <RoundButton
                         variant={'contained'} sx={{ borderRadius: '10px', py: .8, mt: 1 }}
                         color={'primary'} disableElevation
-                        text='Student' startIcon={<AddCircleIcon size={18} color='#fff' />}
-                        onClick={() => navigate('/staff/add-student')}
+                        text='New Registration' startIcon={<AddCircleIcon size={18} color='#fff' />}
+                        onClick={() => navigate('/staff/registration')}
                     />
                 }
             />
@@ -70,8 +70,12 @@ const Students = () => {
                                 view === 'grid' && (
                                     <Grid container spacing={3}>
                                         {
-                                            data?.map((el, i) => {
-                                                return <Grid item sm={3} key={i}><UserCard variant={view} user={el} /></Grid>
+                                            data?.map((el: any, i: number) => {
+                                                return <Grid item sm={3} key={i}>
+                                                    <UserCard variant={view} user={el} onClick={
+                                                        ()=>navigate(`/staff/registration/${el?.id}/view`)
+                                                    } />
+                                                </Grid>
                                             })
                                         }
                                     </Grid>

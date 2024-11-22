@@ -37,9 +37,10 @@ type InputFieldProps = {
     placeholder?: string
     fullWidth?: boolean,
     showTopLabel?: boolean
+    isDisabled?:boolean
 }
 
-export const InputField = ({ showTopLabel = false, size = 'medium', sx, isSelect, variant, value, onChange, isRequired, label, error, children, type, InputProps, inputProps, placeholder, fullWidth }: InputFieldProps) => {
+export const InputField = ({ showTopLabel = false, size = 'medium', sx, isSelect, variant, value, onChange, isRequired, label, error, children, type, InputProps, inputProps, placeholder, fullWidth, isDisabled }: InputFieldProps) => {
     return (
         <Box>
             {showTopLabel && <Typography variant='body2' textTransform={'capitalize'} fontSize={'.9rem'} mb={.5} color={'GrayText'}>{label}</Typography>}
@@ -63,6 +64,7 @@ export const InputField = ({ showTopLabel = false, size = 'medium', sx, isSelect
                 inputProps={inputProps}
                 placeholder={placeholder}
                 defaultValue={isSelect && ''}
+                disabled={isDisabled}
             >
                 {children}
             </StyledInputField>

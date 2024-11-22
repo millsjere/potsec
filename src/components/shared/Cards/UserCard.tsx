@@ -13,7 +13,7 @@ interface Props {
 }
 
 const UserCard = ({ variant, role = 'student', onClick, user }: Props) => {
-    console.log(user)
+    // console.log(user)
     return (
         <>
             {
@@ -21,7 +21,7 @@ const UserCard = ({ variant, role = 'student', onClick, user }: Props) => {
                 <Box bgcolor={'#fff'} onClick={onClick} sx={{ transition: 'all .2s ease-in-out', cursor: 'pointer', ':hover': { border: theme => `1px solid ${theme.palette.primary.main}` } }} overflow={'hidden'} border={'1px solid lightgrey'} borderRadius={'10px'}>
                     <Box sx={{ backgroundImage: `url(${UserBg})`, backgroundSize: 'cover' }} height={'5rem'} />
                     <Box p={3} textAlign={'left'}>
-                        <Avatar src={user?.photo || UserPic} sx={{ width: '4.5rem', height: '4.5rem', mt: -8, border: '2px solid #fff', boxShadow: '0 2px 8px rgba(0,0,0,15%)' }} />
+                        <Avatar src={user?.photo} sx={{ width: '4.5rem', height: '4.5rem', mt: -8, border: '2px solid #fff', boxShadow: '0 2px 8px rgba(0,0,0,15%)' }} />
                         <Typography mt={1} variant='h6' noWrap>{user?.fullname}</Typography>
                         <Typography color={'GrayText'}>{user?.enrollment?.index}</Typography>
                         <Typography variant='body2' color={'GrayText'} >{user?.enrollment?.month} {user?.enrollment?.year}</Typography>

@@ -73,7 +73,7 @@ const AddStaff = ({ open, onClose, type, callBack }: Props) => {
         if (isValid) {
             await swal({
                 title: 'Create Account',
-                text: 'This action will create a new student account. Student will also be notified via email with the account details',
+                text: 'This action will create a new staff account. Staff will also be notified via email with the account details',
                 icon: 'warning',
                 buttons: ['Cancel', 'Proceed'],
                 dangerMode: true,

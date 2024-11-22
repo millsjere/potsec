@@ -19,7 +19,7 @@ type RoundButtonProps = {
     variant: any,
     disableElevation: boolean,
     fullWidth?: boolean,
-    size?: any,
+    size?: "medium" | "small" | "large" | undefined,
     sx?: object,
     color?: any,
     loading?: boolean, disable?: boolean

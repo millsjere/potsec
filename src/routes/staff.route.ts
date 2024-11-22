@@ -7,17 +7,18 @@ const VerifyLogin = lazy(() => import("../pages/staff/auth/Verify2FA"));
 
 // Private Routes
 const Dashboard = lazy(() => import("../pages/staff/dashboard/Dashboard"));
-const AllStudents = lazy(() => import("../pages/staff/students/Students"));
+const AllStudents = lazy(() => import("../pages/staff/registration/Students"));
 const StudentDetails = lazy(
-  () => import("../pages/staff/students/StudentDetails")
+  () => import("../pages/staff/registration/StudentDetails")
 );
-const AddStudents = lazy(() => import("../pages/staff/students/AddStudent"));
+const AddStudents = lazy(() => import("../pages/staff/registration/AddStudent"));
 const AllStaffs = lazy(() => import("../pages/staff/staffs/Staffs"));
 const Programmes = lazy(() => import("../pages/staff/programmes/Programmes"));
 const ProgrammeDetail = lazy(
   () => import("../pages/staff/programmes/ProgrammeDetails")
 );
 const Departments = lazy(() => import("../pages/staff/department/Departments"));
+const Ticketing = lazy(() => import("../pages/staff/support/Ticket"));
 
 // Routes
 const LoginRoute = {
@@ -47,14 +48,14 @@ const StudentsRoute = {
 };
 
 const StudentsDetailsRoute = {
-  path: "/staff/all-students/:id",
+  path: "/staff/registration/:id/view",
   component: StudentDetails,
   isAuth: "yes",
   role: "staff",
 };
 
 const AddStudentsRoute = {
-  path: "/staff/add-student",
+  path: "/staff/registration",
   component: AddStudents,
   isAuth: "yes",
   role: "staff",
@@ -84,6 +85,13 @@ const ProgrammeDetailRoute = {
 const DepartmentRoute = {
   path: "/staff/departments",
   component: Departments,
+  isAuth: "yes",
+  role: "staff",
+};
+
+const TicketRoute = {
+  path: "/staff/departments",
+  component: Ticketing,
   isAuth: "yes",
   role: "staff",
 };

@@ -37,9 +37,9 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
     const primaryMenu: SideBarMenuProps[] = [
         { name: 'Dashboard', icon: <DashboardSquare01Icon size={20} />, path: '/staff/dashboard' },
         {
-            name: 'Students', icon: <LicenseThirdPartyIcon size={20} />, hasSubMenu: true, subMenus: [
+            name: 'Registrations', icon: <LicenseThirdPartyIcon size={20} />, hasSubMenu: true, subMenus: [
                 { name: 'All Students', icon: <TaskAdd02Icon size={20} />, path: '/staff/all-students' },
-                { name: 'Add Student', icon: <AddTeamIcon size={20} />, path: '/staff/add-student' },
+                { name: 'New Registration', icon: <AddTeamIcon size={20} />, path: '/staff/registration' },
             ]
         },
         {
