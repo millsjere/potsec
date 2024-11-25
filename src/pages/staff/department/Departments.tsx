@@ -21,17 +21,17 @@ const Departments = () => {
     const { startLoading, stopLoading } = useLoader()
     const { isLoading, response: data, fetchData } = useAxiosFetch('/api/staff/department');
     const [open, setOpen] = useState(false)
-    const [value, setValue] = useState({ id: '', name: '' })
+    const [value, setValue] = useState({ id: '', name: '', head: '' })
     const [type, setType] = useState('add')
 
     const onFormSubmit = async () => {
         if (value?.name === '') return swal('Invalid', 'Please provide a name', 'warning')
         try {
             startLoading(type === 'add' ? 'Creating new department. Please wait..' : 'Updating department. Please wait...')
-            const { data: res } = type === 'add' ? await base.post('/api/staff/department/new', { name: value?.name }) : await base.patch(`/api/staff/department/${value?.id}`, { name: value?.name })
+            const { data: res } = type === 'add' ? await base.post('/api/staff/department/new', { name: value?.name, head: value?.head }) : await base.patch(`/api/staff/department/${value?.id}`, { name: value?.name, head: value?.head })
             if (res?.status === 'success') {
                 setOpen(false);
-                setValue({ id: '', name: '' })
+                setValue({ id: '', name: '', head: '' })
                 swal('Success', `Department ${type === 'add' ? 'created' : 'updated'} successfully`, 'success').then(fetchData)
             }
         } catch (error: any) {
@@ -72,7 +72,7 @@ const Departments = () => {
                                             title={el?.name}
                                             subText={`${el?.programmes?.length} Programme(s)`}
                                             onDelete={(e: any) => { e.stopPropagation(); onDeleteHandler(el?.id, 'Department', 'department', startLoading, stopLoading, fetchData) }}
-                                            onClick={(e: any) => { e.stopPropagation(); setType('edit'); setValue({ id: el?.id, name: el?.name }); setOpen(true) }}
+                                            onClick={(e: any) => { e.stopPropagation(); setType('edit'); setValue({ id: el?.id, name: el?.name, head: '' }); setOpen(true) }}
                                         />
                                     </Grid>
                                 })
@@ -93,7 +93,7 @@ const Departments = () => {
 
             <ModalItem
                 actionBtn={type === 'add' ? 'Create' : 'Update'} maxWidth='sm' open={open}
-                onSubmit={onFormSubmit} onClose={() => { setValue({ id: '', name: '' }); setOpen(false) }}
+                onSubmit={onFormSubmit} onClose={() => { setValue({ id: '', name: '', head:'' }); setOpen(false) }}
                 title={`${type} Department`}>
                 <InputField
                     showTopLabel

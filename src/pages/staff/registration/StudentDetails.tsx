@@ -4,8 +4,8 @@ import PageHeader from '../../../components/shared/PageHeader'
 import { Avatar, Box, Button, Divider, Grid, InputAdornment, List, ListItem, ListItemButton, MenuItem, Stack, Typography } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { InputField, RoundButton } from '../../../components/shared'
-import { Cancel01Icon, Delete01Icon, Delete02Icon, File01Icon, FloppyDiskIcon, PencilEdit01Icon, PrinterIcon } from 'hugeicons-react'
-import { getApplicationForm, initState, studentReducerFn, uploadPhoto } from '../../../utils'
+import { Cancel01Icon, Delete02Icon, File01Icon, FloppyDiskIcon, PencilEdit01Icon, PrinterIcon } from 'hugeicons-react'
+import { getApplicationForm, initState, reload, studentReducerFn } from '../../../utils'
 import useAxiosFetch from '../../../hooks/useAxiosFetch'
 import LoadingState from '../../../components/shared/Loaders/LoadingState'
 import { useLoader } from '../../../context/LoaderContext'
@@ -22,8 +22,6 @@ const StudentDetails = () => {
     const menuList = getApplicationForm()?.map(el => el?.title)
     const formData = getApplicationForm();
     const formatLabel = (val: string) => val?.split(' ')[0]?.toLowerCase()
-    const [preview, setPreview] = useState<any>(null)
-    const [photo, setPhoto] = useState<File>()
 
     const getFormValue = (obj: any, keys: string[]) => {
         return keys.reduce((acc, key) => (acc && acc[key] ? acc[key] : undefined), obj);
@@ -44,11 +42,11 @@ const StudentDetails = () => {
             const { data: res } = await base.patch(`/api/student/profile/${id}`, formInput)
             if(res?.responseCode === 200){
                 dispatch({type: 'UPDATE', payload: res?.data})
-                swal('Success', 'Student data updated successfully', 'success').then(()=>window.location.reload())
+                swal('Success', 'Student data updated successfully', 'success').then(reload)
             }
         } catch (error: any) {
             console.log(error?.response)
-            swal('Error', error?.response?.data?.message, 'error').then(()=>window.location.reload())
+            swal('Error', error?.response?.data?.message, 'error').then(reload)
         } finally{
             stopLoading()
         }
@@ -72,7 +70,7 @@ const StudentDetails = () => {
                     const { data: res } = await base.patch(`/api/student/reset-password/${id}`, {password: password.new})
                     if(res?.responseCode === 200){
                         await swal('Success', 'User password updated successfully', 'success')
-                        .then(() => window.location.reload())
+                        .then(reload)
                     }
                 }
             })
@@ -92,6 +90,24 @@ const StudentDetails = () => {
         .replace(/[^a-zA-Z0-9]/g, "x");
         console.log(result)
         setPassword({new: result, confirm: result})
+    }
+
+    const updatePhoto = async(file: File) => {
+        try {
+            const payload = new FormData()
+            payload.append('photo', file!)
+            startLoading('Uploading profile photo..')
+            const { data: res} = await base.patch(`/api/student/photo/${id}`, payload, {
+                headers: { 'content-type': 'multipart/form-data' }
+            })
+            if(res?.responseCode === 200) {
+                await swal('Success', 'Student account created successfully', 'success').then(reload)
+            }
+        } catch (error: any) {
+            swal('Error', error?.response?.data?.message, 'success')
+        } finally{
+            stopLoading()
+        }
     }
 
     
@@ -133,7 +149,7 @@ const StudentDetails = () => {
                     <Grid item sm={9.5}>
                         <Box bgcolor={'#fff'} borderRadius={'10px'} mb={4}>
                             <Stack direction={'row'} gap={2} p={3} borderRadius={'10px'} border={'1px solid lightgrey'} alignItems={'flex-start'} justifyContent={'flex-start'}>
-                                <Avatar variant='rounded' src={preview! || response?.photo} sx={{ width: '8rem', height: '8rem' }} />
+                                <Avatar variant='rounded' src={response?.photo} sx={{ width: '8rem', height: '8rem' }} />
                                 <div>
                                     <Typography variant='h6'>{response?.fullname}</Typography>
                                     <Typography color={'GrayText'}>Index No: {response?.enrollment?.index}</Typography>
@@ -141,7 +157,7 @@ const StudentDetails = () => {
                                     <Typography color={'GrayText'}>Year: {response?.enrollment?.year}</Typography>
                                 </div>
                                 <input type='file' name='photo' ref={ref} accept='image/*' style={{ display: 'none' }} onChange={(e) => {
-                                    uploadPhoto(e?.target?.files![0], (val)=>setPreview(val), (val)=>setPhoto(val))
+                                    updatePhoto(e?.target?.files![0])
                                 }} />
                                 <RoundButton sx={{ ml: 'auto', borderColor: grey[400], color: grey[600] }}
                                     variant={'outlined'} startIcon={<PencilEdit01Icon size={15} />}

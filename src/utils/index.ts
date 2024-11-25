@@ -1327,3 +1327,5 @@ export const uploadPhoto = async (file: File, setPreview: (val:any)=>void, setPh
       setPhoto(file)
   }
 }
+
+export const reload = () => window.location.reload()
