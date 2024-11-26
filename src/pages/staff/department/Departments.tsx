@@ -101,6 +101,12 @@ const Departments = () => {
                     size={'small'} value={value?.name}
                     onChange={(e) => setValue(prev => ({ ...prev, name: e?.target?.value }))}
                 />
+                 <InputField
+                    showTopLabel
+                    label='Head of Department' fullWidth
+                    size={'small'} value={value?.name}
+                    onChange={(e) => setValue(prev => ({ ...prev, head: e?.target?.value }))}
+                />
             </ModalItem>
 
         </div>

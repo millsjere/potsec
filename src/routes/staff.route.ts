@@ -7,16 +7,13 @@ const VerifyLogin = lazy(() => import("../pages/staff/auth/Verify2FA"));
 
 // Private Routes
 const Dashboard = lazy(() => import("../pages/staff/dashboard/Dashboard"));
-const AllStudents = lazy(() => import("../pages/staff/registration/Students"));
-const StudentDetails = lazy(
-  () => import("../pages/staff/registration/StudentDetails")
-);
-const AddStudents = lazy(() => import("../pages/staff/registration/AddStudent"));
+const AllApplications = lazy(() => import("../pages/staff/application/Applications"));
+const StudentDetails = lazy(() => import("../pages/staff/students/StudentDetails"));
+const NewApplication = lazy(() => import("../pages/staff/application/NewApplication"));
 const AllStaffs = lazy(() => import("../pages/staff/staffs/Staffs"));
+const AllStudents = lazy(() => import("../pages/staff/students/AllStudents"));
 const Programmes = lazy(() => import("../pages/staff/programmes/Programmes"));
-const ProgrammeDetail = lazy(
-  () => import("../pages/staff/programmes/ProgrammeDetails")
-);
+const ProgrammeDetail = lazy(() => import("../pages/staff/programmes/ProgrammeDetails"));
 const Departments = lazy(() => import("../pages/staff/department/Departments"));
 const Ticketing = lazy(() => import("../pages/staff/support/Ticket"));
 
@@ -40,23 +37,30 @@ const DashboardRoute = {
   role: "staff",
 };
 
-const StudentsRoute = {
-  path: "/staff/all-students",
-  component: AllStudents,
+const ApplicationRoute = {
+  path: "/staff/applicants",
+  component: AllApplications,
   isAuth: "yes",
   role: "staff",
 };
 
 const StudentsDetailsRoute = {
-  path: "/staff/registration/:id/view",
+  path: "/staff/applicant/:id/view",
   component: StudentDetails,
   isAuth: "yes",
   role: "staff",
 };
 
-const AddStudentsRoute = {
-  path: "/staff/registration",
-  component: AddStudents,
+const NewApplicationRoute = {
+  path: "/staff/application",
+  component: NewApplication,
+  isAuth: "yes",
+  role: "staff",
+};
+
+const StudentsRoute = {
+  path: "/staff/all-students",
+  component: AllStudents,
   isAuth: "yes",
   role: "staff",
 };
@@ -101,9 +105,10 @@ export const staffRoutes: RouteProps[] = [
   LoginRoute,
   VerifyLoginRoute,
   DashboardRoute,
-  StudentsRoute,
-  AddStudentsRoute,
+  ApplicationRoute,
+  NewApplicationRoute,
   StudentsDetailsRoute,
+  StudentsRoute,
   StaffsRoute,
   ProgrammeRoute,
   ProgrammeDetailRoute,

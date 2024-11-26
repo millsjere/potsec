@@ -69,8 +69,8 @@ const FilterBar = ({ view, onViewChange, showView = true, showProgramme = true, 
                     {
                         showView &&
                         <Stack direction={'row'} ml={'auto'} alignItems={'center'} gap={1}>
-                            <IconButton disableRipple onClick={() => onViewChange!('grid')} sx={{ mt: 1, bgcolor: view === 'grid' ? theme => theme.palette.primary.main : '#ededed', borderRadius: '8px', color: view === 'grid' ? '#fff' : null }}><GridViewIcon size={20} /></IconButton>
                             <IconButton disableRipple onClick={() => onViewChange!('list')} sx={{ mt: 1, bgcolor: view === 'list' ? theme => theme.palette.primary.main : '#ededed', borderRadius: '8px', color: view === 'list' ? '#fff' : null }}><RightToLeftListDashIcon size={20} /></IconButton>
+                            <IconButton disableRipple onClick={() => onViewChange!('grid')} sx={{ mt: 1, bgcolor: view === 'grid' ? theme => theme.palette.primary.main : '#ededed', borderRadius: '8px', color: view === 'grid' ? '#fff' : null }}><GridViewIcon size={20} /></IconButton>
                         </Stack>
                     }
                 </Stack>

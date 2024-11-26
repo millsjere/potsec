@@ -10,7 +10,7 @@ import { base } from '../../../config/appConfig'
 import { useNavigate } from 'react-router-dom'
 
 
-const AddStudent = () => {
+const NewApplication = () => {
     const ref = useRef()
     const navigate = useNavigate()
     const { startLoading, stopLoading } = useLoader()
@@ -83,14 +83,14 @@ const AddStudent = () => {
         if (isValid) {
             await swal({
                 title: 'Create Account',
-                text: 'This action will create a new student account. Student will also be notified via email with the account details',
+                text: 'This action will create a new student application. Applicant will also be notified via email with the account details',
                 icon: 'warning',
                 buttons: ['Cancel', 'Proceed'],
                 dangerMode: true,
                 closeOnClickOutside: false
             }).then(async (del) => {
                 if (del) {
-                    startLoading('Creating student account. Please wait')
+                    startLoading('Creating new account. Please wait')
                     try {
                         const { data: res } = await base.post('/api/student/create', formInput)
                         if (res?.responseCode === 200 && photo) {
@@ -100,11 +100,11 @@ const AddStudent = () => {
                             await base.patch(`/api/student/photo/${res?.data?.enrollment?.index}`, payload, {
                                 headers: { 'content-type': 'multipart/form-data' }
                             })
-                            await swal('Success', 'Student account created successfully', 'success').then(() => navigate('/staff/all-students'))
+                            await swal('Success', 'Applicant account created successfully', 'success').then(() => navigate('/staff/applicants'))
                         }else{
-                            await swal('Success', 'Student account created successfully', 'success').then(() => navigate('/staff/all-students'))
+                            await swal('Success', 'Applicant account created successfully', 'success').then(() => navigate('/staff/applicants'))
                         }
-                    } catch (error) {
+                    } catch (error: any) {
                         console.log(error?.response)
                         swal('Error', error?.response?.data?.message, 'error')
                     } finally {
@@ -117,7 +117,7 @@ const AddStudent = () => {
 
     return (
         <div>
-            <PageHeader title={'New Registration'} breadcrumbs={[{ label: 'Registration', link: '#' }]} />
+            <PageHeader title={'New Application'} breadcrumbs={[{ label: 'Application', link: '#' }]} />
             <Box>
                 <Grid container columnSpacing={4}>
                     <Grid item sm={8.5}>
@@ -213,4 +213,4 @@ const AddStudent = () => {
     )
 }
 
-export default AddStudent
+export default NewApplication

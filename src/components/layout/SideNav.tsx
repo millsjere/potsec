@@ -1,5 +1,5 @@
 import { Avatar, Box, Collapse, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, styled, Toolbar, Typography } from '@mui/material'
-import { AddTeamIcon, Analytics02Icon, ArrowDown01Icon, ArrowRight01Icon, Building03Icon, CreditCardValidationIcon, DashboardSquare01Icon, DashboardSquareAddIcon, DocumentValidationIcon, File01Icon, HelpCircleIcon, ImageAdd02Icon, InboxDownloadIcon, LibraryIcon, LicenseThirdPartyIcon, LogoutSquare01Icon, Settings01Icon, StoreLocation01Icon, StudentCardIcon, TaskAdd02Icon, Ticket02Icon, UserGroupIcon, UserSquareIcon, VideoReplayIcon } from 'hugeicons-react';
+import { AddTeamIcon, Analytics02Icon, ArrowDown01Icon, ArrowRight01Icon, Building03Icon, CreditCardValidationIcon, DashboardSquare01Icon, DashboardSquareAddIcon, DocumentValidationIcon, File01Icon, HelpCircleIcon, ImageAdd02Icon, InboxDownloadIcon, LibraryIcon, LicenseThirdPartyIcon, LogoutSquare01Icon, Settings01Icon, StoreLocation01Icon, StudentCardIcon, TaskAdd02Icon, Ticket02Icon, UserAccountIcon, UserGroupIcon, UserSquareIcon, VideoReplayIcon } from 'hugeicons-react';
 import React from 'react'
 import Logo from '../../assets/images/logo.png'
 import { useNavigate } from 'react-router-dom';
@@ -37,10 +37,13 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
     const primaryMenu: SideBarMenuProps[] = [
         { name: 'Dashboard', icon: <DashboardSquare01Icon size={20} />, path: '/staff/dashboard' },
         {
-            name: 'Registrations', icon: <LicenseThirdPartyIcon size={20} />, hasSubMenu: true, subMenus: [
-                { name: 'All Students', icon: <TaskAdd02Icon size={20} />, path: '/staff/all-students' },
-                { name: 'New Registration', icon: <AddTeamIcon size={20} />, path: '/staff/registration' },
+            name: 'Applications', icon: <LicenseThirdPartyIcon size={20} />, hasSubMenu: true, subMenus: [
+                { name: 'All Applicants', icon: <TaskAdd02Icon size={20} />, path: '/staff/applicants' },
+                { name: 'New Application', icon: <AddTeamIcon size={20} />, path: '/staff/application' },
             ]
+        },
+        {
+            name: 'Students', icon: <UserAccountIcon size={20} />, path: '/staff/all-students'
         },
         {
             name: 'Staff', icon: <UserGroupIcon size={20} />, path: '/staff/all-staff'

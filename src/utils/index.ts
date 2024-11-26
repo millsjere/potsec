@@ -60,6 +60,12 @@ export const getYearRange = (startYear: number) => {
   return years;
 };
 
+export const formatDateTime = (date: string) => {
+  const newDate =  new Date(date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year:'numeric'})
+  const newTime =  new Date(date).toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true, })
+  return `${newDate}, ${newTime}`
+}
+
 export const emailValidation = (email: string): boolean => {
   const isValid = email?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
   return Boolean(isValid);
@@ -112,13 +118,13 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           isRequired: true,
           keys: ['enrollment','year']
         },
-        {
-          type: "text",
-          label: "Index No.",
-          action: "ENROLL_INDEX",
-          isRequired: true,
-          keys: ['enrollment','index']
-        },
+        // {
+        //   type: "text",
+        //   label: "Index No.",
+        //   action: "ENROLL_INDEX",
+        //   isRequired: true,
+        //   keys: ['enrollment','index']
+        // },
       ],
     },
     {
@@ -752,7 +758,6 @@ export const initState = {
     // location: "",
   },
   enrollment: {
-    index: "",
     type: "",
     month: "",
     year: "",
@@ -997,14 +1002,6 @@ export const studentReducerFn = (state: typeof initState, action: any) => {
         ...state,
         enrollment: { ...state?.enrollment, session: action?.payload },
       };
-    case "ENROLL_INDEX":
-      return {
-        ...state,
-        enrollment: {
-          ...state?.enrollment,
-          index: action?.payload?.toUpperCase(),
-        },
-      };
     case "UPDATE":
       return {
         surname: action?.payload?.surname || "",
@@ -1062,7 +1059,6 @@ export const studentReducerFn = (state: typeof initState, action: any) => {
           // location: "",
         },
         enrollment: {
-          index: action?.payload?.enrollment?.index || "",
           type: action?.payload?.enrollment?.type || "",
           month: action?.payload?.enrollment?.month || "",
           year: action?.payload?.enrollment?.year || "",

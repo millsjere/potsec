@@ -1,10 +1,10 @@
 import React, { useEffect, useReducer, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import PageHeader from '../../../components/shared/PageHeader'
-import { Avatar, Box, Button, Divider, Grid, InputAdornment, List, ListItem, ListItemButton, MenuItem, Stack, Typography } from '@mui/material'
+import { Avatar, Box, Button, Chip, Divider, Grid, IconButton, InputAdornment, List, ListItem, ListItemButton, MenuItem, Stack, Typography } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { InputField, RoundButton } from '../../../components/shared'
-import { Cancel01Icon, Delete02Icon, File01Icon, FloppyDiskIcon, PencilEdit01Icon, PrinterIcon } from 'hugeicons-react'
+import { Camera01Icon, Cancel01Icon, CancelCircleIcon, CheckmarkCircle02Icon, Delete02Icon, File01Icon, FloppyDiskIcon, PencilEdit01Icon, PrinterIcon } from 'hugeicons-react'
 import { getApplicationForm, initState, reload, studentReducerFn } from '../../../utils'
 import useAxiosFetch from '../../../hooks/useAxiosFetch'
 import LoadingState from '../../../components/shared/Loaders/LoadingState'
@@ -114,7 +114,7 @@ const StudentDetails = () => {
 
     return (
         <div>
-            <PageHeader backOption title={'Student Details'} breadcrumbs={[{ label: 'All Students', link: '/staff/all-students' }, { label: 'Details', link: '#' }]} />
+            <PageHeader backOption title={'Applicant Details'} breadcrumbs={[{ label: 'All Applicants', link: '/staff/applicants' }, { label: 'Details', link: '#' }]} />
             {
                 isLoading ? <LoadingState state='staff' /> : 
                 <Grid container columnSpacing={3}>
@@ -138,10 +138,19 @@ const StudentDetails = () => {
                                     }
                                 </List>
                             </Box>
-                            <Stack direction={'row'} gap={2}>
-                                <RoundButton startIcon={<File01Icon size={20} />} disableElevation fullWidth variant={'contained'} color={'secondary'} text={'View Course'} onClick={()=>{}} />
-                                <RoundButton startIcon={<PrinterIcon size={20} />} disableElevation fullWidth variant={'contained'} color={'primary'} text={'Print PDF'} onClick={()=>{}} />
-                            </Stack>
+                            {
+                                response?.applicationStatus === 'pending' ? 
+                                <Stack direction={'row'} gap={2}>
+                                    <RoundButton startIcon={<CheckmarkCircle02Icon size={20} />} disableElevation fullWidth variant={'contained'} color={'secondary'} text={'Accept'} onClick={()=>{}} />
+                                    <RoundButton startIcon={<CancelCircleIcon size={20} />} disableElevation fullWidth variant={'contained'} color={'primary'} text={'Decline'} onClick={()=>{}} />
+                                </Stack>
+                                :
+                                <Stack direction={'row'} gap={2}>
+                                    <RoundButton startIcon={<File01Icon size={20} />} disableElevation fullWidth variant={'contained'} color={'secondary'} text={'View Course'} onClick={()=>{}} />
+                                    <RoundButton startIcon={<PrinterIcon size={20} />} disableElevation fullWidth variant={'contained'} color={'primary'} text={'Print PDF'} onClick={()=>{}} />
+                                </Stack>
+
+                            }
                         </Box>
                     </Grid>
 
@@ -149,21 +158,22 @@ const StudentDetails = () => {
                     <Grid item sm={9.5}>
                         <Box bgcolor={'#fff'} borderRadius={'10px'} mb={4}>
                             <Stack direction={'row'} gap={2} p={3} borderRadius={'10px'} border={'1px solid lightgrey'} alignItems={'flex-start'} justifyContent={'flex-start'}>
-                                <Avatar variant='rounded' src={response?.photo} sx={{ width: '8rem', height: '8rem' }} />
+                                <Stack direction={'column'} position={'relative'}>
+                                    <input type='file' name='photo' ref={ref} accept='image/*' style={{ display: 'none' }} onChange={(e) => {
+                                        updatePhoto(e?.target?.files![0])
+                                    }} />
+                                    <Avatar variant='circular' src={response?.photo} sx={{ width: '8rem', height: '8rem' }} />
+                                    <IconButton onClick={() => ref?.current?.click()} sx={{ bgcolor: 'secondary.main', position: 'absolute', bottom: '4%', right: '-1%', ':hover': { bgcolor: 'red' } }}><Camera01Icon size={20} color='#fff' /></IconButton>
+                                </Stack>
+
                                 <div>
                                     <Typography variant='h6'>{response?.fullname}</Typography>
                                     <Typography color={'GrayText'}>Index No: {response?.enrollment?.index}</Typography>
                                     <Typography color={'GrayText'}>Programme: {response?.enrollment?.programme}</Typography>
                                     <Typography color={'GrayText'}>Year: {response?.enrollment?.year}</Typography>
                                 </div>
-                                <input type='file' name='photo' ref={ref} accept='image/*' style={{ display: 'none' }} onChange={(e) => {
-                                    updatePhoto(e?.target?.files![0])
-                                }} />
-                                <RoundButton sx={{ ml: 'auto', borderColor: grey[400], color: grey[600] }}
-                                    variant={'outlined'} startIcon={<PencilEdit01Icon size={15} />}
-                                    onClick={() => ref.current.click()} disableElevation
-                                    text='Change Photo' size={'small'}
-                                />
+                                <Chip sx={{textTransform: 'capitalize', ml:'auto'}} label={response?.applicationStatus} />
+                                
                             </Stack>
                         </Box>
                         <>
