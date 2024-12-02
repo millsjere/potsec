@@ -46,7 +46,7 @@ function Layout({ children }: { children: React.ReactNode }) {
       {/* main Content */}
       <Box component="main" sx={{ flexGrow: 1, width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
         <Toolbar />
-        <Box minHeight={'100vh'} bgcolor={grey[100]} p={'2rem 3rem'}>
+        <Box minHeight={'100vh'} bgcolor={grey[100]} p={'2rem'}>
           {children}
         </Box>
         <Footer />

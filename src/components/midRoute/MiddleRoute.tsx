@@ -10,13 +10,13 @@ const MiddleRoute = () => {
     const user = getData('uid')
     const role = user?.role
 
-    if(auth){
-        if(auth && (Number(sessionTime) > Number(currentTime)) && (role === 'staff' || role === 'admin')){
-            if(user?.isLoginVerified){
+    if (auth) {
+        if (auth && (Number(sessionTime) > Number(currentTime)) && (role === 'staff' || role === 'admin')) {
+            if (user?.isLoginVerified) {
                 return (
                     <Navigate to={'/staff/dashboard'} replace />
                 )
-            }else{
+            } else {
                 return (
                     <React.Suspense fallback={<Loader />}>
                         <Outlet />
@@ -24,12 +24,12 @@ const MiddleRoute = () => {
                 )
             }
         }
-        if(auth && (Number(sessionTime) > Number(currentTime)) && (role === 'student')){
-            if(user?.isLoginVerified){
+        if (auth && (Number(sessionTime) > Number(currentTime)) && (role === 'student' || role === 'applicant')) {
+            if (user?.isLoginVerified) {
                 return (
-                    <Navigate to={'/student/dashboard'} replace />
+                    <Navigate to={'/account/dashboard'} replace />
                 )
-            }else{
+            } else {
                 return (
                     <React.Suspense fallback={<Loader />}>
                         <Outlet />
@@ -38,12 +38,12 @@ const MiddleRoute = () => {
             }
         }
     }
-        sessionTimeout()
-        return (
-            <>
-                <Navigate to={'/'} replace />
-            </>
-        )
+    sessionTimeout()
+    return (
+        <>
+            <Navigate to={'/'} replace />
+        </>
+    )
 }
 
 export default MiddleRoute

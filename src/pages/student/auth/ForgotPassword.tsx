@@ -127,7 +127,7 @@ const ForgotPassword = () => {
                 {
                     stage === 0 &&
                     <Typography textAlign={'center'} sx={{ cursor: 'pointer' }}
-                        mt={2} display={'flex'} color={'primary'} onClick={() => navigate('/students')}
+                        mt={2} display={'flex'} color={'primary'} onClick={() => navigate('/')}
                         alignItems={'center'} gap={.5} justifyContent={'center'} ><ArrowLeft01Icon size={20} />Login</Typography>
                 }
             </AuthWrapper>

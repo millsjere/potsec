@@ -13,6 +13,7 @@ const Verify2FA = () => {
     const [load, setLoad] = useState(false)
     const user = getData('uid')
     const { successAlert, errorAlert } = useAlert()
+    const isStaff = (user?.role === 'staff' || user?.role === 'admin')
 
 
     console.log(user)
@@ -29,7 +30,7 @@ const Verify2FA = () => {
         try {
             successAlert('Sending 2FA code...')
             setLoad(true)
-            const { data: res } = await base.get('/api/staff/resend-email-token')
+            const { data: res } = await base.get(isStaff ? '/api/staff/resend-email-token' : '/api/u/resend-email-token')
             if (res?.status === 'success') {
                 successAlert('2FA code sent to your email')
             }
@@ -41,16 +42,17 @@ const Verify2FA = () => {
     }
 
     const onFormSubmit = async () => {
+        const url = `/api/${isStaff ? 'staff' : 'u'}/verify-login`
         const code = ref1.current?.value + ref2.current?.value + ref3.current?.value + ref4.current?.value + ref5.current?.value + ref6.current?.value
         if (code === '') return errorAlert('Please provide token')
         if (code?.length < 6) return errorAlert('Token must be 6 characters')
         try {
             setLoad(true)
-            const { data: res } = await base.post('/api/staff/verify-login', { code })
+            const { data: res } = await base.post(url, { code })
             if (res?.status === 'success') {
                 saveData('uid', res?.data)
                 successAlert('User verification successful')
-                navigate('/staff/dashboard')
+                navigate(`/${isStaff ? 'staff' : 'account'}/dashboard`)
             }
         } catch (error) {
             errorAlert(error?.response?.data?.message)
@@ -75,9 +77,25 @@ const Verify2FA = () => {
         const clipboardData = e?.clipboardData || new window.clipboardData;
         const pastedData = clipboardData.getData('Text');
         console.log(pastedData)
+
     }
 
+    const handleKeyUp = (e: React.KeyboardEvent) => {
+        const current = e?.currentTarget;
+        if (e?.key === 'ArrowLeft' || e?.key === 'Backspace') {
+            const prev = current?.previousElementSibling as HTMLInputElement | null
+            prev?.focus();
+            prev?.setSelectionRange(0, 1);
+            return
+        }
 
+        if (e?.key === 'ArrowRight') {
+            const prev = current?.nextElementSibling as HTMLInputElement | null
+            prev?.focus();
+            prev?.setSelectionRange(0, 1);
+            return
+        }
+    }
 
 
     return (
@@ -97,6 +115,7 @@ const Verify2FA = () => {
                                     type='text' maxLength={1}
                                     onChange={(e) => autoFocusHandler(e)}
                                     onPaste={(e) => pasteHandler(e)}
+                                    onKeyUp={handleKeyUp}
                                     style={{ textAlign: 'center', height: '5rem', fontSize: '2rem', fontFamily: "Plus Jakarta Sans", width: '100%', borderRadius: '15px', border: '1px solid lightgrey' }}
                                 />
                             )
@@ -108,7 +127,7 @@ const Verify2FA = () => {
                     text='Continue' variant={'contained'}
                     color='secondary' disableElevation fullWidth
                 />
-                <Typography textAlign={'center'} variant='body1' paragraph color={'GrayText'} >Didn't get the token? <span onClick={resendToken} style={{ cursor: 'pointer', color: '#ED8A2F' }}>Resend Token </span> </Typography>
+                <Typography textAlign={'center'} variant='body2' paragraph color={'GrayText'} >Didn't get the token? <span onClick={resendToken} style={{ cursor: 'pointer', color: '#ED8A2F' }}>Resend Token </span> </Typography>
             </AuthWrapper>
         </>
     )

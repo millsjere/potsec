@@ -12,26 +12,28 @@ const Login = () => {
     const navigate = useNavigate()
     const { successAlert, errorAlert } = useAlert()
     const [load, setLoad] = React.useState(false)
-    const [value, setValue] = React.useState({ id: '', password: '' })
+    const [value, setValue] = React.useState({ email: '', password: '' })
 
     // console.log(getData('uid'))
 
     const onFormSubmit = async () => {
-        if (value.id === '') return errorAlert('Invalid Student ID')
-        if (value.password === '') return errorAlert('Invalid password')
+        const validateEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (value.email === '' || !value?.email?.match(validateEmail)) return errorAlert('Please provide a valid email address')
+        if (value.password === '') return errorAlert('Please enter your password')
         try {
             setLoad(true)
             const url = '/api/u/login'
             const { data: res } = await base.post(url, value)
             if (res?.status === 'success') {
-                // console.log(res?.data)
+                console.log(res?.data)
+                localStorage.setItem('user', res?.data?.user)
                 saveData('uac', res?.data?.ac)
                 saveData('uid', res?.data?.user)
                 saveData('exp', res?.data?.expiry)
                 successAlert('User Login successful')
-                navigate('/auth-2fa', { replace: true })
+                navigate('/2fa', { replace: true })
             }
-        } catch (error) {
+        } catch (error: any) {
             errorAlert(error?.response?.data?.message)
         } finally {
             setLoad(false)
@@ -51,9 +53,9 @@ const Login = () => {
             >
                 <div>
                     <InputField variant='outlined'
-                        label='Student ID' type='text'
+                        label='Email' type='email'
                         InputProps={{ endAdornment: <InputAdornment position='start'><UserCircleIcon size={20} color='#acacac' /></InputAdornment> }}
-                        value={value?.id} onChange={(e) => setValue(prev => ({ ...prev, id: e.target.value }))} fullWidth
+                        value={value?.email} onChange={(e) => setValue(prev => ({ ...prev, email: e.target.value }))} fullWidth
                     />
                     <InputField variant='outlined'
                         label='Password' type='password'
@@ -65,9 +67,9 @@ const Login = () => {
                         onClick={onFormSubmit}
                         loading={load} sx={{ mb: '1rem' }}
                         text='Login' variant={'contained'}
-                        color='primary' disableElevation fullWidth
+                        color='secondary' disableElevation fullWidth
                     />
-                    <Typography textAlign={'center'} paragraph > <Link to='/students/forgot-password' style={{ color: '#ee0704' }}>Forgot Password </Link> </Typography>
+                    <Typography variant='body2' textAlign={'center'} paragraph > <Link to='/forgot-password' style={{ color: '#ee0704' }}>Forgot Password </Link> </Typography>
 
 
                 </div>

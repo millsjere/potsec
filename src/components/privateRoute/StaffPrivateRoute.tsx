@@ -12,7 +12,7 @@ const StaffPrivateRoute = () => {
     const user = getData('uid')
     const role = user?.role
 
-    console.log('IS_SESSION_EXPIRED', (Number(sessionTime) < Number(currentTime)))
+    // console.log('IS_SESSION_EXPIRED', (Number(sessionTime) < Number(currentTime)))
     if (auth) {
         if ((Number(sessionTime) > Number(currentTime)) && (role === 'staff' || role === 'admin')) {
             if (user?.isLoginVerified) {

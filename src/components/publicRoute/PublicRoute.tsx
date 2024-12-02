@@ -9,47 +9,47 @@ const PublicRoute = () => {
     const role = user?.role
     // console.log(auth)
 
-    if(auth){
-        if((role === 'staff' || role === 'admin')){
-            if(user?.isLoginVerified){
+    if (auth) {
+        if ((role === 'staff' || role === 'admin')) {
+            if (user?.isLoginVerified) {
                 console.log('staff is verified')
                 return (
                     <React.Suspense fallback={<Loader />}>
                         <Navigate to={'/staff/dashboard'} replace />
                     </React.Suspense>
                 )
-            }else{
+            } else {
                 console.log('staff is not yet verified')
                 return (
-                        <React.Suspense fallback={<Loader />}>
-                            <Navigate to={'/staff/2fa'} replace />
-                        </React.Suspense>
+                    <React.Suspense fallback={<Loader />}>
+                        <Navigate to={'/staff/2fa'} replace />
+                    </React.Suspense>
                 )
             }
         }
-        if((role === 'student')){
-            if(user?.isLoginVerified){
+        if ((role === 'student' || role === 'applicant')) {
+            if (user?.isLoginVerified) {
                 console.log('student is verified')
                 return (
                     <React.Suspense fallback={<Loader />}>
-                        <Navigate to={'/student/dashboard'} replace />
+                        <Navigate to={'/account/dashboard'} replace />
                     </React.Suspense>
                 )
-            }else{
+            } else {
                 console.log('student is not yet verified')
                 return (
                     <React.Suspense fallback={<Loader />}>
-                        <Navigate to={'/student/2fa'} replace />
+                        <Navigate to={'/2fa'} replace />
                     </React.Suspense>
                 )
             }
         }
     }
-        return (
-            <React.Suspense fallback={<Loader />}>
-                <Outlet />
-            </React.Suspense>
-        )
+    return (
+        <React.Suspense fallback={<Loader />}>
+            <Outlet />
+        </React.Suspense>
+    )
 }
 
 export default PublicRoute

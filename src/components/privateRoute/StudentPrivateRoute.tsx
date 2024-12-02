@@ -10,12 +10,11 @@ const StudentPrivateRoute = () => {
     const currentTime = new Date().getTime()
     const sessionTime = getData('exp')
     const user = getData('uid')
-    const { role } = user
 
-    console.log(user)
+    console.log('USER HERE ===>', user)
 
-    if(auth && (Number(sessionTime) > Number(currentTime)) && (role === 'staff' || role === 'admin')){
-        if(user?.isLoginVerified){
+    if (auth && (Number(sessionTime) > Number(currentTime))) {
+        if (user?.isLoginVerified) {
             return (
                 <>
                     <Layout>
@@ -25,9 +24,9 @@ const StudentPrivateRoute = () => {
                     </Layout>
                 </>
             )
-        }else{
+        } else {
             return (
-                <Navigate to={'/student/2fa'} replace />
+                <Navigate to={'/2fa'} replace />
             )
         }
     }
@@ -35,11 +34,11 @@ const StudentPrivateRoute = () => {
         sessionTimeout()
         return (
             <>
-                <Navigate to={'/student'} replace />
+                <Navigate to={'/'} replace />
             </>
         )
     }
-    
+
 }
 
 export default StudentPrivateRoute

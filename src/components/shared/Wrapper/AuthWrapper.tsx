@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Grid, Stack, Typography } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Logo from '../../../assets/images/logo.png'
 import Skills from '../../../assets/images/skill_01.jpeg'
 
@@ -74,7 +74,7 @@ export const AuthWrapper = ({ children, staff = false, title, subtitle, image, o
 
                             <Stack direction={{ xs: 'row', sm: 'row', md: 'row', lg: 'row' }} justifyContent={'space-between'} width={{ xs: '80%', sm: '80%', md: '80%', lg: '50%' }}>
                                 <Typography variant='body2' color={'GrayText'} sx={{ textAlign: 'center' }}> © {new Date().getFullYear()} POTSEC</Typography>
-                                <Typography variant='body2' color={'GrayText'}>About Us</Typography>
+                                <Typography variant='body2' color={'GrayText'}><Link to={'https://potsec.edu.gh'}>About Us</Link></Typography>
                             </Stack>
                         </Box>
                     </Box>

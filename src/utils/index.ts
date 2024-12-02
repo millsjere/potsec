@@ -39,7 +39,7 @@ interface FieldProps {
   label: string;
   action: string;
   options?: Array<any>;
-  keys: Array<string>;
+  keys?: Array<string>;
   placeholder?: string;
   isRequired?: boolean | undefined;
 }
@@ -53,18 +53,26 @@ interface FormDataProps {
 export const getYearRange = (startYear: number) => {
   var currentYear = new Date().getFullYear(),
     years = [];
-  startYear = startYear || 1980;
+  startYear = startYear || 2020;
   while (startYear <= currentYear) {
-    years.push(startYear++);
+    years.push(startYear++ + 1);
   }
   return years;
 };
 
 export const formatDateTime = (date: string) => {
-  const newDate =  new Date(date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year:'numeric'})
-  const newTime =  new Date(date).toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true, })
-  return `${newDate}, ${newTime}`
-}
+  const newDate = new Date(date).toLocaleDateString("en-US", {
+    month: "short",
+    day: "2-digit",
+    year: "numeric",
+  });
+  const newTime = new Date(date).toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  });
+  return `${newDate}, ${newTime}`;
+};
 
 export const emailValidation = (email: string): boolean => {
   const isValid = email?.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
@@ -98,9 +106,9 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           type: "select",
           label: "Application Type",
           action: "ENROLL_TYPE",
-          options: ["Local (Ghana)", "Foreign"],
+          options: ["Local", "Foreign"],
           isRequired: true,
-          keys: ['enrollment','type']
+          keys: ["enrollment", "type"],
         },
         {
           type: "select",
@@ -108,15 +116,15 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "ENROLL_MONTH",
           options: allMonths,
           isRequired: true,
-          keys: ['enrollment','month']
+          keys: ["enrollment", "month"],
         },
         {
           type: "select",
           label: "Year of Enrollment",
           action: "ENROLL_YEAR",
-          options: getYearRange(2019 - 19),
+          options: getYearRange(2023),
           isRequired: true,
-          keys: ['enrollment','year']
+          keys: ["enrollment", "year"],
         },
         // {
         //   type: "text",
@@ -130,39 +138,40 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
     {
       title: "Personal Details",
       fields: [
-        { 
-          type: "text", 
-          label: "Surname", 
-          action: "SURNAME", 
+        {
+          type: "text",
+          label: "Surname",
+          action: "SURNAME",
           isRequired: true,
-          keys: ['surname']
+          keys: ["surname"],
         },
         {
           type: "text",
           label: "Othernames",
           action: "OTHERNAMES",
           isRequired: true,
-          keys: ['othernames']
+          keys: ["othernames"],
         },
-        { type: "email", 
-          label: "Email", 
-          action: "EMAIL", 
+        {
+          type: "email",
+          label: "Email",
+          action: "EMAIL",
           isRequired: true,
-          keys: ['email']
+          keys: ["email"],
         },
         {
           type: "number",
           label: "Phone",
           action: "PHONE_MOBILE",
           isRequired: true,
-          keys: ['phone','mobile']
+          keys: ["phone", "mobile"],
         },
         {
           type: "number",
           label: "WhatsApp",
           action: "PHONE_WHATSAPP",
           isRequired: true,
-          keys: ['phone','whatsapp']
+          keys: ["phone", "whatsapp"],
         },
         {
           type: "select",
@@ -170,20 +179,21 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "GENDER",
           options: ["Male", "Female"],
           isRequired: true,
-          keys: ['gender']
+          keys: ["gender"],
         },
         {
           type: "date",
           label: "Date of Birth",
           action: "DOB",
           isRequired: true,
-          keys: ['dob']
+          keys: ["dob"],
         },
-        { 
-          type: "number", 
-          label: "Age", action: "AGE", 
-          isRequired: true,  
-          keys: ['age']
+        {
+          type: "number",
+          label: "Age",
+          action: "AGE",
+          isRequired: true,
+          keys: ["age"],
         },
         {
           type: "select",
@@ -197,7 +207,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
             "Others",
           ],
           isRequired: true,
-          keys: ['educationalLevel']
+          keys: ["educationalLevel"],
         },
         {
           type: "text",
@@ -205,7 +215,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "LANGUAGE_SPOKEN",
           placeholder: "English, Fante, Ewe",
           isRequired: true,
-          keys: ['language','spoken']
+          keys: ["language", "spoken"],
         },
         {
           type: "text",
@@ -213,8 +223,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "LANGUAGE_WRITTEN",
           placeholder: "English, Fante, Ewe",
           isRequired: true,
-          keys: ['language','written']
-
+          keys: ["language", "written"],
         },
         {
           type: "select",
@@ -222,36 +231,35 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "NATIONAL_ID",
           options: ["Ghana Card", "Drivers License", "Passport"],
           isRequired: true,
-          keys: ['nationalID','type']
-
+          keys: ["nationalID", "type"],
         },
         {
           type: "text",
           label: "ID Number",
           action: "NATIONAL_ID_NUMBER",
           isRequired: true,
-          keys: ['nationalID','number']
+          keys: ["nationalID", "number"],
         },
         {
           type: "text",
           label: "Residence Address",
           action: "RESIDENCE",
           isRequired: true,
-          keys: ['address','residence']
+          keys: ["address", "residence"],
         },
         {
           type: "text",
           label: "Town",
           action: "RESIDENCE_TOWN",
           isRequired: true,
-          keys: ['address','town']
+          keys: ["address", "town"],
         },
         {
           type: "text",
           label: "District",
           action: "RESIDENCE_DISTRICT",
           isRequired: true,
-          keys: ['address','district']
+          keys: ["address", "district"],
         },
         {
           type: "select",
@@ -259,7 +267,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "RESIDENCE_REGION",
           options: getRegions(),
           isRequired: true,
-          keys: ['address','region']
+          keys: ["address", "region"],
         },
       ],
     },
@@ -272,21 +280,21 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "PAYMENT",
           options: ["Mobile Money"],
           isRequired: true,
-          keys: ['payment','type']
+          keys: ["payment", "type"],
         },
         {
           type: "text",
           label: "Reference",
           action: "PAYMENT_REF",
           isRequired: true,
-          keys: ['payment','reference']
+          keys: ["payment", "reference"],
         },
         {
           type: "text",
           label: "Transaction ID",
           action: "PAYMENT_TRANSACTION_ID",
           isRequired: true,
-          keys: ['payment','transactionID']
+          keys: ["payment", "transactionID"],
         },
       ],
     },
@@ -299,14 +307,14 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "EMPLOYMENT",
           options: ["Yes", "No"],
           isRequired: true,
-          keys: ['employment','isEmployed']
+          keys: ["employment", "isEmployed"],
         },
         {
           type: "text",
           label: "What is your current job",
           action: "CURRENT_EMPLOYMENT",
           isRequired: true,
-          keys: ['employment','currentJob']
+          keys: ["employment", "currentJob"],
         },
         {
           type: "select",
@@ -314,7 +322,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "EMPLOYMENT_NEEDED",
           options: ["Yes", "No"],
           isRequired: true,
-          keys: ['employment','afterCompletion']
+          keys: ["employment", "afterCompletion"],
         },
       ],
     },
@@ -327,14 +335,14 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "HEALTH_CONDITION",
           options: ["Yes", "No"],
           isRequired: true,
-          keys: ['health','anyCondition']
+          keys: ["health", "anyCondition"],
         },
         {
           type: "textarea",
           label: "If yes, please provide details of the condition",
           action: "HEALTH_DETAILS",
           isRequired: false,
-          keys: ['health','details']
+          keys: ["health", "details"],
         },
       ],
     },
@@ -346,21 +354,21 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           label: "Name",
           action: "GUARDIAN_NAME",
           isRequired: true,
-          keys: ['guardian','name']
+          keys: ["guardian", "name"],
         },
         {
           type: "text",
           label: "Phone Number",
           action: "GUARDIAN_PHONE",
           isRequired: true,
-          keys: ['guardian','phone']
+          keys: ["guardian", "phone"],
         },
         {
           type: "text",
           label: "Relationship",
           action: "GUARDIAN_RELATIONSHIP",
           isRequired: false,
-          keys: ['guardian','relationship']
+          keys: ["guardian", "relationship"],
         },
       ],
     },
@@ -373,21 +381,21 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           label: "Name",
           action: "SPONSOR_NAME",
           isRequired: false,
-          keys: ['sponsor','name']
+          keys: ["sponsor", "name"],
         },
         {
           type: "text",
           label: "Phone Number",
           action: "SPONSOR_PHONE",
           isRequired: false,
-          keys: ['sponsor','phone']
+          keys: ["sponsor", "phone"],
         },
         {
           type: "text",
           label: "Relationship",
           action: "SPONSOR_RELATIONSHIP",
           isRequired: false,
-          keys: ['sponsor','relationship']
+          keys: ["sponsor", "relationship"],
         },
       ],
     },
@@ -400,14 +408,14 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           label: "Name",
           action: "EMERGENCY_NAME",
           isRequired: false,
-          keys: ['emergency','name']
+          keys: ["emergency", "name"],
         },
         {
           type: "text",
           label: "Phone Number",
           action: "EMERGENCY_PHONE",
           isRequired: false,
-          keys: ['emergency','phone']
+          keys: ["emergency", "phone"],
         },
         // { type: 'text', label: 'Location', action: 'EMERGENCY_LOCATION', isRequired: false },
       ],
@@ -421,7 +429,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "ENROLL_CERTIFICATION",
           options: ["HND/DIPLOMA", "ADVANCED CERTIFICATE", "CERTIFICATE"],
           isRequired: true,
-          keys: ['enrollment','certification']
+          keys: ["enrollment", "certification"],
         },
         {
           type: "select",
@@ -433,7 +441,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
             "ADVANCED - (has at least 50% knowledge)",
           ],
           isRequired: true,
-          keys: ['enrollment','certificationLevel']
+          keys: ["enrollment", "certificationLevel"],
         },
         {
           type: "select",
@@ -441,7 +449,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "ENROLL_PROGRAMME",
           options: selectProgrammes || [],
           isRequired: true,
-          keys: ['enrollment','programme']
+          keys: ["enrollment", "programme"],
         },
         {
           type: "select",
@@ -449,7 +457,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "ENROLL_TUITION_MODE",
           options: programmeTrainings,
           isRequired: true,
-          keys: ['enrollment','modeofTuition']
+          keys: ["enrollment", "modeofTuition"],
         },
         {
           type: "select",
@@ -457,7 +465,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "ENROLL_SESSION",
           options: programmeSessions,
           isRequired: true,
-          keys: ['enrollment','session']
+          keys: ["enrollment", "session"],
         },
         {
           type: "select",
@@ -465,7 +473,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           action: "CAMPUS",
           options: ["Accra", "Kumasi"],
           isRequired: true,
-          keys: ['campus']
+          keys: ["campus"],
         },
       ],
     },
@@ -1067,11 +1075,12 @@ export const studentReducerFn = (state: typeof initState, action: any) => {
           department: action?.payload?.enrollment?.department || "",
           modeofTuition: action?.payload?.enrollment?.modeofTuition || "",
           certification: action?.payload?.enrollment?.certification || "",
-          certificationLevel: action?.payload?.enrollment?.certificationLevel || "",
+          certificationLevel:
+            action?.payload?.enrollment?.certificationLevel || "",
           session: action?.payload?.enrollment?.session || "",
         },
         campus: action?.payload?.campus || "",
-      }
+      };
     case "RESET":
       return initState;
     default:
@@ -1186,24 +1195,24 @@ export const staffReducerFn = (state: typeof staffData, action: any) => {
         ...state,
         academics: { ...state?.academics, campus: action?.payload },
       };
-    case 'UPDATE':
+    case "UPDATE":
       return {
-        role: action?.payload?.role || '',
-        surname: action?.payload?.surname || '',
-        othernames: action?.payload?.othernames || '',
-        email: action?.payload?.email || '',
+        role: action?.payload?.role || "",
+        surname: action?.payload?.surname || "",
+        othernames: action?.payload?.othernames || "",
+        email: action?.payload?.email || "",
         phone: {
-          mobile: action?.payload?.phone?.mobile || '',
-          whatsapp: action?.payload?.phone?.whatsapp || '',
+          mobile: action?.payload?.phone?.mobile || "",
+          whatsapp: action?.payload?.phone?.whatsapp || "",
         },
-        gender: action?.payload?.gender || '',
+        gender: action?.payload?.gender || "",
         language: {
-          spoken: action?.payload?.language?.spoken || '',
-          written: action?.payload?.language?.written || '',
+          spoken: action?.payload?.language?.spoken || "",
+          written: action?.payload?.language?.written || "",
         },
         nationalID: {
-          type: action?.payload?.nationalID?.type || '',
-          number: action?.payload?.nationalID?.number || '',
+          type: action?.payload?.nationalID?.type || "",
+          number: action?.payload?.nationalID?.number || "",
         },
         address: {
           residence: action?.payload?.address?.residence || "",
@@ -1215,8 +1224,8 @@ export const staffReducerFn = (state: typeof staffData, action: any) => {
           staffID: action?.payload?.academics?.staffID || "",
           staffEmail: action?.payload?.academics?.staffEmail || "",
           campus: action?.payload?.academics?.campus || "",
-        }
-      }
+        },
+      };
     default:
       return state;
   }
@@ -1267,61 +1276,123 @@ export const validateFile = (file: File, type: string) => {
   return file;
 };
 
-export const validateFormData = (formInput: typeof initState) => {
-  if (formInput?.enrollment?.type === ''
-      || formInput?.enrollment?.month === ''
-      || formInput?.enrollment?.year === ''
-      || formInput?.enrollment?.index === ''
-  ) return swal('Invalid', 'Provide all required fields under Application', 'error').then(() => false)
-  if (formInput?.surname === ''
-      || formInput?.othernames === ''
-      || (formInput?.email === '' || !formInput?.email?.includes('@'))
-      || formInput?.phone?.mobile === '' || formInput?.phone?.whatsapp === ''
-      || formInput?.gender === '' || formInput?.dob === '' || formInput?.age === '' || formInput?.educationalLevel === ''
-      || formInput?.language?.spoken === '' || formInput?.language?.written === ''
-      || formInput?.nationalID?.type === '' || formInput?.nationalID?.number === ''
-      || formInput?.address?.residence === '' || formInput?.address?.town === '' || formInput?.address?.district === '' || formInput?.address?.region === ''
-  ) return swal('Invalid', 'Provide all required fields under Personal Details', 'error').then(() => false)
-  if (formInput?.payment?.type === ''
-      || formInput?.payment?.reference === ''
-      || formInput?.payment?.transaction_id === ''
-  ) return swal('Invalid', 'Provide all required fields under Payment', 'error').then(() => false)
-  if (formInput?.employment?.isEmployed === ''
-      || formInput?.employment?.currentJob === ''
-      || formInput?.employment?.afterCompletion === ''
-  ) return swal('Invalid', 'Provide all required fields under Employment', 'error').then(() => false)
+export const validateFormData = (formInput: typeof initState, photo: File) => {
   if (
-      formInput?.health?.anyCondition === ''
-      || formInput?.employment?.currentJob === ''
-  ) return swal('Invalid', 'Provide all required fields under Health', 'error').then(() => false)
-  if (formInput?.guardian?.name === ''
-      || formInput?.guardian?.phone === ''
-      || formInput?.guardian?.relationship === ''
-  ) return swal('Invalid', 'Provide all required fields under Guardian', 'error').then(() => false)
-  if (formInput?.emergency?.name === ''
-      || formInput?.emergency?.phone === ''
-  ) return swal('Invalid', 'Provide all required fields under Emergency', 'error').then(() => false)
-  if (formInput?.enrollment?.certification === '' || formInput?.campus === ''
-      || formInput?.enrollment?.certificationLevel === '' || formInput?.enrollment?.programme === ''
-      || formInput?.enrollment?.session === '' || formInput?.enrollment?.modeofTuition === ''
-  ) return swal('Invalid', 'Provide all required fields under Programme & Certification', 'error').then(() => false)
-  // if (!photo) return swal('Invalid', 'Provide profile photo', 'error').then(() => false)
+    formInput?.enrollment?.type === "" ||
+    formInput?.enrollment?.month === "" ||
+    formInput?.enrollment?.year === "" ||
+    formInput?.enrollment?.index === ""
+  )
+    return swal(
+      "Invalid",
+      "Provide all required fields under Application",
+      "error"
+    ).then(() => false);
+  if (
+    formInput?.surname === "" ||
+    formInput?.othernames === "" ||
+    formInput?.email === "" ||
+    !formInput?.email?.includes("@") ||
+    formInput?.phone?.mobile === "" ||
+    formInput?.phone?.whatsapp === "" ||
+    formInput?.gender === "" ||
+    formInput?.dob === "" ||
+    formInput?.age === "" ||
+    formInput?.educationalLevel === "" ||
+    formInput?.language?.spoken === "" ||
+    formInput?.language?.written === "" ||
+    formInput?.nationalID?.type === "" ||
+    formInput?.nationalID?.number === "" ||
+    formInput?.address?.residence === "" ||
+    formInput?.address?.town === "" ||
+    formInput?.address?.district === "" ||
+    formInput?.address?.region === ""
+  )
+    return swal(
+      "Invalid",
+      "Provide all required fields under Personal Details",
+      "error"
+    ).then(() => false);
+  if (
+    formInput?.payment?.type === "" ||
+    formInput?.payment?.reference === "" ||
+    formInput?.payment?.transaction_id === ""
+  )
+    return swal(
+      "Invalid",
+      "Provide all required fields under Payment",
+      "error"
+    ).then(() => false);
+  if (
+    formInput?.employment?.isEmployed === "" ||
+    formInput?.employment?.currentJob === "" ||
+    formInput?.employment?.afterCompletion === ""
+  )
+    return swal(
+      "Invalid",
+      "Provide all required fields under Employment",
+      "error"
+    ).then(() => false);
+  if (
+    formInput?.health?.anyCondition === "" ||
+    formInput?.employment?.currentJob === ""
+  )
+    return swal(
+      "Invalid",
+      "Provide all required fields under Health",
+      "error"
+    ).then(() => false);
+  if (
+    formInput?.guardian?.name === "" ||
+    formInput?.guardian?.phone === "" ||
+    formInput?.guardian?.relationship === ""
+  )
+    return swal(
+      "Invalid",
+      "Provide all required fields under Guardian",
+      "error"
+    ).then(() => false);
+  if (formInput?.emergency?.name === "" || formInput?.emergency?.phone === "")
+    return swal(
+      "Invalid",
+      "Provide all required fields under Emergency",
+      "error"
+    ).then(() => false);
+  if (
+    formInput?.enrollment?.certification === "" ||
+    formInput?.campus === "" ||
+    formInput?.enrollment?.certificationLevel === "" ||
+    formInput?.enrollment?.programme === "" ||
+    formInput?.enrollment?.session === "" ||
+    formInput?.enrollment?.modeofTuition === ""
+  )
+    return swal(
+      "Invalid",
+      "Provide all required fields under Programme & Certification",
+      "error"
+    ).then(() => false);
+  if (!photo)
+    return swal("Invalid", "Provide profile photo", "error").then(() => false);
 
-  return true
-}
+  return true;
+};
 
-export const uploadPhoto = async (file: File, setPreview: (val:any)=>void, setPhoto: (val: any)=>void) => {
+export const uploadPhoto = async (
+  file: File,
+  setPreview: (val: any) => void,
+  setPhoto: (val: any) => void
+) => {
   // console.log(file)
-  const res = await validateFile(file, 'image')
+  const res = await validateFile(file, "image");
   if (res) {
-      var reader = new FileReader();
-      reader.onload = function () {
-          const dataURL = reader.result;
-          setPreview(dataURL)
-      };
-      reader.readAsDataURL(file);
-      setPhoto(file)
+    var reader = new FileReader();
+    reader.onload = function () {
+      const dataURL = reader.result;
+      setPreview(dataURL);
+    };
+    reader.readAsDataURL(file);
+    setPhoto(file);
   }
-}
+};
 
-export const reload = () => window.location.reload()
+export const reload = () => window.location.reload();

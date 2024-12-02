@@ -1,11 +1,13 @@
 
 import { Menu02Icon, MessageNotification01Icon, TaskAdd02Icon } from 'hugeicons-react'
-import { AppBar, Toolbar, IconButton, Badge, Dialog, DialogContent, Slide, SlideProps, Stack, Avatar } from '@mui/material'
+import { AppBar, Toolbar, IconButton, Badge, Dialog, DialogContent, Slide, SlideProps, Stack, Avatar, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { RoundButton } from '../shared'
 import { grey } from '@mui/material/colors'
 import BulkUpload from '../upload/BulkUpload'
 import NotificationBar from '../shared/Notify/NotificationBar'
+import { getData } from '../../config/appConfig'
+import SearchImg from '../../assets/images/search.gif'
 
 
 const SlideTransition = (props: React.JSX.IntrinsicAttributes & SlideProps) => {
@@ -16,6 +18,10 @@ const SlideTransition = (props: React.JSX.IntrinsicAttributes & SlideProps) => {
 const TopNav = ({ drawerWidth, handleDrawerToggle }: { drawerWidth: number, handleDrawerToggle: () => void }) => {
   const [openSearch, setOpenSearch] = useState(false)
   const [notify, setNotify] = useState(false)
+  const [check, setCheck] = useState(false)
+  const currentUser = getData('uid')
+  const isStaff = currentUser?.role === 'staff' || currentUser?.role === 'admin'
+  const isApplicant = currentUser?.role === 'applicant'
 
   return (
     <>
@@ -31,21 +37,34 @@ const TopNav = ({ drawerWidth, handleDrawerToggle }: { drawerWidth: number, hand
           <IconButton
             color="inherit"
             aria-label="open drawer"
-            edge="start"
+            edge="start" size='small'
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
+            sx={{ mr: 2, bgcolor: 'secondary.main', ':hover': { bgcolor: 'primary.main' }, display: { sm: 'none' } }}
           >
-            <Menu02Icon />
+            <Menu02Icon color='lightgrey' />
           </IconButton>
+          <Typography color={'secondary'} sx={{ display: { xs: 'block', sm: 'none', md: "none", lg: 'none', xl: 'none' } }}>Menu</Typography>
+
 
           <Stack direction={'row'} alignItems={'center'} gap={1} sx={{ ml: 'auto' }}>
-            <RoundButton variant={'contained'} startIcon={<TaskAdd02Icon size={18} />}
-              text={'Upload'} sx={{ padding: '.3rem .8rem', borderRadius: '8px' }}
-              color={'primary'} onClick={() => { setOpenSearch(true) }}
-              disableElevation
-            />
-            <IconButton disableRipple onClick={()=>setNotify(true)} sx={{ bgcolor: grey[100], ml: 2 }}>
-              <Badge variant='standard' color='primary' overlap='circular' sx={{ '& > span': { color: '#fff', padding: '3px', fontSize: '11px', minWidth: '16px', height: '16px' } }} badgeContent={4} >
+            {
+              isStaff &&
+              <RoundButton variant={'contained'} startIcon={<TaskAdd02Icon size={18} />}
+                text={'Upload'} sx={{ padding: '.3rem .8rem', borderRadius: '8px' }}
+                color={'primary'} onClick={() => { setOpenSearch(true) }}
+                disableElevation
+              />
+            }
+            {
+              isApplicant &&
+              <RoundButton variant={'contained'}
+                text={'Check Application Status'} sx={{ padding: '.3rem .8rem', borderRadius: '8px' }}
+                color={'primary'} onClick={() => { setCheck(true) }}
+                disableElevation
+              />
+            }
+            <IconButton disableRipple onClick={() => setNotify(true)} sx={{ bgcolor: grey[100], ml: 2 }}>
+              <Badge variant='standard' color='primary' overlap='circular' sx={{ '& > span': { color: '#fff', padding: '3px', fontSize: '11px', minWidth: '16px', height: '16px' } }} badgeContent={0} >
                 <MessageNotification01Icon />
               </Badge>
             </IconButton>
@@ -61,8 +80,16 @@ const TopNav = ({ drawerWidth, handleDrawerToggle }: { drawerWidth: number, hand
         </DialogContent>
       </Dialog>
 
-        {/* Notification */}
-        <NotificationBar open={notify} onClose={()=>setNotify(false)} />
+      {/* Check Application Status */}
+      <Dialog open={check} maxWidth={'xs'} fullWidth>
+        <DialogContent sx={{ py: 4 }}>
+          <img src={SearchImg} style={{ display: 'block', margin: '0 auto' }} width={'18%'} alt='searching' />
+          <Typography textAlign={'center'}>Checking Application Status</Typography>
+        </DialogContent>
+      </Dialog>
+
+      {/* Notification */}
+      <NotificationBar open={notify} onClose={() => setNotify(false)} />
 
     </>
   )
