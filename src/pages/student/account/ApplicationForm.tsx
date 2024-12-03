@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { useLoader } from '../../../context/LoaderContext'
 import { certifications, getApplicationForm, initState, studentReducerFn, uploadPhoto, validateFormData } from '../../../utils'
 import swal from 'sweetalert'
-import { base, getData } from '../../../config/appConfig'
+import { base, getData, saveData } from '../../../config/appConfig'
 import useAxiosFetch from '../../../hooks/useAxiosFetch'
 import SubmitForm from '../../../assets/images/submit-file.png'
 
@@ -21,7 +21,6 @@ const ApplicationForm = () => {
     const [photo, setPhoto] = useState<File>()
     const { response: formData } = useAxiosFetch('/api/admission/form')
     const [formInput, dispatch] = useReducer(studentReducerFn, initState)
-    const steps = getApplicationForm()?.map(item => item.title?.split(' ')[0])
 
     useEffect(() => {
         if (formData) {
@@ -31,6 +30,7 @@ const ApplicationForm = () => {
             dispatch({ type: 'EMAIL', payload: currentUser?.email })
             dispatch({ type: 'SURNAME', payload: currentUser?.surname })
             dispatch({ type: 'OTHERNAMES', payload: currentUser?.othernames })
+            dispatch({ type: 'PHONE_MOBILE', payload: currentUser?.phone?.mobile })
         }
     }, [formData])
 
@@ -40,24 +40,25 @@ const ApplicationForm = () => {
         const isValid = await validateFormData(formInput, photo!)
         if (isValid) {
             await swal({
-                title: 'Create Account',
-                text: 'This action will create a new student application. Applicant will also be notified via email with the account details',
+                title: 'Submit Application',
+                text: 'This action will submit your application. Please make sure you have reviewed all information',
                 icon: 'warning',
                 buttons: ['Cancel', 'Proceed'],
                 dangerMode: true,
                 closeOnClickOutside: false
             }).then(async (del) => {
                 if (del) {
-                    startLoading('Creating new account. Please wait')
+                    startLoading('Submitting application. Please wait')
                     try {
-                        const { data: res } = await base.post('/api/student/create', formInput)
-                        if (res?.responseCode === 200 && photo) {
+                        const { data: res } = await base.patch(`/api/applicant/update/${currentUser?.id}`, formInput)
+                        if (res?.responseCode === 200) {
                             const payload = new FormData()
                             payload.append('photo', photo!)
                             startLoading('Uploading profile photo..')
-                            await base.patch(`/api/student/photo/${res?.data?.enrollment?.index}`, payload, {
+                            await base.patch(`/api/applicant/photo/${res?.data?.enrollment?.index}`, payload, {
                                 headers: { 'content-type': 'multipart/form-data' }
                             })
+                            saveData('uid', res?.data)
                             await swal('Success', 'Your application has been submitted successfully', 'success').then(() => navigate('/account/dashboard'))
                         }
                     } catch (error: any) {
@@ -77,7 +78,7 @@ const ApplicationForm = () => {
 
             {/* Submitted State */}
             {
-                currentUser?.applicationStage === 0 ?
+                currentUser?.applicationStage === 1 ?
                     <Box>
                         <Grid container columnSpacing={4}>
                             <Grid item sm={8.5}>
@@ -128,7 +129,8 @@ const ApplicationForm = () => {
                                                                             el?.label === 'Email' ? formInput?.email :
                                                                                 el?.label === 'Surname' ? formInput?.surname :
                                                                                     el?.label === 'Othernames' ? formInput?.othernames :
-                                                                                        null
+                                                                                        el?.label === 'Phone' ? formInput?.phone?.mobile :
+                                                                                            null
                                                                         }
                                                                     />
                                                                 </Grid>
@@ -179,10 +181,12 @@ const ApplicationForm = () => {
                         </Grid>
                     </Box>
                     :
-                    <Box>
-                        <Box bgcolor={'#fff'} py={4} px={6} textAlign={'center'} width={'60%'}>
-                            <img src={SubmitForm} alt='submit-form' width={'15%'} />
-                            <Typography variant='h6' fontWeight={500}>Application Submitted</Typography>
+                    <Box width={'100%'} alignItems={'center'} justifyContent={'center'} display={'flex'} flexDirection={'column'}>
+                        <Box bgcolor={'#fff'} py={4} px={6} textAlign={'center'} sx={{
+                            width: {lg: '60%', md: '100%', sm: '100%', xs: '100%'},
+                        }}>
+                            <img src={SubmitForm} alt='submit-form' width={'12%'} style={{margin: '20px auto'}} />
+                            <Typography variant='h6' mt={2} fontWeight={500}>Application Submitted</Typography>
                             <Typography variant='body1' mb={3} color={'GrayText'}>Thank you for submitting your application to POTSEC. We have successfully received your application and are currently reviewing it. Our admissions team will review your application thoroughly, and we will notify you of the next steps via email at [{currentUser?.email}] or through our application portal. If additional information or documents are required, we will contact you directly.
                             </Typography>
                             <Stack direction={'row'} gap={2} justifyContent={'center'}>
