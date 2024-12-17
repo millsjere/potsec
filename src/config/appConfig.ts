@@ -23,6 +23,11 @@ base.interceptors.request.use((config) => {
   return config;
 });
 
+// base.interceptors.response.use((config)=>{
+//   console.log('RES INTERCEPTOR ==>', config?.)
+//   return config
+// });
+
 export const isAuth = () => {
   return window.localStorage.getItem("uid");
 };

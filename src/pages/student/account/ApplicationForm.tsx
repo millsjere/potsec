@@ -5,7 +5,7 @@ import { InputField, RoundButton } from '../../../components/shared'
 import UploadComp from '../../../components/upload/UploadComp'
 import { useNavigate } from 'react-router-dom'
 import { useLoader } from '../../../context/LoaderContext'
-import { certifications, getApplicationForm, initState, studentReducerFn, uploadPhoto, validateFormData } from '../../../utils'
+import { certifications, getApplicationForm, initState, reload, studentReducerFn, uploadPhoto, validateFormData } from '../../../utils'
 import swal from 'sweetalert'
 import { base, getData, saveData } from '../../../config/appConfig'
 import useAxiosFetch from '../../../hooks/useAxiosFetch'
@@ -55,11 +55,16 @@ const ApplicationForm = () => {
                             const payload = new FormData()
                             payload.append('photo', photo!)
                             startLoading('Uploading profile photo..')
-                            await base.patch(`/api/applicant/photo/${res?.data?.enrollment?.index}`, payload, {
+                            await base.patch(`/api/applicant/photo/${res?.data?.id}`, payload, {
                                 headers: { 'content-type': 'multipart/form-data' }
                             })
                             saveData('uid', res?.data)
-                            await swal('Success', 'Your application has been submitted successfully', 'success').then(() => navigate('/account/dashboard'))
+                            await swal({
+                                title: 'Success', 
+                                text: 'Your application has been submitted successfully', 
+                                icon: 'success',
+                                closeOnClickOutside: false
+                            }).then(reload)
                         }
                     } catch (error: any) {
                         console.log(error?.response)
@@ -187,11 +192,14 @@ const ApplicationForm = () => {
                         }}>
                             <img src={SubmitForm} alt='submit-form' width={'12%'} style={{margin: '20px auto'}} />
                             <Typography variant='h6' mt={2} fontWeight={500}>Application Submitted</Typography>
-                            <Typography variant='body1' mb={3} color={'GrayText'}>Thank you for submitting your application to POTSEC. We have successfully received your application and are currently reviewing it. Our admissions team will review your application thoroughly, and we will notify you of the next steps via email at [{currentUser?.email}] or through our application portal. If additional information or documents are required, we will contact you directly.
+                            <Typography variant='body1' mb={3} color={'GrayText'}>
+                                Thank you for submitting your application to POTSEC. 
+                                We have successfully received your application and are currently reviewing it. 
+                                Our admissions team will review your application thoroughly, and we will notify you of the next steps via email at [{currentUser?.email}] or through our application portal. If additional information or documents are required, we will contact you directly.
                             </Typography>
                             <Stack direction={'row'} gap={2} justifyContent={'center'}>
-                                <RoundButton onClick={onFormSubmit} text='Print Application' color={'secondary'} variant={'outlined'} disableElevation />
-                                <RoundButton onClick={onFormSubmit} text='Check Application Status' color={'secondary'} variant={'contained'} disableElevation />
+                                <RoundButton onClick={()=>{}} text='Print Application' color={'secondary'} variant={'outlined'} disableElevation />
+                                <RoundButton onClick={()=>{}} text='Check Application Status' color={'secondary'} variant={'contained'} disableElevation />
                             </Stack>
                         </Box>
                     </Box>

@@ -1,6 +1,7 @@
 import { Box, Divider, Drawer, IconButton, Typography } from '@mui/material'
 import { Cancel01Icon } from 'hugeicons-react'
 import React from 'react'
+import { getData } from '../../../config/appConfig'
 import NotifyItem from './NotifyItem'
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
 
 
 const NotificationBar = ({open, onClose}: Props) => {
+    const notifications = getData('unf')
   return (
     <>
             <Drawer anchor='right' open={open} onClose={onClose}>
@@ -20,7 +22,14 @@ const NotificationBar = ({open, onClose}: Props) => {
                     </Box>
                     <Divider />
                     {
-                        Array(4)?.fill(1)?.map((_el, i)=> <NotifyItem key={i} />)
+                        notifications?.map((el: any, i: number)=> (
+                            <NotifyItem 
+                                title={el?.title} 
+                                message={el?.message} 
+                                createdAt={el?.createdAt}
+                                key={i} 
+                            />
+                        ))
                     }
                 </Box>
 

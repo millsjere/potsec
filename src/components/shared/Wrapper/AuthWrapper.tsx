@@ -52,7 +52,7 @@ export const AuthWrapper = ({ children, staff = false, title, subtitle, image, o
                             <p></p>
                             <Box p={4} sx={{ color: '#fff', bgcolor: 'rgba(255,255,255, 10%)', borderRadius: '20px', 'backdrop-filter': 'blur(20px)' }}>
                                 <Typography variant='h4' mb={2} textTransform={'capitalize'} fontWeight={600}>Prince Osei-Tutu Skills & Enterpreneurial College - POTSEC</Typography>
-                                <Typography variant='body1' sx={{ letterSpacing: 2 }}>STUDENT PORTAL - {new Date().getFullYear()}</Typography>
+                                <Typography variant='body1' fontWeight={400} sx={{ letterSpacing: 2 }}>STUDENT PORTAL - {new Date().getFullYear()}/{new Date().getFullYear()+1}</Typography>
                             </Box>
                         </Box>
                         <Box width={{ xs: '100%', sm: '50%', lg: '55%' }} sx={{

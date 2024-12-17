@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Outlet, Navigate } from 'react-router-dom'
-import { getData, isAuth, sessionTimeout } from '../../config/appConfig'
+import { getData, isAuth, saveData, sessionTimeout } from '../../config/appConfig'
 import Loader from '../shared/Loaders/PageLoader'
 import Layout from '../layout'
+import useAxiosFetch from '../../hooks/useAxiosFetch'
 
 
 const StudentPrivateRoute = () => {
@@ -10,8 +11,13 @@ const StudentPrivateRoute = () => {
     const currentTime = new Date().getTime()
     const sessionTime = getData('exp')
     const user = getData('uid')
+    const {response} = useAxiosFetch('/api/applicant/notify')
 
-    console.log('USER HERE ===>', user)
+    useEffect(()=>{
+        if(response){
+            saveData('unf', response)
+        }
+    },[response])
 
     if (auth && (Number(sessionTime) > Number(currentTime))) {
         if (user?.isLoginVerified) {

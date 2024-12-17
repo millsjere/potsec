@@ -68,9 +68,9 @@ const ResetPassword = () => {
                 successAlert('User account reset successful')
                 localStorage.removeItem('rs-tp');
                 localStorage.removeItem('rs-vl');
-                navigate('/dashboard', { replace: true })
+                navigate('/account/dashboard', { replace: true })
             }
-        } catch (error) {
+        } catch (error: any) {
             console.log(error)
             errorAlert(error?.response?.data?.message)
         } finally {
@@ -82,7 +82,7 @@ const ResetPassword = () => {
         if (!type || !value) {
             errorAlert('Access Denied. Go to Forgot Password to start process')
             setTimeout(() => {
-                navigate('/students/forgot-password', { replace: true })
+                navigate('/forgot-password', { replace: true })
             }, 2000);
             return
         }

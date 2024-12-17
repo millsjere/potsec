@@ -6,7 +6,7 @@ import { RoundButton } from '../shared'
 import { grey } from '@mui/material/colors'
 import BulkUpload from '../upload/BulkUpload'
 import NotificationBar from '../shared/Notify/NotificationBar'
-import { getData } from '../../config/appConfig'
+import { base, getData, saveData } from '../../config/appConfig'
 import SearchImg from '../../assets/images/search.gif'
 
 
@@ -20,8 +20,23 @@ const TopNav = ({ drawerWidth, handleDrawerToggle }: { drawerWidth: number, hand
   const [notify, setNotify] = useState(false)
   const [check, setCheck] = useState(false)
   const currentUser = getData('uid')
+  const notifications = getData('unf')
   const isStaff = currentUser?.role === 'staff' || currentUser?.role === 'admin'
   const isApplicant = currentUser?.role === 'applicant'
+  const getIsRead = notifications?.filter((el: any)=>!el?.isRead)?.length
+
+  console.log(currentUser)
+
+  const readNotifications = async() => {
+    try {
+      const { data: res} = await base.get('/api/applicant/notify/read')
+      if(res?.responseCode === 200){
+        saveData('unf', res?.data)
+      }
+    } catch (error: any) {
+      console.log(error?.response)
+    }
+  }
 
   return (
     <>
@@ -63,12 +78,19 @@ const TopNav = ({ drawerWidth, handleDrawerToggle }: { drawerWidth: number, hand
                 disableElevation
               />
             }
-            <IconButton disableRipple onClick={() => setNotify(true)} sx={{ bgcolor: grey[100], ml: 2 }}>
-              <Badge variant='standard' color='primary' overlap='circular' sx={{ '& > span': { color: '#fff', padding: '3px', fontSize: '11px', minWidth: '16px', height: '16px' } }} badgeContent={0} >
+            <IconButton disableRipple 
+              onClick={() => {
+                  readNotifications();
+                  setNotify(true)
+                }} sx={{ bgcolor: grey[100], ml: 2 }}>
+              <Badge variant='standard'showZero color='primary' overlap='circular' 
+                sx={{ '& > span': { color: '#fff', padding: '3px', fontSize: '11px', minWidth: '16px', height: '16px' } }} 
+                badgeContent={getIsRead || 0} 
+              >
                 <MessageNotification01Icon />
               </Badge>
             </IconButton>
-            <Avatar sx={{ cursor: 'pointer', width: '2rem', height: '2rem', border: '1px solid #fff' }} alt='user-img' />
+            <Avatar src={currentUser?.photo || null} sx={{ cursor: 'pointer', width: '2rem', height: '2rem', border: '1px solid #fff' }} alt='user-img' />
           </Stack>
         </Toolbar>
       </AppBar>
