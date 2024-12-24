@@ -23,7 +23,7 @@ const Dashboard = () => {
                     {
                         steps?.map((el: any, i: number) => (
                             <Grid item sm={3} key={i}>
-                                <Card elevation={0} sx={{ borderRadius: '15px' }}>
+                                <Card elevation={0} sx={{ borderRadius: '15px', height: '100%' }}>
                                     <CardContent sx={{ p: '2rem' }}>
                                         {el?.icon}
                                         <Typography mt={3} variant='h6'>{el?.title}</Typography>

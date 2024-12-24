@@ -278,7 +278,7 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           type: "select",
           label: "Payment",
           action: "PAYMENT",
-          options: ["Mobile Money"],
+          options: ["Mobile Money", "Online"],
           isRequired: true,
           keys: ["payment", "type"],
         },
