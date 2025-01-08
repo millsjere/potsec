@@ -17,9 +17,11 @@ import { TabContext, TabList, TabPanel } from '@mui/lab'
 import DeptCard from '../../../components/shared/Cards/DeptCard'
 import CourseItem from '../../../components/shared/Cards/CourseItem'
 import { useNavigate } from 'react-router-dom'
+import MuiTable from '../../../components/shared/Tables/MuiTable'
 
 interface CourseProps {
-    name: string, code: string
+    name: string,
+    code: string
 }
 
 interface EditProps {
@@ -44,6 +46,9 @@ const Programmes = () => {
     const [duration, setDuration] = useState({ type: '', number: 0 })
     const [value, setValue] = useState<EditProps>({ id: '', name: '', department: '', duration: { number: 0, type: '' }, courses: [] })
     const [newCourses, setNewCourses] = useState<CourseProps[]>([])
+    const [view, setView] = useState('list')
+    const headers = ['Name', 'Department', 'Duration', 'Courses', 'Action']
+
 
     const resetForm = () => {
         setOpen(false);
@@ -52,6 +57,7 @@ const Programmes = () => {
         setType({ label: 'add', value: 1 })
         setDuration({ type: '', number: 0 })
     }
+
     const onFormSubmit = async () => {
         if (name === '') return swal('Invalid', 'Please provide a name', 'warning')
         if (department === '') return swal('Invalid', 'Please select a department', 'warning')
@@ -77,7 +83,8 @@ const Programmes = () => {
             <FilterBar
                 showYear={false}
                 showProgramme={false}
-                showView={false}
+                showView={true}
+                onViewChange={() => { setView(view === 'list' ? 'grid' : 'list') }}
                 onSearch={() => { }}
                 isLoading={isLoading}
                 moreBtns={
@@ -93,34 +100,47 @@ const Programmes = () => {
                 isLoading ?
                     <LoadingState state='students' />
                     :
-                    (!isLoading && data?.length > 0) ?
-                        <Grid container spacing={3}>
+                    (!isLoading && data?.length > 0) ? (
+                        <>
                             {
-                                data?.map((el: any, i: number) => {
-                                    return <Grid key={i} item sm={3}>
-                                        <DeptCard
-                                            title={el?.name} showBtn
-                                            subText={`Dept - ${el?.department?.name}`}
-                                            extraText={`${el?.duration?.number} ${el?.duration?.type}`}
-                                            onDelete={() => onDeleteHandler(el?.id, 'Programme', 'programmes', startLoading, stopLoading, fetchData)}
-                                            onClick={(e) => {
-                                                e.stopPropagation()
-                                                setValue({
-                                                    id: el?.id, name: el?.name,
-                                                    department: el?.department?.name,
-                                                    duration: el?.duration,
-                                                    courses: el?.courses
-                                                });
-                                                setType({ label: 'edit', value: 1 });
-                                                setOpen(true)
-                                            }}
-                                            addCourse={() => navigate(`/staff/programmes/${el?.id}/edit`)}
-                                        />
-                                    </Grid>
-                                })
+                                view === 'grid' ?
+                                    <Grid container spacing={3}>
+                                        {
+                                            data?.map((el: any, i: number) => {
+                                                return <Grid key={i} item sm={3}>
+                                                    <DeptCard
+                                                        title={el?.name} showBtn
+                                                        subText={`Dept - ${el?.department?.name}`}
+                                                        extraText={`${el?.duration?.number} ${el?.duration?.type}`}
+                                                        onDelete={() => onDeleteHandler(el?.id, 'Programme', 'programmes', startLoading, stopLoading, fetchData)}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation()
+                                                            setValue({
+                                                                id: el?.id, name: el?.name,
+                                                                department: el?.department?.name,
+                                                                duration: el?.duration,
+                                                                courses: el?.courses
+                                                            });
+                                                            setType({ label: 'edit', value: 1 });
+                                                            setOpen(true)
+                                                        }}
+                                                        addCourse={() => navigate(`/staff/programmes/${el?.id}/edit`)}
+                                                    />
+                                                </Grid>
+                                            })
 
+                                        }
+                                    </Grid>
+                                    :
+                                    <MuiTable
+                                        data={data}
+                                        headers={headers}
+                                        onEditClick={(id) => navigate(`/staff/programmes/${id}/edit`)}
+                                        onDeleteClick={(id) => onDeleteHandler(id, 'Programme', 'programmes', startLoading, stopLoading, fetchData)}
+                                    />
                             }
-                        </Grid>
+                        </>
+                    )
                         :
                         <NullState
                             title='Programmes'

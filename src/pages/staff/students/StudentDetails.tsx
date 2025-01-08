@@ -4,12 +4,19 @@ import PageHeader from '../../../components/shared/PageHeader'
 import { Avatar, Box, Chip, Divider, Grid, IconButton, InputAdornment, List, ListItem, ListItemButton, MenuItem, Stack, Typography } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { InputField, RoundButton } from '../../../components/shared'
-import { Camera01Icon, Cancel01Icon, CancelCircleIcon, CheckmarkCircle02Icon, Delete02Icon, File01Icon, FloppyDiskIcon, PencilEdit01Icon, PrinterIcon } from 'hugeicons-react'
+import { Camera01Icon, Cancel01Icon, CancelCircleIcon, CheckmarkCircle02Icon, Delete02Icon, File01Icon, FloppyDiskIcon, MailSend01Icon, PencilEdit01Icon, PrinterIcon } from 'hugeicons-react'
 import { getApplicationForm, initState, reload, studentReducerFn } from '../../../utils'
 import useAxiosFetch from '../../../hooks/useAxiosFetch'
 import { useLoader } from '../../../context/LoaderContext'
 import { base } from '../../../config/appConfig'
 import swal from 'sweetalert'
+
+
+export const getFormValue = (obj: any, keys: string[]) => {
+    return keys.reduce((acc, key) => (acc && acc[key] ? acc[key] : undefined), obj);
+}
+
+export const formatLabel = (val: string) => val?.split(' ')[0]?.toLowerCase()
 
 const StudentDetails = () => {
     const { id } = useParams()
@@ -21,7 +28,7 @@ const StudentDetails = () => {
     const [password, setPassword] = useState({ new: '', confirm: '' })
     const menuList = getApplicationForm()?.map(el => el?.title)
     const formData = getApplicationForm();
-    const formatLabel = (val: string) => val?.split(' ')[0]?.toLowerCase()
+
 
     const getFormValue = (obj: any, keys: string[]) => {
         return keys.reduce((acc, key) => (acc && acc[key] ? acc[key] : undefined), obj);
@@ -145,6 +152,40 @@ const StudentDetails = () => {
 
     }
 
+    const sendAdmissionLetter = () => {
+        swal({
+            title: 'Send Admission Letter',
+            text: 'Do you want to send admission letter to applicant?',
+            icon: 'warning',
+            buttons: ['Cancel', 'Send'],
+            closeOnClickOutside: false
+        }).then(async (send) => {
+            if (send) {
+                try {
+                    startLoading('Sending admission letter. Please wait...')
+                    const { data: res } = await base.get(`/api/student/send-admission-letter/${id}`)
+                    if (res.responseCode === 200) {
+                        swal({
+                            title: 'Success',
+                            icon: 'success',
+                            text: 'Admission letter sent successfully'
+                        }).then(reload)
+                    }
+                } catch (error: any) {
+                    console.log(error?.response)
+                    swal({
+                        title: 'Error',
+                        icon: 'error',
+                        text: 'Sorry, could not send email. Please try again'
+                    }).then(reload)
+                } finally {
+                    stopLoading()
+                }
+
+            }
+        })
+    }
+
 
 
     return (
@@ -182,7 +223,8 @@ const StudentDetails = () => {
                                         : response?.applicationStatus === 'pending' ? null
                                             :
                                             <Stack direction={'column'} gap={1}>
-                                                <RoundButton startIcon={<File01Icon size={20} />} disableElevation fullWidth variant={'contained'} color={'secondary'} text={'View Course'} onClick={() => { }} />
+                                                <RoundButton startIcon={<MailSend01Icon size={20} />} disableElevation fullWidth variant={'outlined'} color={'secondary'} text={'Admission Letter'} onClick={sendAdmissionLetter} />
+                                                <RoundButton startIcon={<File01Icon size={20} />} disableElevation fullWidth variant={'contained'} color={'secondary'} text={'View Transcript'} onClick={() => { }} />
                                                 <RoundButton startIcon={<PrinterIcon size={20} />} disableElevation fullWidth variant={'contained'} color={'primary'} text={'Print PDF'} onClick={() => { }} />
                                             </Stack>
 
@@ -247,7 +289,7 @@ const StudentDetails = () => {
                                                 <Grid container columnSpacing={3} sx={{ px: 4, pb: 3 }}>
                                                     {
                                                         data?.fields?.map((el, i) => {
-                                                            const value: string = getFormValue(formInput, el?.keys)
+                                                            const value: string = getFormValue(formInput, el?.keys!)
                                                             if (el?.type === 'select') {
                                                                 return (
                                                                     <Grid item sm={6} key={i}>

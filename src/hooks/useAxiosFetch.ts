@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { base } from "../config/appConfig";
+import swal from "sweetalert";
 
 const useAxiosFetch = (url: string) => {
   const [response, setResponse] = useState<any>();
@@ -13,6 +14,11 @@ const useAxiosFetch = (url: string) => {
       setResponse(res?.data);
     } catch (error: any) {
       setError(error?.response);
+      swal({
+        title: "Error",
+        text: "Sorry, coould not fetch data. Please reload",
+        icon: "error",
+      });
     } finally {
       setIsLoading(false);
     }

@@ -43,6 +43,7 @@
     "@mui/material": "^5.15.21",
     "@mui/styles": "^5.15.21",
     "@mui/x-data-grid": "^7.22.3",
+    "@react-pdf/renderer": "^4.1.6",
     "axios": "^1.7.2",
     "crypto-js": "^4.2.0",
     "file-loader": "^6.2.0",

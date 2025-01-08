@@ -14,6 +14,7 @@ import { base } from '../../../config/appConfig'
 import { useLoader } from '../../../context/LoaderContext'
 import { onDeleteHandler } from '../../../utils'
 import DeptCard from '../../../components/shared/Cards/DeptCard'
+import MuiTable from '../../../components/shared/Tables/MuiTable'
 
 
 
@@ -23,6 +24,8 @@ const Departments = () => {
     const [open, setOpen] = useState(false)
     const [value, setValue] = useState({ id: '', name: '', head: '' })
     const [type, setType] = useState('add')
+    const [view, setView] = useState('list')
+    const headers = ['Name', 'Programmes', 'Action']
 
     const onFormSubmit = async () => {
         if (value?.name === '') return swal('Invalid', 'Please provide a name', 'warning')
@@ -48,7 +51,8 @@ const Departments = () => {
             <FilterBar
                 showYear={false}
                 showProgramme={false}
-                showView={false}
+                showView={true}
+                onViewChange={() => setView(view === 'list' ? 'grid' : 'list')}
                 onSearch={() => { }}
                 moreBtns={
                     <RoundButton
@@ -63,22 +67,40 @@ const Departments = () => {
                 isLoading ?
                     <LoadingState state='staff' />
                     :
-                    (!isLoading && data?.length > 0) ?
-                        <Grid container spacing={3}>
+                    (!isLoading && data?.length > 0) ? (
+                        <>
                             {
-                                data?.map((el: any, i: number) => {
-                                    return <Grid key={i} item sm={3}>
-                                        <DeptCard
-                                            title={el?.name}
-                                            subText={`${el?.programmes?.length} Programme(s)`}
-                                            onDelete={(e: any) => { e.stopPropagation(); onDeleteHandler(el?.id, 'Department', 'department', startLoading, stopLoading, fetchData) }}
-                                            onClick={(e: any) => { e.stopPropagation(); setType('edit'); setValue({ id: el?.id, name: el?.name, head: '' }); setOpen(true) }}
-                                        />
+                                view === 'grid' ?
+                                    <Grid container spacing={3}>
+                                        {
+                                            data?.map((el: any, i: number) => {
+                                                return <Grid key={i} item sm={3}>
+                                                    <DeptCard
+                                                        title={el?.name}
+                                                        subText={`${el?.programmes?.length} Programme(s)`}
+                                                        onDelete={(e: any) => { e.stopPropagation(); onDeleteHandler(el?.id, 'Department', 'department', startLoading, stopLoading, fetchData) }}
+                                                        onClick={(e: any) => { e.stopPropagation(); setType('edit'); setValue({ id: el?.id, name: el?.name, head: '' }); setOpen(true) }}
+                                                    />
+                                                </Grid>
+                                            })
+
+                                        }
                                     </Grid>
-                                })
+                                    :
+                                    <MuiTable
+                                        data={data}
+                                        headers={headers}
+                                        onEditClick={(id, e, row) => {
+                                            e?.stopPropagation(); setType('edit'); setValue({ id, name: row?.name, head: '' }); setOpen(true)
+                                        }}
+                                        onDeleteClick={(id, e) => {
+                                            e?.stopPropagation(); onDeleteHandler(id, 'Department', 'department', startLoading, stopLoading, fetchData)
+                                        }}
+                                    />
 
                             }
-                        </Grid>
+                        </>
+                    )
                         :
                         <NullState
                             title='Departments'
@@ -93,7 +115,7 @@ const Departments = () => {
 
             <ModalItem
                 actionBtn={type === 'add' ? 'Create' : 'Update'} maxWidth='sm' open={open}
-                onSubmit={onFormSubmit} onClose={() => { setValue({ id: '', name: '', head:'' }); setOpen(false) }}
+                onSubmit={onFormSubmit} onClose={() => { setValue({ id: '', name: '', head: '' }); setOpen(false) }}
                 title={`${type} Department`}>
                 <InputField
                     showTopLabel
@@ -101,7 +123,7 @@ const Departments = () => {
                     size={'small'} value={value?.name}
                     onChange={(e) => setValue(prev => ({ ...prev, name: e?.target?.value }))}
                 />
-                 <InputField
+                <InputField
                     showTopLabel
                     label='Head of Department' fullWidth
                     size={'small'} value={value?.name}

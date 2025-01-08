@@ -84,13 +84,13 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
     }
 
     const extraMenu: SideBarMenuProps[] = [
-        { name: 'Transcripts', icon: <File01Icon size={20} />, path: '/staff/transcript' },
-        { name: 'ID Cards', icon: <StudentCardIcon size={20} />, path: '/staff/cards' },
+        { name: 'Transcripts', icon: <File01Icon size={20} />, path: '/staff/documents' },
+        // { name: 'ID Cards', icon: <StudentCardIcon size={20} />, path: '/staff/cards' },
     ]
 
     const supportMenu: SideBarMenuProps[] = [
-        { name: 'Tickets', icon: <Ticket02Icon size={20} />, path: '/staff/suppport' },
-        { name: 'FAQs', icon: <VideoReplayIcon size={20} />, path: '/staff/help' },
+        { name: 'Settings', icon: <Settings01Icon size={20} />, path: '/staff/settings' },
+        { name: 'Tickets', icon: <Ticket02Icon size={20} />, path: '/staff/ticketing' },
     ]
 
     const drawer = (

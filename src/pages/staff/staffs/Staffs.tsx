@@ -1,44 +1,62 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import PageHeader from '../../../components/shared/PageHeader'
-import swal from 'sweetalert'
-import { base } from '../../../config/appConfig'
 import LoadingState from '../../../components/shared/Loaders/LoadingState'
-import { Grid } from '@mui/material'
+import { Box } from '@mui/material'
 import FilterBar from '../../../components/filter/FilterBar'
 import { RoundButton } from '../../../components/shared'
 import NoStaff from '../../../assets/images/team.png'
 import { AddCircleIcon } from 'hugeicons-react'
-import UserCard from '../../../components/shared/Cards/UserCard'
 import AddStaff from './AddStaff'
 import NullState from '../../../components/shared/NullState/NullState'
+import useAxiosFetch from '../../../hooks/useAxiosFetch'
+import { DataGrid } from '@mui/x-data-grid'
+import { getTableColumns } from '../application/Applications'
+import swal from 'sweetalert'
+import { useLoader } from '../../../context/LoaderContext'
+import { base } from '../../../config/appConfig'
+import { reload } from '../../../utils'
 
 
 const Staffs = () => {
-    const [data, setData] = useState([])
-    const [isLoading, setIsLoading] = useState(false)
+    const { isLoading, response: data, fetchData } = useAxiosFetch('/api/staff/all')
+    const { startLoading, stopLoading } = useLoader()
     const [open, setOpen] = useState(false)
     const [view, setView] = useState('grid')
-    const [type, setType] = useState('add')
+    const [type, setType] = useState('')
+    const [staffDetails, setStaffDetails] = useState()
+    const [pageSize, setPageSize] = useState(20);
+    const headers = ['Surname', 'Othernames', 'Phone', 'Email', 'Programme', 'Campus', 'Action']
 
-    const fetchAllStaff = async () => {
-        try {
-            setIsLoading(true)
-            const url = '/api/staff/all'
-            const { data: res } = await base.get(url)
-            if (res?.responseCode === 200) {
-                setData(res?.data)
-            }
-        } catch (error) {
-            console.log(error?.response)
-            swal({ title: 'Error', text: 'Sorry, could not fetch all staff. Please refresh the page', icon: 'error' })
-        } finally {
-            setIsLoading(false)
-        }
+    const editStaffDetails = (id: string) => {
+        console.log(id)
+        setType('edit')
+        setOpen(true)
+        const staff = data?.find((el: any) => el?.id === id)
+        setStaffDetails(staff)
     }
 
-    useEffect(() => {
-        fetchAllStaff()
-    }, [])
+    const onStaffDelete = (id: string) => {
+        swal({
+            icon: 'warning',
+            title: 'Are You Sure?',
+            text: 'This action will delete this staff.',
+            buttons: ['Cancel', 'Delete'],
+            dangerMode: true,
+            closeOnClickOutside: false
+        }).then(async (del) => {
+            if (del) {
+                startLoading('Deleting account. Please wait')
+                await base.delete(`/api/staff/remove/${id}`)
+                stopLoading()
+                swal({
+                    text: 'Staff account removed successfully',
+                    title: 'Success',
+                    icon: 'success',
+                    closeOnClickOutside: false,
+                }).then(() => reload())
+            }
+        })
+    }
 
     return (
         <div>
@@ -51,7 +69,7 @@ const Staffs = () => {
                     <RoundButton
                         variant={'contained'} sx={{ borderRadius: '10px', py: .8, mt: 1 }}
                         color={'primary'} disableElevation
-                        text='Staff' startIcon={<AddCircleIcon size={18} color='#fff' />}
+                        text='New Staff' startIcon={<AddCircleIcon size={18} color='#fff' />}
                         onClick={() => { setOpen(true); setType('add') }}
                         loading={isLoading}
                     />
@@ -62,25 +80,41 @@ const Staffs = () => {
                 isLoading ? <LoadingState state='staff' /> :
                     (!isLoading && data?.length > 0) ? (
                         <>
-                            {
-                                view === 'list' &&
-                                data?.map((el, i) => {
-                                    return <UserCard user={el} key={i} variant={view} />
-                                })
-                            }
-                            {
-                                view === 'grid' && (
-                                    <Grid container spacing={3}>
-                                        {
-                                            data?.map((el, i) => {
-                                                return <Grid item sm={3} key={i}>
-                                                    <UserCard user={el} variant={view} role='staff' onClick={() => { setOpen(true); setType('edit') }} />
-                                                </Grid>
-                                            })
+                            <Box sx={{ height: 400, width: '100%' }}>
+                                <DataGrid
+                                    sx={{
+                                        bgcolor: "#fff", '& .MuiDataGrid-cell': {
+                                            verticalAlign: 'middle',
+                                            display: 'flex',
+                                            // alignItems: 'center'
                                         }
-                                    </Grid>
-                                )
-                            }
+                                    }}
+                                    autoHeight={true}
+                                    isRowSelectable={() => true}
+                                    disableColumnFilter={true}
+                                    disableColumnMenu={true}
+                                    checkboxSelection={true}
+                                    pagination
+                                    rowSelection={false}
+                                    rows={data || []}
+                                    pageSizeOptions={[20, 50, 100]}
+                                    rowHeight={60}
+                                    columns={getTableColumns(
+                                        headers,
+                                        (id: string) => { editStaffDetails(id) },
+                                        (id: string) => onStaffDelete(id)
+                                    ) || []
+                                    }
+                                    getRowId={(row: any) => row?.id}
+                                    columnHeaderHeight={80}
+                                    initialState={{
+                                        pagination: {
+                                            paginationModel: { page: 0, pageSize: pageSize },
+                                        },
+                                    }}
+                                    onPaginationMetaChange={(newSize: any) => setPageSize(newSize)}
+                                />
+                            </Box>
                         </>
 
                     ) :
@@ -99,7 +133,7 @@ const Staffs = () => {
             }
 
             {/* ADD STAFF */}
-            <AddStaff open={open} onClose={() => setOpen(false)} type={type} callBack={fetchAllStaff} />
+            <AddStaff open={open} onClose={() => { setOpen(false); setType(''); setStaffDetails(undefined) }} data={staffDetails} type={type} callBack={fetchData} />
         </div>
     )
 }

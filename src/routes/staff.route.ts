@@ -7,15 +7,25 @@ const VerifyLogin = lazy(() => import("../pages/staff/auth/Verify2FA"));
 
 // Private Routes
 const Dashboard = lazy(() => import("../pages/staff/dashboard/Dashboard"));
-const AllApplications = lazy(() => import("../pages/staff/application/Applications"));
-const StudentDetails = lazy(() => import("../pages/staff/students/StudentDetails"));
-const NewApplication = lazy(() => import("../pages/staff/application/NewApplication"));
+const AllApplications = lazy(
+  () => import("../pages/staff/application/Applications")
+);
+const StudentDetails = lazy(
+  () => import("../pages/staff/students/StudentDetails")
+);
+const NewApplication = lazy(
+  () => import("../pages/staff/application/NewApplication")
+);
 const AllStaffs = lazy(() => import("../pages/staff/staffs/Staffs"));
 const AllStudents = lazy(() => import("../pages/staff/students/AllStudents"));
 const Programmes = lazy(() => import("../pages/staff/programmes/Programmes"));
-const ProgrammeDetail = lazy(() => import("../pages/staff/programmes/ProgrammeDetails"));
+const ProgrammeDetail = lazy(
+  () => import("../pages/staff/programmes/ProgrammeDetails")
+);
 const Departments = lazy(() => import("../pages/staff/department/Departments"));
+const Transcripts = lazy(() => import("../pages/staff/transcript/Transcript"));
 const Ticketing = lazy(() => import("../pages/staff/support/Ticket"));
+const Settings = lazy(() => import("../pages/staff/support/Settings"));
 
 // Routes
 const LoginRoute = {
@@ -93,9 +103,23 @@ const DepartmentRoute = {
   role: "staff",
 };
 
+const DocumentRoute = {
+  path: "/staff/documents",
+  component: Transcripts,
+  isAuth: "yes",
+  role: "staff",
+};
+
 const TicketRoute = {
-  path: "/staff/departments",
+  path: "/staff/ticketing",
   component: Ticketing,
+  isAuth: "yes",
+  role: "staff",
+};
+
+const SettingsRoute = {
+  path: "/staff/settings",
+  component: Settings,
   isAuth: "yes",
   role: "staff",
 };
@@ -113,4 +137,7 @@ export const staffRoutes: RouteProps[] = [
   ProgrammeRoute,
   ProgrammeDetailRoute,
   DepartmentRoute,
+  TicketRoute,
+  SettingsRoute,
+  DocumentRoute,
 ];

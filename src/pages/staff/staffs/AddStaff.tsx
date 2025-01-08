@@ -1,22 +1,24 @@
 import { Avatar, Box, Dialog, DialogContent, Divider, Grid, IconButton, MenuItem, Stack, Typography } from '@mui/material'
-import React, { useReducer, useRef, useState } from 'react'
+import React, { useEffect, useReducer, useRef, useState } from 'react'
 import UserBg from '../../../assets/images/user_bg.jpg'
-import { emailValidation, getStaffForm, staffData, staffReducerFn, validateFile } from '../../../utils'
+import { emailValidation, getStaffForm, reload, staffData, staffReducerFn, validateFile } from '../../../utils'
 import { InputField, RoundButton } from '../../../components/shared'
 import { Camera01Icon, Cancel01Icon, FloppyDiskIcon, PencilEdit01Icon } from 'hugeicons-react'
 import { grey } from '@mui/material/colors'
 import swal from 'sweetalert'
 import { useLoader } from '../../../context/LoaderContext'
 import { base } from '../../../config/appConfig'
+import { formatLabel, getFormValue } from '../students/StudentDetails'
 
 
 interface Props {
+    data?: any
     open: boolean
     onClose: () => void
     type: 'add' | 'edit' | string
     callBack: () => void
 }
-const AddStaff = ({ open, onClose, type, callBack }: Props) => {
+const AddStaff = ({ open, onClose, type, callBack, data }: Props) => {
     const { startLoading, stopLoading } = useLoader()
     const formData = getStaffForm()
     const ref = useRef()
@@ -24,6 +26,13 @@ const AddStaff = ({ open, onClose, type, callBack }: Props) => {
     const [edit, setEdit] = useState<string | undefined>(undefined)
     const [preview, setPreview] = useState<any>(null)
     const [photo, setPhoto] = useState<File>()
+
+    useEffect(() => {
+        if (type === 'edit' && data) {
+            console.log(data)
+            dispatch({ type: 'UPDATE', payload: data })
+        }
+    }, [type])
 
     const uploadPhoto = async (file: File) => {
         // console.log(file)
@@ -105,12 +114,30 @@ const AddStaff = ({ open, onClose, type, callBack }: Props) => {
 
     }
 
+    const updateStaffDetails = async () => {
+        try {
+            startLoading('Updating staff data. Please wait...')
+            const { data: res } = await base.patch(`/api/staff/profile/${data?.id}`, formInput)
+            if (res?.responseCode === 200) {
+                swal('Success', 'Staff data updated successfully', 'success').then(reload)
+            }
+        } catch (error: any) {
+            console.log(error?.response)
+            swal('Error', error?.response?.data?.message, 'error').then(reload)
+        } finally {
+            stopLoading()
+        }
+    }
+
 
     return (
         <Dialog open={open} maxWidth={'md'} fullWidth>
             <DialogContent sx={{ p: 0, position: 'relative' }}>
                 <Box sx={{ backgroundImage: `url(${UserBg})`, backgroundSize: 'cover' }} height={'5rem'} />
-                <IconButton onClick={onClose} sx={{ position: 'absolute', top: '3%', right: '3%' }}><Cancel01Icon size={18} color='#fff' /></IconButton>
+                <IconButton onClick={() => {
+                    dispatch({ type: 'RESET' })
+                    onClose()
+                }} sx={{ position: 'absolute', top: '3%', right: '3%' }}><Cancel01Icon size={18} color='#fff' /></IconButton>
                 <Box p={4}>
                     <Box width={'fit-content'} position={'relative'}>
                         <input type='file' name='photo' ref={ref} accept='image/*' style={{ display: 'none' }} onChange={(e) => uploadPhoto(e?.target?.files![0])} />
@@ -137,35 +164,44 @@ const AddStaff = ({ open, onClose, type, callBack }: Props) => {
                                 <Box id={data?.title} key={i} border={'1px solid lightgrey'} borderRadius={'10px'} bgcolor={'#fff'} mb={4} sx={{ scrollMarginTop: '5.8rem' }}>
                                     <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'} py={2} px={4}>
                                         <Typography fontWeight={600}>{data?.title}</Typography>
-
                                         {
-                                            type === 'edit' &&
-                                            <>
-                                                {
-                                                    (edit === data?.title) ?
-                                                        <Stack direction={'row'} gap={1} alignItems={'center'}>
-                                                            <RoundButton
-                                                                variant={'contained'} startIcon={<FloppyDiskIcon size={15} />} color={'secondary'}
-                                                                onClick={() => { }} disableElevation text='Save' size={'small'}
+                                            type === 'edit' && (
+                                                <>
+                                                    {
+
+                                                        (edit === formatLabel(data?.title)) ?
+                                                            <Stack direction={'row'} gap={1} alignItems={'center'}>
+                                                                <RoundButton
+                                                                    variant={'contained'} startIcon={<FloppyDiskIcon size={15} />} color={'secondary'}
+                                                                    onClick={() => {
+                                                                        updateStaffDetails()
+                                                                    }}
+                                                                    disableElevation text='Save' size={'small'}
+                                                                />
+                                                                <RoundButton sx={{ borderColor: grey[400], color: grey[600] }}
+                                                                    variant={'outlined'} startIcon={<Cancel01Icon size={12} />} color={'primary'}
+                                                                    onClick={() => {
+                                                                        dispatch({ type: 'UPDATE', payload: data })
+                                                                        setEdit(undefined)
+                                                                    }} disableElevation text='Cancel' size={'small'}
+                                                                />
+                                                            </Stack>
+                                                            :
+                                                            <RoundButton sx={{ ml: 'auto', borderColor: grey[400], color: grey[600] }}
+                                                                variant={'outlined'} startIcon={<PencilEdit01Icon size={15} />} color={'primary'}
+                                                                onClick={() => { setEdit(formatLabel(data?.title)) }}
+                                                                disableElevation text='Edit' size={'small'}
                                                             />
-                                                            <RoundButton sx={{ borderColor: grey[400], color: grey[600] }}
-                                                                variant={'outlined'} startIcon={<Cancel01Icon size={12} />} color={'primary'}
-                                                                onClick={() => { setEdit(undefined) }} disableElevation text='Cancel' size={'small'}
-                                                            />
-                                                        </Stack>
-                                                        :
-                                                        <RoundButton sx={{ ml: 'auto', borderColor: grey[400], color: grey[600] }}
-                                                            variant={'outlined'} startIcon={<PencilEdit01Icon size={15} />} color={'primary'}
-                                                            onClick={() => { setEdit(data?.title) }} disableElevation text='Edit' size={'small'}
-                                                        />
-                                                }
-                                            </>
+                                                    }
+                                                </>
+                                            )
                                         }
                                     </Stack>
                                     <Divider sx={{ mb: 3 }} />
                                     <Grid container columnSpacing={3} sx={{ px: 4, pb: 3 }}>
                                         {
                                             data?.fields?.map((el, i) => {
+                                                const value: string = getFormValue(formInput, el?.keys!)
                                                 if (el?.type === 'select') {
                                                     return (
                                                         <Grid item sm={6} key={i}>
@@ -173,6 +209,8 @@ const AddStaff = ({ open, onClose, type, callBack }: Props) => {
                                                             <InputField size={'small'}
                                                                 type={el?.type} fullWidth isSelect
                                                                 variant={'outlined'} placeholder={el?.placeholder || ''}
+                                                                value={value || ''}
+                                                                isDisabled={type === 'add' ? false : edit !== formatLabel(data?.title)}
                                                                 onChange={(e) => { dispatch({ type: el?.action, payload: e?.target?.value }) }}
                                                             >
                                                                 {
@@ -188,6 +226,8 @@ const AddStaff = ({ open, onClose, type, callBack }: Props) => {
                                                         <InputField size={'small'}
                                                             type={el?.type} fullWidth
                                                             variant={'outlined'} placeholder={el?.placeholder}
+                                                            value={value || ''}
+                                                            isDisabled={type === 'add' ? false : edit !== formatLabel(data?.title)}
                                                             onChange={(e) => { dispatch({ type: el?.action, payload: e?.target?.value }) }}
                                                         />
                                                     </Grid>

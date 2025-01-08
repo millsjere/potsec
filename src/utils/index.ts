@@ -490,6 +490,7 @@ export const getStaffForm = (): FormDataProps[] => [
         action: "DEPARTMENT",
         options: ["HND/DIPLOMA", "ADVANCED CERTIFICATE", "CERTIFICATE"],
         isRequired: true,
+        keys: ["academics", "department"],
       },
       {
         type: "select",
@@ -497,18 +498,21 @@ export const getStaffForm = (): FormDataProps[] => [
         action: "PROGRAMME",
         options: programmes,
         isRequired: true,
+        keys: ["academics", "programme"],
       },
       {
         type: "email",
         label: "Staff Email",
         action: "STAFF_EMAIL",
         isRequired: true,
+        keys: ["academics", "staffEmail"],
       },
       {
         type: "text",
         label: "Staff ID",
         action: "STAFF_ID",
         isRequired: true,
+        keys: ["academics", "staffID"],
       },
       {
         type: "select",
@@ -516,6 +520,7 @@ export const getStaffForm = (): FormDataProps[] => [
         action: "CAMPUS",
         options: ["Accra", "Kumasi"],
         isRequired: true,
+        keys: ["academics", "campus"],
       },
       {
         type: "select",
@@ -523,6 +528,7 @@ export const getStaffForm = (): FormDataProps[] => [
         action: "ROLE",
         options: ["Staff", "Admin"],
         isRequired: true,
+        keys: ["role"],
       },
     ],
   },
@@ -534,30 +540,35 @@ export const getStaffForm = (): FormDataProps[] => [
         label: "Surname",
         action: "SURNAME",
         isRequired: true,
+        keys: ["surname"],
       },
       {
         type: "text",
         label: "Other Names",
         action: "OTHER_NAMES",
         isRequired: true,
+        keys: ["othernames"],
       },
       {
         type: "email",
         label: "Email",
         action: "EMAIL",
         isRequired: true,
+        keys: ["email"],
       },
       {
         type: "tel",
         label: "Phone",
         action: "PHONE_MOBILE",
         isRequired: true,
+        keys: ["phone", "mobile"],
       },
       {
         type: "tel",
         label: "WhatsApp",
         action: "PHONE_WHATSAPP",
         isRequired: true,
+        keys: ["phone", "whatsapp"],
       },
       {
         type: "select",
@@ -565,18 +576,21 @@ export const getStaffForm = (): FormDataProps[] => [
         action: "GENDER",
         options: ["Male", "Female"],
         isRequired: true,
+        keys: ["gender"],
       },
       {
         type: "text",
         label: "Language Spoken",
         action: "LANGUAGE_SPOKEN",
         isRequired: true,
+        keys: ["language", "spoken"],
       },
       {
         type: "text",
         label: "Language Written",
         action: "LANGUAGE_WRITTEN",
         isRequired: true,
+        keys: ["language", "written"],
       },
       {
         type: "select",
@@ -584,18 +598,21 @@ export const getStaffForm = (): FormDataProps[] => [
         action: "NATIONAL_ID",
         options: ["Ghana Card", "Drivers License", "Passport"],
         isRequired: true,
+        keys: ["nationalID", "type"],
       },
       {
         type: "text",
         label: "ID Number",
         action: "NATIONAL_ID_NUMBER",
         isRequired: true,
+        keys: ["nationalID", "number"],
       },
       {
         type: "text",
         label: "Residence Address",
         action: "RESIDENCE",
         isRequired: true,
+        keys: ["address", "residence"],
       },
       {
         type: "select",
@@ -603,6 +620,7 @@ export const getStaffForm = (): FormDataProps[] => [
         action: "RESIDENCE_REGION",
         options: getRegions(),
         isRequired: true,
+        keys: ["address", "region"],
       },
     ],
   },
@@ -1226,6 +1244,8 @@ export const staffReducerFn = (state: typeof staffData, action: any) => {
           campus: action?.payload?.academics?.campus || "",
         },
       };
+    case "RESET":
+      return staffData;
     default:
       return state;
   }

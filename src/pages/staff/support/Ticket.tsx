@@ -11,11 +11,11 @@ const Ticket = () => {
         { title: '25', subtitle: 'PROCESSING', icon: <Ticket02Icon color='#fff' size={40} />, path: '', bgcolor: '#005adf1a' },
         { title: '12', subtitle: 'RESOLVED', icon: <Ticket02Icon color='#fff' size={40} />, path: '', bgcolor: '#005adf1a' }
     ]
-  return (
-    <div>
-        <PageHeader title={'Support'} breadcrumbs={[{ label: 'Tickets', link: '#' }]} />
-        {/* Summary Cards */}
-        <Grid container spacing={3} mt={2}>
+    return (
+        <div>
+            <PageHeader title={'Ticketing'} breadcrumbs={[{ label: 'Tickets', link: '#' }]} />
+            {/* Summary Cards */}
+            <Grid container spacing={3} mt={2}>
                 {
                     summary?.map((sum, i) => {
                         return (
@@ -33,8 +33,8 @@ const Ticket = () => {
                 }
             </Grid>
 
-    </div>
-  )
+        </div>
+    )
 }
 
 export default Ticket
