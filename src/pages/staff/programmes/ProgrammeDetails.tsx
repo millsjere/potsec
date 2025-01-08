@@ -1,5 +1,5 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab'
-import { Avatar, Box, Chip, Divider, MenuItem, Stack, Tab, Typography } from '@mui/material'
+import { Avatar, Box, Chip, MenuItem, Stack, Tab, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import CourseItem from '../../../components/shared/Cards/CourseItem'
 import NullState from '../../../components/shared/NullState/NullState'
@@ -31,12 +31,12 @@ const ProgrammeDetails = () => {
     const { isLoading, response, fetchData } = useAxiosFetch(`/api/staff/programmes/${params?.id}`);
     const [data, setData] = useState<DetailsProps>()
     const [open, setOpen] = useState(false)
-    const [input, setInput] = useState({ name: '', code: '', level: '', })
+    const [input, setInput] = useState({ name: '', code: '', trimester: '', credit: 0, year: 0})
 
-    const year1 = data?.courses!?.length > 0 ? data?.courses?.filter((el => el?.level === 'Year 1')) : []
-    const year2 = data?.courses!?.length > 0 ? data?.courses?.filter((el => el?.level === 'Year 2')) : []
-    const year3 = data?.courses!?.length > 0 ? data?.courses?.filter((el => el?.level === 'Year 3')) : []
-    const year4 = data?.courses!?.length > 0 ? data?.courses?.filter((el => el?.level === 'Year 4')) : []
+    const year1 = data?.courses!?.length > 0 ? data?.courses?.filter((el => el?.year === 1)) : []
+    const year2 = data?.courses!?.length > 0 ? data?.courses?.filter((el => el?.year === 2)) : []
+    const year3 = data?.courses!?.length > 0 ? data?.courses?.filter((el => el?.year === 3)) : []
+    const year4 = data?.courses!?.length > 0 ? data?.courses?.filter((el => el?.year === 4)) : []
     const months = data?.courses!?.length > 0 ? data?.courses?.filter((el => el?.level?.includes('Months'))) : []
 
     useEffect(() => {
@@ -46,9 +46,10 @@ const ProgrammeDetails = () => {
     }, [isLoading])
 
     const onFormSubmit = async () => {
-        if (input?.level === '') return swal('Invalid', 'Please select a level', 'warning')
+        if (input?.trimester === '') return swal('Invalid', 'Please select a trimester', 'warning')
         if (input?.name === '') return swal('Invalid', 'Please provide a course name', 'warning')
         if (input?.code === '') return swal('Invalid', 'Please select a course code', 'warning')
+        if (input?.credit === 0) return swal('Invalid', 'Course credit cannot be zero', 'warning')
         try {
             startLoading('Creating new course. Please wait..')
             const { data: res } = await base.patch('/api/staff/course/add', { id: params?.id, course: input })
@@ -66,7 +67,7 @@ const ProgrammeDetails = () => {
 
     const resetForm = () => {
         setOpen(false)
-        setInput({ name: '', code: '', level: '' })
+        setInput({ name: '', code: '', trimester: '', credit: 0, year: 0 })
     }
 
     const removeCourse = (course: any)=>{
@@ -109,6 +110,108 @@ const ProgrammeDetails = () => {
                             </span>
 
                         </Stack>
+
+                        {/* New Layout */}
+                        <Box bgcolor={'#fff'} p={3} borderRadius={'10px'} mb={2}>
+                            <Stack mb={2} direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
+                                <Typography variant='h6'>Courses - Year 1</Typography>
+                                <RoundButton text='Course'
+                                    variant={'contained'} size={'small'}
+                                    color={'secondary'} disableElevation sx={{ borderRadius: '6px' }}
+                                    onClick={() => { setOpen(true); setInput(prev => ({...prev, year: 1})) }} startIcon={<AddCircleIcon size={18} />}
+                                />
+                            </Stack>
+                            <TabContext value={value}>
+                                <Box sx={{ border: 1, borderColor: 'divider', borderRadius: '10px 10px 0 0' }}>
+                                    <TabList onChange={(_e, val) => setValue(val)}>
+                                        <Tab label={`Trimester 1`} value={'1'} />
+                                        <Tab label={`Trimester 2`} value={'2'} />
+                                        <Tab label={`Trimester 3`} value={'3'} />
+                                    </TabList>
+                                </Box>
+
+                                {/* Tabs */}
+                                <TabPanel value='1' sx={{ border: 1, borderTopWidth: 0, borderColor: 'divider', minHeight: '20rem' }}>
+                                    {
+                                        data?.duration?.type?.toLowerCase() === 'years' ?
+                                        <>
+                                        {
+                                                year1!?.length > 0 ?
+                                                year1?.map((course: any, i: number) => (
+                                                    <Stack key={i}>
+                                                        <CourseItem course={course} onRemove={()=>removeCourse(course)} />
+                                                    </Stack>
+                                                ))
+                                                :
+                                                <NullState
+                                                    title='All Courses'
+                                                    subtext={`No course records added yet`}
+                                                    image={Empty}
+                                                    btnText={'Add Course'}
+                                                    onClick={() => { }}
+                                                    opacity={0.2}
+                                                    height='25rem'
+                                                    btnSize='small'
+                                                    showBtn={false}
+                                                />
+                                        }
+                                        </>
+                                        :
+                                        <>
+                                            {
+                                                months!?.length > 0 ?
+                                                months?.map((course: any, i: number) => (
+                                                    <Stack key={i}>
+                                                        <CourseItem course={course} onRemove={()=>removeCourse(course)} />
+                                                    </Stack>
+                                                ))
+                                                :
+                                                <NullState
+                                                    title='All Courses'
+                                                    subtext={`No course records added yet`}
+                                                    image={Empty}
+                                                    btnText={'Add Course'}
+                                                    onClick={() => { }}
+                                                    opacity={0.2}
+                                                    height='25rem'
+                                                    btnSize='small'
+                                                    showBtn={false}
+                                                />
+                                        }
+                                        </>
+                                    }
+                                </TabPanel>
+                                <TabPanel value='2' sx={{ border: 1, borderTopWidth: 0, borderColor: 'divider', minHeight: '20rem' }}>
+                                    <NullState
+                                        title='All Courses'
+                                        subtext={`No course records added yet`}
+                                        image={Empty}
+                                        btnText={'Add Course'}
+                                        onClick={() => { }}
+                                        opacity={0.2}
+                                        height='25rem'
+                                        btnSize='small'
+                                        showBtn={false}
+                                    />
+                                </TabPanel>
+                                <TabPanel value='3' sx={{ border: 1, borderTopWidth: 0, borderColor: 'divider', minHeight: '20rem' }}>
+                                    <NullState
+                                        title='All Courses'
+                                        subtext={`No course records added yet`}
+                                        image={Empty}
+                                        btnText={'Add Course'}
+                                        onClick={() => { }}
+                                        opacity={0.2}
+                                        height='25rem'
+                                        btnSize='small'
+                                        showBtn={false}
+                                    />
+                                </TabPanel>
+                            </TabContext>
+                        </Box>
+
+
+                        {/* End of Layout */}
 
                         <Box bgcolor={'#fff'} p={3} borderRadius={'10px'}>
                             <Stack mb={2} direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
@@ -263,14 +366,14 @@ const ProgrammeDetails = () => {
                         >
                             <InputField
                                 showTopLabel type='select'
-                                label='Level' fullWidth
+                                label='Trimester' fullWidth
                                 size={'small'}
-                                value={input?.level} isSelect
-                                onChange={(e) => setInput(prev => ({ ...prev, level: e?.target?.value }))}
+                                value={input?.trimester} isSelect
+                                onChange={(e) => setInput(prev => ({ ...prev, trimester: e?.target?.value }))}
                             >
                                 {
                                     data?.duration?.type?.toLowerCase() === 'years' ?
-                                        Array(data?.duration?.number).fill(1)?.map((_el, i) => `Year ${i + 1}`)?.map((el, i) => <MenuItem key={i} value={el}>{el}</MenuItem>)
+                                        Array(3).fill(1)?.map((_el, i) => `Trimester ${i + 1}`)?.map((el, i) => <MenuItem key={i} value={el}>{el}</MenuItem>)
                                         :
                                         <MenuItem value={data?.duration?.type+' '+data?.duration?.number}>{`${data?.duration?.number} ${data?.duration?.type}`}</MenuItem>
                                 }
@@ -288,6 +391,13 @@ const ProgrammeDetails = () => {
                                 size={'small'} type='text'
                                 value={input?.code}
                                 onChange={(e) => setInput(prev => ({ ...prev, code: e?.target?.value }))}
+                            />
+                            <InputField
+                                showTopLabel
+                                label='Credit' fullWidth
+                                size={'small'} type='number'
+                                value={input?.credit} inputProps={{min: 0}}
+                                onChange={(e) => setInput(prev => ({ ...prev, credit: e?.target?.value }))}
                             />
 
                         </ModalItem>
