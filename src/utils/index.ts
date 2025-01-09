@@ -485,7 +485,7 @@ export const getStaffForm = (): FormDataProps[] => [
     title: "Academics",
     fields: [
       {
-        type: "text",
+        type: "select",
         label: "Department",
         action: "DEPARTMENT",
         options: ["HND/DIPLOMA", "ADVANCED CERTIFICATE", "CERTIFICATE"],
@@ -506,13 +506,6 @@ export const getStaffForm = (): FormDataProps[] => [
         action: "STAFF_EMAIL",
         isRequired: true,
         keys: ["academics", "staffEmail"],
-      },
-      {
-        type: "text",
-        label: "Staff ID",
-        action: "STAFF_ID",
-        isRequired: true,
-        keys: ["academics", "staffID"],
       },
       {
         type: "select",
@@ -561,14 +554,7 @@ export const getStaffForm = (): FormDataProps[] => [
         label: "Phone",
         action: "PHONE_MOBILE",
         isRequired: true,
-        keys: ["phone", "mobile"],
-      },
-      {
-        type: "tel",
-        label: "WhatsApp",
-        action: "PHONE_WHATSAPP",
-        isRequired: true,
-        keys: ["phone", "whatsapp"],
+        keys: ["phone"],
       },
       {
         type: "select",
@@ -577,20 +563,6 @@ export const getStaffForm = (): FormDataProps[] => [
         options: ["Male", "Female"],
         isRequired: true,
         keys: ["gender"],
-      },
-      {
-        type: "text",
-        label: "Language Spoken",
-        action: "LANGUAGE_SPOKEN",
-        isRequired: true,
-        keys: ["language", "spoken"],
-      },
-      {
-        type: "text",
-        label: "Language Written",
-        action: "LANGUAGE_WRITTEN",
-        isRequired: true,
-        keys: ["language", "written"],
       },
       {
         type: "select",
@@ -612,15 +584,7 @@ export const getStaffForm = (): FormDataProps[] => [
         label: "Residence Address",
         action: "RESIDENCE",
         isRequired: true,
-        keys: ["address", "residence"],
-      },
-      {
-        type: "select",
-        label: "Region",
-        action: "RESIDENCE_REGION",
-        options: getRegions(),
-        isRequired: true,
-        keys: ["address", "region"],
+        keys: ["address"],
       },
     ],
   },
@@ -1111,23 +1075,13 @@ export const staffData = {
   surname: "",
   othernames: "",
   email: "",
-  phone: {
-    mobile: "",
-    whatsapp: "",
-  },
+  phone: "",
   gender: "",
-  language: {
-    spoken: "",
-    written: "",
-  },
   nationalID: {
     type: "",
     number: "",
   },
-  address: {
-    residence: "",
-    region: "",
-  },
+  address: "",
   academics: {
     department: "",
     programme: "",
@@ -1148,26 +1102,9 @@ export const staffReducerFn = (state: typeof staffData, action: any) => {
     case "EMAIL":
       return { ...state, email: action?.payload };
     case "PHONE_MOBILE":
-      return { ...state, phone: { ...state?.phone, mobile: action?.payload } };
-    case "PHONE_WHATSAPP":
-      return {
-        ...state,
-        phone: { ...state?.phone, whatsapp: action?.payload },
-      };
-    case "PHONE_MOBILE":
-      return { ...state, phone: { ...state?.phone, mobile: action?.payload } };
+      return { ...state, phone: action?.payload };
     case "GENDER":
       return { ...state, gender: action?.payload };
-    case "LANGUAGE_SPOKEN":
-      return {
-        ...state,
-        language: { ...state?.language, spoken: action?.payload },
-      };
-    case "LANGUAGE_WRITTEN":
-      return {
-        ...state,
-        language: { ...state?.language, written: action?.payload },
-      };
     case "NATIONAL_ID":
       return {
         ...state,
@@ -1181,12 +1118,7 @@ export const staffReducerFn = (state: typeof staffData, action: any) => {
     case "RESIDENCE":
       return {
         ...state,
-        address: { ...state?.address, residence: action?.payload },
-      };
-    case "RESIDENCE_REGION":
-      return {
-        ...state,
-        address: { ...state?.address, region: action?.payload },
+        address: action?.payload,
       };
     case "DEPARTMENT":
       return {
@@ -1197,11 +1129,6 @@ export const staffReducerFn = (state: typeof staffData, action: any) => {
       return {
         ...state,
         academics: { ...state?.academics, staffEmail: action?.payload },
-      };
-    case "STAFF_ID":
-      return {
-        ...state,
-        academics: { ...state?.academics, staffID: action?.payload },
       };
     case "PROGRAMME":
       return {
@@ -1219,23 +1146,13 @@ export const staffReducerFn = (state: typeof staffData, action: any) => {
         surname: action?.payload?.surname || "",
         othernames: action?.payload?.othernames || "",
         email: action?.payload?.email || "",
-        phone: {
-          mobile: action?.payload?.phone?.mobile || "",
-          whatsapp: action?.payload?.phone?.whatsapp || "",
-        },
+        phone: action?.payload?.phone || "",
         gender: action?.payload?.gender || "",
-        language: {
-          spoken: action?.payload?.language?.spoken || "",
-          written: action?.payload?.language?.written || "",
-        },
         nationalID: {
           type: action?.payload?.nationalID?.type || "",
           number: action?.payload?.nationalID?.number || "",
         },
-        address: {
-          residence: action?.payload?.address?.residence || "",
-          region: action?.payload?.address?.region || "",
-        },
+        address: action?.payload?.address || "",
         academics: {
           department: action?.payload?.academics?.department || "",
           programme: action?.payload?.academics?.programme || "",

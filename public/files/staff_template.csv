@@ -1,0 +1,6 @@
+surname,othernames,staff_email,phone,gender,nationalID_type,nationalID_number,address,campus
+Doe,John,john.doe@potsec.com,1234567890,Male,Passport,A1234567,123 Main St,Accra
+Smith,Jane,jane.smith@potsec.com,2345678901,Female,Ghana Card,GHA-000000009-1,45 Elm St,Kumasi
+Brown,Chris,chris.brown@potsec.com,3456789012,Male,Driving License,DL789456,78 Oak St,Kumasi
+Johnson,Sarah,sarah.johnson@potsec.com,4567890123,Female,Passport,PQ123987,90 Maple Ave,Accra
+Taylor,Alex,alex.taylor@potsec.com,5678901234,Non-Binary,Ghana Card,GHA-000000009-1,67 Pine St,Kumasi

@@ -51,20 +51,20 @@ const AddStaff = ({ open, onClose, type, callBack, data }: Props) => {
     const validateFormData = () => {
         if (formInput?.academics?.department === ''
             || formInput?.academics?.programme === ''
-            || formInput?.academics?.staffEmail === '' || formInput?.academics?.staffID === ''
+            || formInput?.academics?.staffEmail === ''
             || formInput?.academics?.campus === ''
         ) return swal('Invalid', 'Provide all required fields under Academics', 'error').then(() => false)
         if (formInput?.surname === ''
             || formInput?.othernames === ''
-            || formInput?.phone?.mobile === '' || formInput?.phone?.whatsapp === ''
+            || formInput?.phone === ''
             || formInput?.gender === ''
-            || formInput?.language?.spoken === '' || formInput?.language?.written === ''
-            || formInput?.nationalID?.type === '' || formInput?.nationalID?.number === ''
-            || formInput?.address?.residence === '' || formInput?.address?.region === ''
+            || formInput?.nationalID?.type === '' 
+            || formInput?.nationalID?.number === ''
+            || formInput?.address === ''
         ) return swal('Invalid', 'Provide all required fields under Personal Details', 'error').then(() => false)
-        if (
-            formInput?.email === '' || !emailValidation(formInput?.email)
-        ) return swal('Invalid', 'Please provide a valid email address', 'error').then(() => false)
+        // if (
+        //     formInput?.email === '' || !emailValidation(formInput?.email)
+        // ) return swal('Invalid', 'Please provide a valid email address', 'error').then(() => false)
         if (!photo) return swal('Invalid', 'Provide profile photo', 'error').then(() => false)
 
         return true
@@ -77,7 +77,7 @@ const AddStaff = ({ open, onClose, type, callBack, data }: Props) => {
     }
 
     const onFormSubmit = async () => {
-        console.log(formInput)
+        // console.log(formInput)
         const isValid = await validateFormData()
         if (isValid) {
             await swal({
@@ -214,7 +214,7 @@ const AddStaff = ({ open, onClose, type, callBack, data }: Props) => {
                                                                 onChange={(e) => { dispatch({ type: el?.action, payload: e?.target?.value }) }}
                                                             >
                                                                 {
-                                                                    el?.options?.map((item, i) => <MenuItem key={i} value={item}>{item}</MenuItem>)
+                                                                    el?.options?.map((item, i) => <MenuItem key={i} value={item?.toLowerCase()}>{item}</MenuItem>)
                                                                 }
                                                             </InputField>
                                                         </Grid>

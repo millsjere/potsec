@@ -36,12 +36,12 @@ function Layout({ children }: { children: React.ReactNode }) {
         handleDrawerToggle={handleDrawerToggle}
         drawerWidth={drawerWidth}
       />
-      <SideNav
+      {/* <SideNav
         mobileOpen={mobileOpen}
         drawerWidth={drawerWidth}
         handleDrawerClose={handleDrawerClose}
         handleDrawerTransitionEnd={handleDrawerTransitionEnd}
-      />
+      /> */}
 
       {/* main Content */}
       <Box component="main" sx={{ flexGrow: 1, width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
