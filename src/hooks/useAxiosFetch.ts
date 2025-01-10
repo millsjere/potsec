@@ -28,7 +28,7 @@ const useAxiosFetch = (url: string) => {
     fetchData();
   }, [url]);
 
-  return { response, error, isLoading, fetchData };
+  return { response, error, isLoading, fetchData, setResponse, setIsLoading };
 };
 
 export default useAxiosFetch;

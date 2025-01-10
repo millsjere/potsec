@@ -9,6 +9,7 @@ import swal from 'sweetalert'
 import { useLoader } from '../../../context/LoaderContext'
 import { base } from '../../../config/appConfig'
 import { formatLabel, getFormValue } from '../students/StudentDetails'
+import useAxiosFetch from '../../../hooks/useAxiosFetch'
 
 
 interface Props {
@@ -20,6 +21,7 @@ interface Props {
 }
 const AddStaff = ({ open, onClose, type, callBack, data }: Props) => {
     const { startLoading, stopLoading } = useLoader()
+    const { response: allDepartments } = useAxiosFetch('/api/staff/departments');
     const formData = getStaffForm()
     const ref = useRef()
     const [formInput, dispatch] = useReducer(staffReducerFn, staffData)
@@ -50,7 +52,6 @@ const AddStaff = ({ open, onClose, type, callBack, data }: Props) => {
 
     const validateFormData = () => {
         if (formInput?.academics?.department === ''
-            || formInput?.academics?.programme === ''
             || formInput?.academics?.staffEmail === ''
             || formInput?.academics?.campus === ''
         ) return swal('Invalid', 'Provide all required fields under Academics', 'error').then(() => false)
@@ -58,14 +59,14 @@ const AddStaff = ({ open, onClose, type, callBack, data }: Props) => {
             || formInput?.othernames === ''
             || formInput?.phone === ''
             || formInput?.gender === ''
-            || formInput?.nationalID?.type === '' 
+            || formInput?.nationalID?.type === ''
             || formInput?.nationalID?.number === ''
             || formInput?.address === ''
         ) return swal('Invalid', 'Provide all required fields under Personal Details', 'error').then(() => false)
         // if (
         //     formInput?.email === '' || !emailValidation(formInput?.email)
         // ) return swal('Invalid', 'Please provide a valid email address', 'error').then(() => false)
-        if (!photo) return swal('Invalid', 'Provide profile photo', 'error').then(() => false)
+        // if (!photo) return swal('Invalid', 'Provide profile photo', 'error').then(() => false)
 
         return true
     }
@@ -92,13 +93,16 @@ const AddStaff = ({ open, onClose, type, callBack, data }: Props) => {
                     startLoading('Creating student account. Please wait')
                     try {
                         const { data: res } = await base.post('/api/staff/create', formInput)
-                        if (res?.responseCode === 200) {
+                        if (res?.responseCode === 200 && photo) {
                             const payload = new FormData()
                             payload.append('photo', photo!)
                             startLoading('Uploading profile photo..')
                             await base.patch(`/api/staff/photo/${res?.data?.academics?.staffID}`, payload, {
                                 headers: { 'content-type': 'multipart/form-data' }
                             })
+                            resetForm();
+                            await swal('Success', 'Staff account created successfully', 'success').then(() => { callBack() })
+                        } else {
                             resetForm();
                             await swal('Success', 'Staff account created successfully', 'success').then(() => { callBack() })
                         }
@@ -214,7 +218,10 @@ const AddStaff = ({ open, onClose, type, callBack, data }: Props) => {
                                                                 onChange={(e) => { dispatch({ type: el?.action, payload: e?.target?.value }) }}
                                                             >
                                                                 {
-                                                                    el?.options?.map((item, i) => <MenuItem key={i} value={item?.toLowerCase()}>{item}</MenuItem>)
+                                                                    el?.label === 'Department' ?
+                                                                        allDepartments?.map((item: any, i: number) => <MenuItem key={i} value={item?.id}>{item?.name}</MenuItem>)
+                                                                        :
+                                                                        el?.options?.map((item, i) => <MenuItem key={i} value={item?.toLowerCase()}>{item}</MenuItem>)
                                                                 }
                                                             </InputField>
                                                         </Grid>

@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import PageHeader from '../../../components/shared/PageHeader'
 import LoadingState from '../../../components/shared/Loaders/LoadingState'
-import { Box } from '@mui/material'
 import FilterBar from '../../../components/filter/FilterBar'
 import { RoundButton } from '../../../components/shared'
 import NoStaff from '../../../assets/images/team.png'
@@ -9,23 +8,21 @@ import { AddCircleIcon } from 'hugeicons-react'
 import AddStaff from './AddStaff'
 import NullState from '../../../components/shared/NullState/NullState'
 import useAxiosFetch from '../../../hooks/useAxiosFetch'
-import { DataGrid } from '@mui/x-data-grid'
-import { getTableColumns } from '../application/Applications'
 import swal from 'sweetalert'
 import { useLoader } from '../../../context/LoaderContext'
 import { base } from '../../../config/appConfig'
 import { reload } from '../../../utils'
+import MuiTable from '../../../components/shared/Tables/MuiTable'
 
 
 const Staffs = () => {
-    const { isLoading, response: data, fetchData } = useAxiosFetch('/api/staff/all')
+    const { isLoading, response: data, fetchData, setResponse, setIsLoading } = useAxiosFetch('/api/staff/all')
     const { startLoading, stopLoading } = useLoader()
     const [open, setOpen] = useState(false)
-    const [view, setView] = useState('grid')
+    const [params, setParams] = useState({ label: '', value: '' })
     const [type, setType] = useState('')
     const [staffDetails, setStaffDetails] = useState()
-    const [pageSize, setPageSize] = useState(20);
-    const headers = ['Surname', 'Othernames', 'Phone', 'Email', 'Programme', 'Campus', 'Action']
+    const headers = ['Staff ID', 'Fullname', 'Phone', 'Email', 'Department', 'Campus', 'Action']
 
     const editStaffDetails = (id: string) => {
         console.log(id)
@@ -58,12 +55,38 @@ const Staffs = () => {
         })
     }
 
+    const onSearchHandler = async () => {
+        if (params.label === '' || params.value === '') return
+        console.log('params ==>', params)
+        try {
+            setIsLoading(true)
+            const { data: res } = await base.get(`/api/search/staff?${params?.label?.toLowerCase()}=${params?.value}`)
+            if (res?.status === 'success') {
+                setResponse(res?.data)
+            }
+        } catch (error) {
+            swal({
+                title: 'Error',
+                text: 'Sorry, could not get data. Please refresh and try again',
+                icon: 'error'
+            }).then(reload)
+        } finally {
+            setIsLoading(false)
+        }
+
+    }
+
+    const resetFilter = async () => {
+        setParams({ label: '', value: '' })
+        await fetchData()
+    }
+
     return (
         <div>
             <PageHeader title={'All Staff'} breadcrumbs={[{ label: 'Staff', link: '#' }]} />
             <FilterBar
-                showYear={false} view={view}
-                onViewChange={(val) => setView(val)}
+                showView={false}
+                showExport={true}
                 isLoading={isLoading}
                 moreBtns={
                     <RoundButton
@@ -74,13 +97,25 @@ const Staffs = () => {
                         loading={isLoading}
                     />
                 }
-                onSearch={() => { }}
+                filterParams={params}
+                onSearch={onSearchHandler}
+                onReset={resetFilter}
+                onExport={() => { }}
+                onFilter={(e: any) => { setParams(prev => ({ ...prev, label: e?.target?.value })) }}
+                onKeywordChange={(e: any) => { setParams(prev => ({ ...prev, value: e?.target?.value })) }}
+                filterOptions={['Name', 'Staff ID', 'Email']}
             />
             {
                 isLoading ? <LoadingState state='staff' /> :
                     (!isLoading && data?.length > 0) ? (
                         <>
-                            <Box sx={{ height: 400, width: '100%' }}>
+                            <MuiTable
+                                data={data || []}
+                                headers={headers}
+                                onEditClick={(id) => editStaffDetails(id)}
+                                onDeleteClick={(id) => onStaffDelete(id)}
+                            />
+                            {/* <Box sx={{ height: 400, width: '100%' }}>
                                 <DataGrid
                                     sx={{
                                         bgcolor: "#fff", '& .MuiDataGrid-cell': {
@@ -114,7 +149,7 @@ const Staffs = () => {
                                     }}
                                     onPaginationMetaChange={(newSize: any) => setPageSize(newSize)}
                                 />
-                            </Box>
+                            </Box> */}
                         </>
 
                     ) :
@@ -126,6 +161,7 @@ const Staffs = () => {
                                 btnText={'Add Staff'}
                                 onClick={() => { setOpen(true); setType('add') }}
                                 opacity={0.5}
+                                showBtn={false}
                             />
 
                         )

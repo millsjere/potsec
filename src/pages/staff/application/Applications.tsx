@@ -25,8 +25,9 @@ export const getTableColumns = (headers: string[], actionClick: (id: string) => 
                     el?.toLowerCase() === 'date applied' ? 'createdAt' :
                         el?.toLowerCase() === 'index no.' ? 'applicationStage' : // doing this help the dataTable render field headers as expected but the value rendered under these headers are all from the same object enrollment
                             el?.toLowerCase() === 'programme' ? 'enrollment' || 'academics' :
-                                el?.toLowerCase() === 'year' ? 'role' :
-                                    el?.toLowerCase()
+                                el?.toLowerCase() === 'department' ? 'academics' :
+                                    el?.toLowerCase() === 'year' ? 'role' :
+                                        el?.toLowerCase()
             ),
             flex: el?.toLowerCase() === 'date applied' ? 1.5 : el?.toLowerCase() === 'programme' ? 2 : 1,
             minWidth: 150,
@@ -46,12 +47,12 @@ export const getTableColumns = (headers: string[], actionClick: (id: string) => 
                         </Stack>
                         :
                         <Typography mt={2.2} variant='body2' noWrap>{
-                            el?.toLowerCase() === 'phone' ? params?.value?.mobile :
+                            el?.toLowerCase() === 'phone' ? params?.value?.mobile || params?.value :
                                 el?.toLowerCase() === 'index no.' ? params?.row?.enrollment?.index :
                                     el?.toLowerCase() === 'programme' ? params?.row?.enrollment?.programme || params?.row?.academics?.programme :
                                         el?.toLowerCase() === 'campus' ? params?.value || params?.row?.academics?.campus :
                                             el?.toLowerCase() === 'year' ? params?.row?.enrollment?.year :
-                                                el?.toLowerCase() === 'department' ? params?.row?.department?.name :
+                                                el?.toLowerCase() === 'department' ? params?.row?.department?.name || params?.row?.academics?.department?.name :
                                                     el?.toLowerCase() === 'courses' ? (params?.row?.courses?.length + ' Courses') :
                                                         el?.toLowerCase() === 'duration' ? (params?.row?.duration?.number + ' ' + params?.row?.duration?.type) :
                                                             el?.toLowerCase() === 'date applied' ? formatDateTime(params?.row?.createdAt)

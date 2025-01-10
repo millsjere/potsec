@@ -1,8 +1,7 @@
-import { Box, IconButton, InputAdornment, MenuItem, Stack } from '@mui/material'
-import { GridViewIcon, RightToLeftListDashIcon, Search01Icon } from 'hugeicons-react'
+import { Box, IconButton, MenuItem, Stack } from '@mui/material'
+import { Download01Icon, GridViewIcon, RightToLeftListDashIcon, Search01Icon } from 'hugeicons-react'
 import React from 'react'
 import { InputField, RoundButton } from '../shared'
-import { programmes, getYearRange } from '../../utils'
 
 interface Props {
     view?: string
@@ -12,50 +11,53 @@ interface Props {
     showYear?: boolean
     moreBtns?: React.ReactNode
     onSearch: () => void
+    onKeywordChange: (val: any) => void
+    onFilter: (val: any) => void
+    onExport: () => void
+    onReset: () => void
     isLoading?: boolean
+    showExport?: boolean
+    filterOptions?: string[]
+    filterParams: { label: string, value: string }
+    selectFieldOptions?: any[]
 }
 
-const FilterBar = ({ view, onViewChange, showView = true, showProgramme = true, showYear = true, moreBtns, onSearch, isLoading }: Props) => {
+const FilterBar = ({ view, onViewChange, selectFieldOptions, filterOptions, filterParams, onReset, onKeywordChange, onFilter, showView = true, moreBtns, showExport, onSearch, onExport, isLoading }: Props) => {
     return (
         <Box px={3} pb={1} pt={2} mb={4} bgcolor='#fff' borderRadius={'10px'}>
             <Box display={'flex'} gap={2} alignItems={'center'}>
                 <InputField
-                    variant={'outlined'}
-                    onChange={() => { }}
+                    variant={'outlined'} isSelect
+                    onChange={onFilter}
                     size={'small'} fullWidth
-                    label={'Search'}
+                    label={'Filter By'} sx={{ width: '12rem' }}
                     showTopLabel
-                    InputProps={{
-                        endAdornment: <InputAdornment position='end'><Search01Icon size={18} /></InputAdornment>
-                    }}
-                />
-                {
-                    showProgramme &&
-                    <InputField
-                        variant={'outlined'}
-                        isSelect sx={{ width: '12rem' }}
-                        onChange={() => { }}
-                        size={'small'}
-                        placeholder={''}
-                        label={'Programmes'}
-                        showTopLabel
-                    >
-                        {programmes?.map((el, i) => <MenuItem key={i} value={el}>{el}</MenuItem>)}
-                    </InputField>
-                }
+                    value={filterParams.label}
+                >
+                    {filterOptions?.map((el, i) => <MenuItem key={i} value={el}>{el}</MenuItem>)}
+                </InputField>
 
-                {
-                    showYear &&
+                {filterParams.label === 'Department' ?
                     <InputField
                         variant={'outlined'}
-                        isSelect sx={{ width: '12rem' }}
-                        onChange={() => { }}
-                        size={'small'}
-                        label={'Enroll Year'}
-                        showTopLabel
+                        onChange={onKeywordChange}
+                        size={'small'} fullWidth
+                        label={'Departments'}
+                        showTopLabel isSelect
+                        value={filterParams.value}
                     >
-                        {getYearRange(2019 - 19)?.map((el, i) => <MenuItem key={i} value={el}>{el}</MenuItem>)}
+                        {selectFieldOptions?.map((el: any, i) => <MenuItem key={i} value={el?.id}>{el?.name}</MenuItem>)}
                     </InputField>
+                    :
+                    <InputField
+                        variant={'outlined'}
+                        onChange={onKeywordChange}
+                        size={'small'} fullWidth
+                        label={'Keyword'}
+                        showTopLabel
+                        value={filterParams.value}
+
+                    />
                 }
                 <RoundButton
                     variant={'contained'} sx={{ borderRadius: '10px', py: .8, mt: 1 }}
@@ -64,8 +66,24 @@ const FilterBar = ({ view, onViewChange, showView = true, showProgramme = true, 
                     onClick={onSearch}
                     loading={isLoading}
                 />
+                <RoundButton
+                    variant={'outlined'} sx={{ borderRadius: '10px', py: .8, mt: 1 }}
+                    color={'primary'} disableElevation
+                    text='Reset'
+                    onClick={onReset}
+                    loading={isLoading}
+                />
                 <Stack direction={'row'} ml={'auto'} alignItems={'center'} gap={1}>
                     {moreBtns}
+                    {showExport &&
+                        <RoundButton
+                            variant={'outlined'} sx={{ borderRadius: '10px', py: .8, mt: 1 }}
+                            color={'secondary'} disableElevation
+                            text='Download' startIcon={<Download01Icon size={18} />}
+                            onClick={onExport}
+                            loading={isLoading}
+                        />
+                    }
                     {
                         showView &&
                         <Stack direction={'row'} ml={'auto'} alignItems={'center'} gap={1}>

@@ -20,12 +20,12 @@ import MuiTable from '../../../components/shared/Tables/MuiTable'
 
 const Departments = () => {
     const { startLoading, stopLoading } = useLoader()
-    const { isLoading, response: data, fetchData } = useAxiosFetch('/api/staff/department');
+    const { isLoading, response: data, fetchData } = useAxiosFetch('/api/staff/departments');
     const [open, setOpen] = useState(false)
     const [value, setValue] = useState({ id: '', name: '', head: '' })
     const [type, setType] = useState('add')
     const [view, setView] = useState('list')
-    const headers = ['Name', 'Programmes', 'Action']
+    const headers = ['Name', 'Head of Dept', 'Programmes', 'Action']
 
     const onFormSubmit = async () => {
         if (value?.name === '') return swal('Invalid', 'Please provide a name', 'warning')
@@ -126,7 +126,7 @@ const Departments = () => {
                 <InputField
                     showTopLabel
                     label='Head of Department' fullWidth
-                    size={'small'} value={value?.name}
+                    size={'small'} value={value?.head || ''}
                     onChange={(e) => setValue(prev => ({ ...prev, head: e?.target?.value }))}
                 />
             </ModalItem>

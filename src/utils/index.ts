@@ -493,14 +493,6 @@ export const getStaffForm = (): FormDataProps[] => [
         keys: ["academics", "department"],
       },
       {
-        type: "select",
-        label: "Programme",
-        action: "PROGRAMME",
-        options: programmes,
-        isRequired: true,
-        keys: ["academics", "programme"],
-      },
-      {
         type: "email",
         label: "Staff Email",
         action: "STAFF_EMAIL",
@@ -1084,7 +1076,6 @@ export const staffData = {
   address: "",
   academics: {
     department: "",
-    programme: "",
     staffID: "",
     staffEmail: "",
     campus: "",
@@ -1130,11 +1121,6 @@ export const staffReducerFn = (state: typeof staffData, action: any) => {
         ...state,
         academics: { ...state?.academics, staffEmail: action?.payload },
       };
-    case "PROGRAMME":
-      return {
-        ...state,
-        academics: { ...state?.academics, programme: action?.payload },
-      };
     case "CAMPUS":
       return {
         ...state,
@@ -1155,7 +1141,6 @@ export const staffReducerFn = (state: typeof staffData, action: any) => {
         address: action?.payload?.address || "",
         academics: {
           department: action?.payload?.academics?.department || "",
-          programme: action?.payload?.academics?.programme || "",
           staffID: action?.payload?.academics?.staffID || "",
           staffEmail: action?.payload?.academics?.staffEmail || "",
           campus: action?.payload?.academics?.campus || "",

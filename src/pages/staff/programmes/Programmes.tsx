@@ -10,7 +10,7 @@ import ModalItem from '../../../components/shared/Modals/ModalItem'
 import swal from 'sweetalert'
 import { Avatar, Box, Chip, Divider, Grid, MenuItem, Stack, Tab, Typography } from '@mui/material'
 import LoadingState from '../../../components/shared/Loaders/LoadingState'
-import { onDeleteHandler } from '../../../utils'
+import { onDeleteHandler, reload } from '../../../utils'
 import { useLoader } from '../../../context/LoaderContext'
 import { base } from '../../../config/appConfig'
 import { TabContext, TabList, TabPanel } from '@mui/lab'
@@ -37,8 +37,8 @@ interface EditProps {
 const Programmes = () => {
     const navigate = useNavigate()
     const { startLoading, stopLoading } = useLoader()
-    const { isLoading, response: data, fetchData } = useAxiosFetch('/api/staff/programmes');
-    const { response: depts } = useAxiosFetch('/api/staff/department');
+    const { isLoading, response: data, fetchData, setIsLoading, setResponse } = useAxiosFetch('/api/staff/programmes');
+    const { response: depts } = useAxiosFetch('/api/staff/departments');
     const [open, setOpen] = useState(false)
     const [type, setType] = useState({ label: 'add', value: 1 })
     const [name, setName] = useState('')
@@ -48,6 +48,8 @@ const Programmes = () => {
     const [newCourses, setNewCourses] = useState<CourseProps[]>([])
     const [view, setView] = useState('list')
     const headers = ['Name', 'Department', 'Duration', 'Courses', 'Action']
+    const [params, setParams] = useState({ label: '', value: '' })
+
 
 
     const resetForm = () => {
@@ -77,15 +79,38 @@ const Programmes = () => {
         }
     }
 
+    const onSearchHandler = async () => {
+        if (params.label === '' || params.value === '') return
+        console.log('params ==>', params)
+        try {
+            setIsLoading(true)
+            const { data: res } = await base.get(`/api/search/programmes?${params?.label?.toLowerCase()}=${params?.value}`)
+            if (res?.status === 'success') {
+                setResponse(res?.data)
+            }
+        } catch (error) {
+            swal({
+                title: 'Error',
+                text: 'Sorry, could not get data. Please refresh and try again',
+                icon: 'error'
+            }).then(reload)
+        } finally {
+            setIsLoading(false)
+        }
+
+    }
+
+    const resetFilter = async () => {
+        setParams({ label: '', value: '' })
+        await fetchData()
+    }
+
     return (
         <div>
             <PageHeader title={'All Programmes'} breadcrumbs={[{ label: 'Programmes', link: '#' }]} />
             <FilterBar
-                showYear={false}
-                showProgramme={false}
                 showView={true}
                 onViewChange={() => { setView(view === 'list' ? 'grid' : 'list') }}
-                onSearch={() => { }}
                 isLoading={isLoading}
                 moreBtns={
                     <RoundButton
@@ -95,6 +120,14 @@ const Programmes = () => {
                         onClick={() => { setType({ label: 'add', value: 1 }); setOpen(true) }}
                     />
                 }
+                filterParams={params}
+                onSearch={onSearchHandler}
+                onReset={resetFilter}
+                onExport={() => { }}
+                onFilter={(e: any) => { setParams(prev => ({ ...prev, label: e?.target?.value })) }}
+                onKeywordChange={(e: any) => { setParams(prev => ({ ...prev, value: e?.target?.value })) }}
+                filterOptions={['Name', 'Department']}
+                selectFieldOptions={depts}
             />
             {
                 isLoading ?
