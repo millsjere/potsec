@@ -12,7 +12,7 @@ import swal from 'sweetalert'
 import LoadingState from '../../../components/shared/Loaders/LoadingState'
 import { base } from '../../../config/appConfig'
 import { useLoader } from '../../../context/LoaderContext'
-import { onDeleteHandler } from '../../../utils'
+import { onDeleteHandler, reload } from '../../../utils'
 import DeptCard from '../../../components/shared/Cards/DeptCard'
 import MuiTable from '../../../components/shared/Tables/MuiTable'
 
@@ -20,12 +20,14 @@ import MuiTable from '../../../components/shared/Tables/MuiTable'
 
 const Departments = () => {
     const { startLoading, stopLoading } = useLoader()
-    const { isLoading, response: data, fetchData } = useAxiosFetch('/api/staff/departments');
+    const { isLoading, response: data, fetchData, setIsLoading, setResponse } = useAxiosFetch('/api/staff/departments');
     const [open, setOpen] = useState(false)
     const [value, setValue] = useState({ id: '', name: '', head: '' })
     const [type, setType] = useState('add')
     const [view, setView] = useState('list')
     const headers = ['Name', 'Head of Dept', 'Programmes', 'Action']
+    const [params, setParams] = useState({ label: '', value: '' })
+
 
     const onFormSubmit = async () => {
         if (value?.name === '') return swal('Invalid', 'Please provide a name', 'warning')
@@ -45,23 +47,55 @@ const Departments = () => {
         }
     }
 
+    const onSearchHandler = async () => {
+        if (params.label === '' || params.value === '') return
+        console.log('params ==>', params)
+        try {
+            setIsLoading(true)
+            const { data: res } = await base.get(`/api/search/departments?${params?.label?.toLowerCase()}=${params?.value}`)
+            if (res?.status === 'success') {
+                setResponse(res?.data)
+            }
+        } catch (error) {
+            swal({
+                title: 'Error',
+                text: 'Sorry, could not get data. Please refresh and try again',
+                icon: 'error'
+            }).then(reload)
+        } finally {
+            setIsLoading(false)
+        }
+
+    }
+
+    const resetFilter = async () => {
+        setParams({ label: '', value: '' })
+        await fetchData()
+    }
+
     return (
         <div>
             <PageHeader title={'All Departments'} breadcrumbs={[{ label: 'Departments', link: '#' }]} />
             <FilterBar
-                showYear={false}
-                showProgramme={false}
-                showView={true}
-                onViewChange={() => setView(view === 'list' ? 'grid' : 'list')}
-                onSearch={() => { }}
+                showView={false}
+                showExport={true}
+                isLoading={isLoading}
                 moreBtns={
                     <RoundButton
-                        variant={'contained'} sx={{ borderRadius: '8px', py: .8, mt: 1 }}
+                        variant={'contained'} sx={{ borderRadius: '10px', py: .8, mt: 1 }}
                         color={'primary'} disableElevation
-                        text='Department' startIcon={<AddCircleIcon size={18} color='#fff' />}
-                        onClick={() => { setOpen(true) }} loading={isLoading}
+                        text='New Department' startIcon={<AddCircleIcon size={18} color='#fff' />}
+                        onClick={() => { setOpen(true); setType('add') }}
+                        loading={isLoading}
                     />
                 }
+                filterParams={params}
+                onSearch={onSearchHandler}
+                onReset={resetFilter}
+                onExport={() => { }}
+                onFilter={(e: any) => { setParams({ label: e?.target?.value, value: '' }) }}
+                onKeywordChange={(e: any) => { setParams(prev => ({ ...prev, value: e?.target?.value })) }}
+                filterOptions={['Name']}
             />
             {
                 isLoading ?

@@ -8,7 +8,7 @@ import { AddCircleIcon, Alert01Icon } from 'hugeicons-react'
 import useAxiosFetch from '../../../hooks/useAxiosFetch'
 import ModalItem from '../../../components/shared/Modals/ModalItem'
 import swal from 'sweetalert'
-import { Avatar, Box, Chip, Divider, Grid, MenuItem, Stack, Tab, Typography } from '@mui/material'
+import { Avatar, Box, Chip, Divider, Grid, InputAdornment, MenuItem, Stack, Tab, Typography } from '@mui/material'
 import LoadingState from '../../../components/shared/Loaders/LoadingState'
 import { onDeleteHandler, reload } from '../../../utils'
 import { useLoader } from '../../../context/LoaderContext'
@@ -32,6 +32,8 @@ interface EditProps {
     courses?: any[],
     addNewCourseFn?: (val: object) => void
     newCourses?: CourseProps[]
+    tuition?: number,
+    words?: string
 }
 
 const Programmes = () => {
@@ -44,7 +46,8 @@ const Programmes = () => {
     const [name, setName] = useState('')
     const [department, setDepartment] = useState('')
     const [duration, setDuration] = useState({ type: '', number: 0 })
-    const [value, setValue] = useState<EditProps>({ id: '', name: '', department: '', duration: { number: 0, type: '' }, courses: [] })
+    const [tuition, setTuition] = useState({ words: '', amount: 0 })
+    const [value, setValue] = useState<EditProps>({ id: '', name: '', department: '', duration: { number: 0, type: '' }, courses: [], tuition: 0, words: '' })
     const [newCourses, setNewCourses] = useState<CourseProps[]>([])
     const [view, setView] = useState('list')
     const headers = ['Name', 'Department', 'Duration', 'Courses', 'Action']
@@ -58,6 +61,7 @@ const Programmes = () => {
         setDepartment('');
         setType({ label: 'add', value: 1 })
         setDuration({ type: '', number: 0 })
+        setTuition({ words: '', amount: 0 })
     }
 
     const onFormSubmit = async () => {
@@ -124,7 +128,7 @@ const Programmes = () => {
                 onSearch={onSearchHandler}
                 onReset={resetFilter}
                 onExport={() => { }}
-                onFilter={(e: any) => { setParams(prev => ({ ...prev, label: e?.target?.value })) }}
+                onFilter={(e: any) => { setParams({ label: e?.target?.value, value: '' }) }}
                 onKeywordChange={(e: any) => { setParams(prev => ({ ...prev, value: e?.target?.value })) }}
                 filterOptions={['Name', 'Department']}
                 selectFieldOptions={depts}
@@ -218,6 +222,23 @@ const Programmes = () => {
                         >
                             {depts?.map((el: any, i: number) => <MenuItem key={i} value={el?.id}>{el?.name}</MenuItem>)}
                         </InputField>
+                        <InputField
+                            showTopLabel
+                            label='Tuition Fee' fullWidth
+                            size={'small'} type='number'
+                            value={tuition?.amount}
+                            onChange={(e) => setTuition(prev => ({ ...prev, amount: e?.target?.value }))}
+                            InputProps={{
+                                startAdornment: <InputAdornment position='start'>GHS</InputAdornment>
+                            }}
+                        />
+                        <InputField
+                            showTopLabel
+                            label='Amount In Words' fullWidth
+                            size={'small'} type='text' multiline rows={2}
+                            value={tuition?.words}
+                            onChange={(e) => setTuition(prev => ({ ...prev, words: e?.target?.value }))}
+                        />
                         <InputField
                             showTopLabel type='select'
                             label='Duration' fullWidth

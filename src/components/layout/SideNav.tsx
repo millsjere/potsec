@@ -90,7 +90,7 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
 
     const supportMenu: SideBarMenuProps[] = [
         { name: 'Settings', icon: <Settings01Icon size={20} />, path: '/staff/settings' },
-        { name: 'Tickets', icon: <Ticket02Icon size={20} />, path: '/staff/ticketing' },
+        // { name: 'Tickets', icon: <Ticket02Icon size={20} />, path: '/staff/ticketing' },
     ]
 
     const drawer = (

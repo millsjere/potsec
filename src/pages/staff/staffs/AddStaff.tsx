@@ -13,13 +13,13 @@ import useAxiosFetch from '../../../hooks/useAxiosFetch'
 
 
 interface Props {
-    data?: any
+    xdata?: any
     open: boolean
     onClose: () => void
     type: 'add' | 'edit' | string
     callBack: () => void
 }
-const AddStaff = ({ open, onClose, type, callBack, data }: Props) => {
+const AddStaff = ({ open, onClose, type, callBack, xdata }: Props) => {
     const { startLoading, stopLoading } = useLoader()
     const { response: allDepartments } = useAxiosFetch('/api/staff/departments');
     const formData = getStaffForm()
@@ -30,9 +30,9 @@ const AddStaff = ({ open, onClose, type, callBack, data }: Props) => {
     const [photo, setPhoto] = useState<File>()
 
     useEffect(() => {
-        if (type === 'edit' && data) {
-            console.log(data)
-            dispatch({ type: 'UPDATE', payload: data })
+        if (type === 'edit' && xdata) {
+            console.log('payload ===>', xdata)
+            dispatch({ type: 'UPDATE', payload: xdata })
         }
     }, [type])
 
@@ -185,7 +185,7 @@ const AddStaff = ({ open, onClose, type, callBack, data }: Props) => {
                                                                 <RoundButton sx={{ borderColor: grey[400], color: grey[600] }}
                                                                     variant={'outlined'} startIcon={<Cancel01Icon size={12} />} color={'primary'}
                                                                     onClick={() => {
-                                                                        dispatch({ type: 'UPDATE', payload: data })
+                                                                        dispatch({ type: 'UPDATE', payload: xdata })
                                                                         setEdit(undefined)
                                                                     }} disableElevation text='Cancel' size={'small'}
                                                                 />
@@ -207,6 +207,7 @@ const AddStaff = ({ open, onClose, type, callBack, data }: Props) => {
                                             data?.fields?.map((el, i) => {
                                                 const value: string = getFormValue(formInput, el?.keys!)
                                                 if (el?.type === 'select') {
+                                                    console.log('value ===>', value)
                                                     return (
                                                         <Grid item sm={6} key={i}>
                                                             <Typography variant='body2' mb={1} color={'GrayText'}>{el?.label}</Typography>
@@ -221,7 +222,7 @@ const AddStaff = ({ open, onClose, type, callBack, data }: Props) => {
                                                                     el?.label === 'Department' ?
                                                                         allDepartments?.map((item: any, i: number) => <MenuItem key={i} value={item?.id}>{item?.name}</MenuItem>)
                                                                         :
-                                                                        el?.options?.map((item, i) => <MenuItem key={i} value={item?.toLowerCase()}>{item}</MenuItem>)
+                                                                        el?.options?.map((item, i) => <MenuItem key={i} value={item}>{item}</MenuItem>)
                                                                 }
                                                             </InputField>
                                                         </Grid>

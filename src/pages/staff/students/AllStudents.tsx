@@ -3,9 +3,6 @@ import FilterBar from '../../../components/filter/FilterBar'
 import PageHeader from '../../../components/shared/PageHeader'
 import LoadingState from '../../../components/shared/Loaders/LoadingState'
 import NullState from '../../../components/shared/NullState/NullState'
-import { Box } from '@mui/material'
-import { DataGrid } from '@mui/x-data-grid'
-import { getTableColumns } from '../application/Applications'
 import { useNavigate } from 'react-router-dom'
 import swal from 'sweetalert'
 import { useLoader } from '../../../context/LoaderContext'
@@ -13,15 +10,17 @@ import { base } from '../../../config/appConfig'
 import { reload } from '../../../utils'
 import NoStudent from '../../../assets/images/student_data.png'
 import useAxiosFetch from '../../../hooks/useAxiosFetch'
+import { RoundButton } from '../../../components/shared'
+import { AddCircleIcon } from 'hugeicons-react'
+import MuiTable from '../../../components/shared/Tables/MuiTable'
 
 
 const AllStudents = () => {
   const navigate = useNavigate()
   const { startLoading, stopLoading } = useLoader()
-  const { isLoading, response: data } = useAxiosFetch('/api/all-students')
-  const [view, setView] = useState('list')
-  const [pageSize, setPageSize] = useState(20);
-  const headers = ['Surname', 'Othernames', 'Phone', 'Date Applied', 'Programme', 'Year', 'Status', 'Action']
+  const { isLoading, response: data, setIsLoading, setResponse, fetchData } = useAxiosFetch('/api/all-students')
+  const headers = ['Index No.', 'Fullname', 'Phone', 'Date Applied', 'Programme', 'Year', 'Action']
+  const [params, setParams] = useState({ label: '', value: '' })
 
   const onDeleteApplicant = (id: string) => {
     swal({
@@ -41,55 +40,67 @@ const AllStudents = () => {
     })
   }
 
+  const onSearchHandler = async () => {
+    if (params.label === '' || params.value === '') return
+    console.log('params ==>', params)
+    try {
+      setIsLoading(true)
+      const { data: res } = await base.get(`/api/search/students?${params?.label?.toLowerCase()}=${params?.value}`)
+      if (res?.status === 'success') {
+        setResponse(res?.data)
+      }
+    } catch (error) {
+      swal({
+        title: 'Error',
+        text: 'Sorry, could not get data. Please refresh and try again',
+        icon: 'error'
+      }).then(reload)
+    } finally {
+      setIsLoading(false)
+    }
+
+  }
+
+  const resetFilter = async () => {
+    setParams({ label: '', value: '' })
+    await fetchData()
+  }
+
 
   return (
     <div>
       <PageHeader title={'All Students'} breadcrumbs={[{ label: 'Students', link: '#' }]} />
       <FilterBar
-        showYear={false}
-        view={view}
-        onViewChange={(val) => setView(val)}
+        showView={false}
+        showExport={true}
         isLoading={isLoading}
-        onSearch={() => { }}
+        moreBtns={
+          <RoundButton
+            variant={'contained'} sx={{ borderRadius: '10px', py: .8, mt: 1 }}
+            color={'primary'} disableElevation
+            text='New Student' startIcon={<AddCircleIcon size={18} color='#fff' />}
+            onClick={() => { navigate('/staff/application') }}
+            loading={isLoading}
+          />
+        }
+        filterParams={params}
+        onSearch={onSearchHandler}
+        onReset={resetFilter}
+        onExport={() => { }}
+        onFilter={(e: any) => { setParams({ label: e?.target?.value, value: '' }) }}
+        onKeywordChange={(e: any) => { setParams(prev => ({ ...prev, value: e?.target?.value })) }}
+        filterOptions={['Name', 'Index']}
       />
       {
         isLoading ? <LoadingState state='students' /> :
           (!isLoading && data?.length > 0) ? (
             <>
-              <Box sx={{ height: 400, width: '100%' }}>
-                <DataGrid
-                  sx={{
-                    bgcolor: "#fff", '& .MuiDataGrid-cell': {
-                      verticalAlign: 'middle',
-                      display: 'flex',
-                      // alignItems: 'center'
-                    }
-                  }}
-                  autoHeight={true}
-                  isRowSelectable={() => true}
-                  disableColumnFilter={true}
-                  disableColumnMenu={true}
-                  checkboxSelection={true}
-                  pagination
-                  rows={data || []}
-                  pageSizeOptions={[20, 50, 100]}
-                  rowHeight={60}
-                  columns={getTableColumns(
-                    headers,
-                    (id: string) => navigate(`/staff/applicant/${id}/view`),
-                    (id: string) => onDeleteApplicant(id)
-                  ) || []
-                  }
-                  getRowId={(row: any) => row?.id}
-                  columnHeaderHeight={80}
-                  initialState={{
-                    pagination: {
-                      paginationModel: { page: 0, pageSize: pageSize },
-                    },
-                  }}
-                  onPaginationMetaChange={(newSize: any) => setPageSize(newSize)}
-                />
-              </Box>
+              <MuiTable
+                data={data}
+                headers={headers}
+                onEditClick={(id: string) => navigate(`/staff/applicant/${id}/view`)}
+                onDeleteClick={(id: string) => onDeleteApplicant(id)}
+              />
             </>
 
           ) :
@@ -99,7 +110,7 @@ const AllStudents = () => {
                 subtext={`Oops. No students records were found`}
                 image={NoStudent}
                 btnText={'Add Student'}
-                onClick={() => { }}
+                onClick={() => { navigate('/staff/application') }}
                 opacity={0.5}
               />
 

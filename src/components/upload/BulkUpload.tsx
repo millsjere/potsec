@@ -179,12 +179,15 @@ const BulkUpload = ({ onClose }: Props) => {
                     if (!el?.name) return swal('Empty Field', `Selected file has an empty field (name) on line ${i + 1}. Please check and upload again`, 'warning').then(resetFile)
                     if (!el?.years_months) return swal('Empty Field', `Selected file has an empty field (year_month) on line ${i + 1}. Please check and upload again`, 'warning').then(resetFile)
                     if (!el?.duration) return swal('Empty Field', `Selected file has an empty field (duration) on line ${i + 1}. Please check and upload again`, 'warning').then(resetFile)
+                    if (!el?.tuition) return swal('Empty Field', `Selected file has an empty field (tuition) on line ${i + 1}. Please check and upload again`, 'warning').then(resetFile)
+                    if (!el?.amount_in_words) return swal('Empty Field', `Selected file has an empty field (amount_in_words) on line ${i + 1}. Please check and upload again`, 'warning').then(resetFile)
 
                     // create payload //
                     const payload = {
                         name: el?.name,
                         department: deptSelect,
-                        duration: { type: el?.years_months, number: el?.duration }
+                        duration: { type: el?.years_months, number: el?.duration },
+                        tuition: { amount: el?.tuition, words: el?.amount_in_words }
                     }
                     bulkData?.push(payload)
                 }

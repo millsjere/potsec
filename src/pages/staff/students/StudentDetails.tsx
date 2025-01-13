@@ -10,6 +10,7 @@ import useAxiosFetch from '../../../hooks/useAxiosFetch'
 import { useLoader } from '../../../context/LoaderContext'
 import { base } from '../../../config/appConfig'
 import swal from 'sweetalert'
+import ViewStudentProgrammes from './ViewStudentProgrammes'
 
 
 export const getFormValue = (obj: any, keys: string[]) => {
@@ -24,6 +25,7 @@ const StudentDetails = () => {
     const navigate = useNavigate()
     const { startLoading, stopLoading } = useLoader()
     const { isLoading, response, fetchData } = useAxiosFetch(`/api/student/${id}`);
+    const [open, setOpen] = useState(false)
     const [edit, setEdit] = useState<string | undefined>(undefined)
     const [password, setPassword] = useState({ new: '', confirm: '' })
     const menuList = getApplicationForm()?.map(el => el?.title)
@@ -224,7 +226,7 @@ const StudentDetails = () => {
                                             :
                                             <Stack direction={'column'} gap={1}>
                                                 <RoundButton startIcon={<MailSend01Icon size={20} />} disableElevation fullWidth variant={'outlined'} color={'secondary'} text={'Admission Letter'} onClick={sendAdmissionLetter} />
-                                                <RoundButton startIcon={<File01Icon size={20} />} disableElevation fullWidth variant={'contained'} color={'secondary'} text={'View Transcript'} onClick={() => { }} />
+                                                <RoundButton startIcon={<File01Icon size={20} />} disableElevation fullWidth variant={'contained'} color={'secondary'} text={'View Programme'} onClick={() => { setOpen(true) }} />
                                                 <RoundButton startIcon={<PrinterIcon size={20} />} disableElevation fullWidth variant={'contained'} color={'primary'} text={'Print PDF'} onClick={() => { }} />
                                             </Stack>
 
@@ -247,7 +249,7 @@ const StudentDetails = () => {
                                     <div>
                                         <Typography variant='h6'>{response?.fullname}</Typography>
                                         <Typography color={'GrayText'}>Index No: {response?.enrollment?.index}</Typography>
-                                        <Typography color={'GrayText'}>Programme: {response?.enrollment?.programme}</Typography>
+                                        <Typography color={'GrayText'}>Programme: {response?.enrollment?.programme?.name}</Typography>
                                         <Typography color={'GrayText'}>Applied: {new Date(response?.createdAt).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })}</Typography>
                                         <Typography color={'GrayText'} textTransform={'capitalize'}>{response?.applicationStatus}: {new Date(response?.admissionDate).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' })}</Typography>
                                     </div>
@@ -389,6 +391,13 @@ const StudentDetails = () => {
                         </Grid>
                     </Grid>
             }
+
+            {/* View Programmes */}
+            <ViewStudentProgrammes
+                open={open}
+                onClose={() => { setOpen(false) }}
+                programme={response?.enrollment?.programme!}
+            />
         </div>
     )
 }

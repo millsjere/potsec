@@ -4,7 +4,7 @@ const Dotenv = require('dotenv-webpack');
 const deps = require("./package.json").dependencies;
 module.exports = (_, argv) => ({
   output: {
-    publicPath: "http://localhost:8001/", //"https://portal.potsec.edu.gh/", //"http://localhost:8001/",
+    publicPath: "https://portal.potsec.edu.gh/", //"http://localhost:8001/",
     filename: '[name].[contenthash].js'
   },
 

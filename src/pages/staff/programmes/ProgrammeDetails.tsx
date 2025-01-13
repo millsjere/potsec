@@ -15,12 +15,27 @@ import { useLoader } from '../../../context/LoaderContext'
 import { base } from '../../../config/appConfig'
 
 
-interface DetailsProps {
+export interface DetailsProps {
     courses: any[],
     department: object,
     duration: { number: number, type: string },
+    tuition: { amount: number, words: string },
     name: string,
     id: string
+}
+export const trimesters = ['Trimester 1', 'Trimester 2', 'Trimester 3']
+
+export const getCourseYear = (data: DetailsProps, n: number) => {
+    switch (n) {
+        case 1:
+            return data?.courses!?.length > 0 ? data?.courses?.filter((el => el?.year === 1)) : []
+        case 2:
+            return data?.courses!?.length > 0 ? data?.courses?.filter((el => el?.year === 2)) : []
+        case 3:
+            return data?.courses!?.length > 0 ? data?.courses?.filter((el => el?.year === 3)) : []
+        default:
+            break;
+    }
 }
 
 const ProgrammeDetails = () => {
@@ -29,29 +44,10 @@ const ProgrammeDetails = () => {
     const { isLoading, response, fetchData } = useAxiosFetch(`/api/staff/programmes/${params?.id}`);
     const [data, setData] = useState<DetailsProps>()
     const [open, setOpen] = useState(false)
-    const [input, setInput] = useState({ name: '', code: '', trimester: '', credit: 0, year: 0})
+    const [input, setInput] = useState({ name: '', code: '', trimester: '', credit: 0, year: 0 })
 
-    const year1 = data?.courses!?.length > 0 ? data?.courses?.filter((el => el?.year === 1)) : []
-    const year2 = data?.courses!?.length > 0 ? data?.courses?.filter((el => el?.year === 2)) : []
-    const year3 = data?.courses!?.length > 0 ? data?.courses?.filter((el => el?.year === 3)) : []
-    const year4 = data?.courses!?.length > 0 ? data?.courses?.filter((el => el?.year === 4)) : []
     const months = data?.courses!?.length > 0 ? data?.courses?.filter((el => el?.level?.includes('Months'))) : []
-    const trimesters = ['Trimester 1', 'Trimester 2', 'Trimester 3']
 
-    const getCourseYear = (n: number) => {
-        switch (n) {
-            case 1:
-             return year1
-            case 2:
-             return year2
-            case 3:
-             return year3
-            case 4:
-             return year4
-            default:
-                break;
-        }
-    }
 
 
     useEffect(() => {
@@ -85,23 +81,23 @@ const ProgrammeDetails = () => {
         setInput({ name: '', code: '', trimester: '', credit: 0, year: 0 })
     }
 
-    const removeCourse = (course: any)=>{
-        swal('Are You Sure!','This action will delete this course','warning', {buttons:['Cancel','Delete'], dangerMode: true})
-        .then(async(del)=>{
-            if(del){
-                try {
-                    startLoading('Creating new course. Please wait..')
-                    await base.patch('/api/staff/course/delete', { id: params?.id, course })
-                    swal('Success', 'Course deleted successfully', 'success').then(fetchData)
-                    
-                } catch (error: any) {
-                    console.log(error?.response)
-                    swal('Error', 'Sorry could not delete course', 'error')
-                }finally {
-                    stopLoading()
+    const removeCourse = (course: any) => {
+        swal('Are You Sure!', 'This action will delete this course', 'warning', { buttons: ['Cancel', 'Delete'], dangerMode: true })
+            .then(async (del) => {
+                if (del) {
+                    try {
+                        startLoading('Creating new course. Please wait..')
+                        await base.patch('/api/staff/course/delete', { id: params?.id, course })
+                        swal('Success', 'Course deleted successfully', 'success').then(fetchData)
+
+                    } catch (error: any) {
+                        console.log(error?.response)
+                        swal('Error', 'Sorry could not delete course', 'error')
+                    } finally {
+                        stopLoading()
+                    }
                 }
-            }
-        })
+            })
     }
 
     return (
@@ -119,6 +115,7 @@ const ProgrammeDetails = () => {
                             <span>
                                 <Typography mt={-.5} mb={-.5} variant='h6' noWrap>{data?.name}</Typography>
                                 <Typography mb={0} color={'GrayText'}>Department: {data?.department?.name}</Typography>
+                                <Typography mb={0} color={'GrayText'}>Tuition: GHS {data?.tuition?.amount || 0}</Typography>
                             </span>
                             <span style={{ marginLeft: 'auto' }} >
                                 <Chip size='medium' label={<Typography variant='body2'>{data?.duration?.number + ' ' + data?.duration?.type}</Typography>} />
@@ -130,13 +127,13 @@ const ProgrammeDetails = () => {
                             Array(data?.duration?.number).fill(0)?.map((_el: any, i: number) => (
                                 <Box key={i} bgcolor={'#fff'} p={3} borderRadius={'10px'} mb={2}>
                                     <Stack mb={2} direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
-                                        <Typography variant='h6'>{`All Courses (Year ${i+1})`}</Typography>
-                                            <RoundButton text='Course'
-                                                variant={'contained'} size={'small'}
-                                                color={'secondary'} disableElevation sx={{ borderRadius: '6px' }}
-                                                onClick={() => { setOpen(true); setInput(prev => ({...prev, year: i+1})) }} startIcon={<AddCircleIcon size={18} />}
-                                            />
-                                           
+                                        <Typography variant='h6'>{`All Courses (Year ${i + 1})`}</Typography>
+                                        <RoundButton text='Course'
+                                            variant={'contained'} size={'small'}
+                                            color={'secondary'} disableElevation sx={{ borderRadius: '6px' }}
+                                            onClick={() => { setOpen(true); setInput(prev => ({ ...prev, year: i + 1 })) }} startIcon={<AddCircleIcon size={18} />}
+                                        />
+
                                     </Stack>
                                     {
                                         trimesters?.map((trm, index) => (
@@ -144,55 +141,55 @@ const ProgrammeDetails = () => {
                                                 <Box bgcolor={'#ededed'} p={1.5}>
                                                     <Typography variant='h6' fontSize={'1.1rem'}>{trm}</Typography>
                                                 </Box>
-                                                <Box sx={{p: 2}}>
+                                                <Box sx={{ p: 2 }}>
                                                     {
                                                         data?.duration?.type?.toLowerCase() === 'years' ?
-                                                        <>
-                                                        {
-                                                                getCourseYear(i+1)!.filter(el=> el?.trimester === trm)?.length > 0 ?
-                                                                getCourseYear(i+1)?.filter(el=> el?.trimester === trm)?.map((course: any, i: number) => (
-                                                                    <Stack key={i}>
-                                                                        <CourseItem course={course} onRemove={()=>removeCourse(course)} />
-                                                                    </Stack>
-                                                                ))
-                                                                :
-                                                                <NullState
-                                                                    title='All Courses'
-                                                                    subtext={`No course records added yet`}
-                                                                    image={Empty}
-                                                                    imageSize='10%'
-                                                                    btnText={'Add Course'}
-                                                                    onClick={() => { }}
-                                                                    opacity={0.2}
-                                                                    height='20rem'
-                                                                    btnSize='small'
-                                                                    showBtn={false}
-                                                                />
-                                                        }
-                                                        </>
-                                                        :
-                                                        <>
-                                                            {
-                                                                months!?.length > 0 ?
-                                                                months?.map((course: any, i: number) => (
-                                                                    <Stack key={i}>
-                                                                        <CourseItem course={course} onRemove={()=>removeCourse(course)} />
-                                                                    </Stack>
-                                                                ))
-                                                                :
-                                                                <NullState
-                                                                    title='All Courses'
-                                                                    subtext={`No course records added yet`}
-                                                                    image={Empty}
-                                                                    btnText={'Add Course'}
-                                                                    onClick={() => { }}
-                                                                    opacity={0.2}
-                                                                    height='25rem'
-                                                                    btnSize='small'
-                                                                    showBtn={false}
-                                                                />
-                                                        }
-                                                        </>
+                                                            <>
+                                                                {
+                                                                    getCourseYear(data, i + 1)!.filter(el => el?.trimester === trm)?.length > 0 ?
+                                                                        getCourseYear(data, i + 1)?.filter(el => el?.trimester === trm)?.map((course: any, i: number) => (
+                                                                            <Stack key={i}>
+                                                                                <CourseItem course={course} onRemove={() => removeCourse(course)} />
+                                                                            </Stack>
+                                                                        ))
+                                                                        :
+                                                                        <NullState
+                                                                            title='All Courses'
+                                                                            subtext={`No course records added yet`}
+                                                                            image={Empty}
+                                                                            imageSize='10%'
+                                                                            btnText={'Add Course'}
+                                                                            onClick={() => { }}
+                                                                            opacity={0.2}
+                                                                            height='20rem'
+                                                                            btnSize='small'
+                                                                            showBtn={false}
+                                                                        />
+                                                                }
+                                                            </>
+                                                            :
+                                                            <>
+                                                                {
+                                                                    months!?.length > 0 ?
+                                                                        months?.map((course: any, i: number) => (
+                                                                            <Stack key={i}>
+                                                                                <CourseItem course={course} onRemove={() => removeCourse(course)} />
+                                                                            </Stack>
+                                                                        ))
+                                                                        :
+                                                                        <NullState
+                                                                            title='All Courses'
+                                                                            subtext={`No course records added yet`}
+                                                                            image={Empty}
+                                                                            btnText={'Add Course'}
+                                                                            onClick={() => { }}
+                                                                            opacity={0.2}
+                                                                            height='25rem'
+                                                                            btnSize='small'
+                                                                            showBtn={false}
+                                                                        />
+                                                                }
+                                                            </>
                                                     }
                                                 </Box>
                                             </Box>
@@ -201,149 +198,7 @@ const ProgrammeDetails = () => {
                                 </Box>
                             ))
                         }
-                        {/* End of Layout */}
 
-                        {/* <Box bgcolor={'#fff'} p={3} borderRadius={'10px'}>
-                            <Stack mb={2} direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
-                                <Typography variant='h6'>All Courses</Typography>
-                                <RoundButton text='Course'
-                                    variant={'contained'} size={'small'}
-                                    color={'secondary'} disableElevation sx={{ borderRadius: '6px' }}
-                                    onClick={() => { setOpen(true) }} startIcon={<AddCircleIcon size={18} />}
-                                />
-                            </Stack>
-                            <TabContext value={value}>
-                                <Box sx={{ border: 1, borderColor: 'divider', borderRadius: '10px 10px 0 0' }}>
-                                    <TabList onChange={(_e, val) => setValue(val)}>
-                                        {data?.duration?.type?.toLowerCase() === 'months' && <Tab label={`${data?.duration?.number} ${data?.duration?.type}`} value="1" />}
-                                        {data?.duration?.type?.toLowerCase() === 'years' &&
-                                            Array(data?.duration?.number).fill(1)?.map((_el, i) => {
-                                                return (
-                                                    <Tab key={i} label={`YEAR ${(i + 1)}`} value={String(i + 1)} />
-                                                )
-                                            })
-                                        }
-                                    </TabList>
-                                </Box>
-                                <TabPanel value='1' sx={{ border: 1, borderTopWidth: 0, borderColor: 'divider', minHeight: '20rem' }}>
-                                    {
-                                        data?.duration?.type?.toLowerCase() === 'years' ?
-                                        <>
-                                        {
-                                                year1!?.length > 0 ?
-                                                year1?.map((course: any, i: number) => (
-                                                    <Stack key={i}>
-                                                        <CourseItem course={course} onRemove={()=>removeCourse(course)} />
-                                                    </Stack>
-                                                ))
-                                                :
-                                                <NullState
-                                                    title='All Courses'
-                                                    subtext={`No course records added yet`}
-                                                    image={Empty}
-                                                    btnText={'Add Course'}
-                                                    onClick={() => { }}
-                                                    opacity={0.2}
-                                                    height='25rem'
-                                                    btnSize='small'
-                                                    showBtn={false}
-                                                />
-                                        }
-                                        </>
-                                        :
-                                        <>
-                                            {
-                                                months!?.length > 0 ?
-                                                months?.map((course: any, i: number) => (
-                                                    <Stack key={i}>
-                                                        <CourseItem course={course} onRemove={()=>removeCourse(course)} />
-                                                    </Stack>
-                                                ))
-                                                :
-                                                <NullState
-                                                    title='All Courses'
-                                                    subtext={`No course records added yet`}
-                                                    image={Empty}
-                                                    btnText={'Add Course'}
-                                                    onClick={() => { }}
-                                                    opacity={0.2}
-                                                    height='25rem'
-                                                    btnSize='small'
-                                                    showBtn={false}
-                                                />
-                                        }
-                                        </>
-                                    }
-                                </TabPanel>
-                                <TabPanel value='2' sx={{ border: 1, borderTopWidth: 0, borderColor: 'divider', minHeight: '20rem' }}>
-                                {
-                                        year2!?.length > 0 ?
-                                            year2?.filter(el=> el?.trimester === 'Trimester 1')?.map((course: any, i: number) => (
-                                                <Stack key={i}>
-                                                    <CourseItem course={course} onRemove={()=>removeCourse(course)} />
-                                                </Stack>
-                                            ))
-                                            :
-                                            <NullState
-                                                title='All Courses'
-                                                subtext={`No course records added yet`}
-                                                image={Empty}
-                                                btnText={'Add Course'}
-                                                onClick={() => { }}
-                                                opacity={0.2}
-                                                height='25rem'
-                                                btnSize='small'
-                                                showBtn={false}
-                                            />
-                                    }
-                                </TabPanel>
-                                <TabPanel value='3' sx={{ border: 1, borderTopWidth: 0, borderColor: 'divider', minHeight: '20rem' }}>
-                                {
-                                        year3!?.length > 0 ?
-                                            year3?.map((course: any, i: number) => (
-                                                <Stack key={i}>
-                                                    <CourseItem course={course} onRemove={()=>removeCourse(course)} />
-                                                </Stack>
-                                            ))
-                                            :
-                                            <NullState
-                                                title='All Courses'
-                                                subtext={`No course records added yet`}
-                                                image={Empty}
-                                                btnText={'Add Course'}
-                                                onClick={() => { }}
-                                                opacity={0.2}
-                                                height='25rem'
-                                                btnSize='small'
-                                                showBtn={false}
-                                            />
-                                    }
-                                </TabPanel>
-                                <TabPanel value='4' sx={{ border: 1, borderTopWidth: 0, borderColor: 'divider', minHeight: '20rem' }}>
-                                {
-                                        year4!?.length > 0 ?
-                                            year4?.map((course: any, i: number) => (
-                                                <Stack key={i}>
-                                                    <CourseItem course={course} onRemove={()=>removeCourse(course)} />
-                                                </Stack>
-                                            ))
-                                            :
-                                            <NullState
-                                                title='All Courses'
-                                                subtext={`No course records added yet`}
-                                                image={Empty}
-                                                btnText={'Add Course'}
-                                                onClick={() => { }}
-                                                opacity={0.2}
-                                                height='25rem'
-                                                btnSize='small'
-                                                showBtn={false}
-                                            />
-                                    }
-                                </TabPanel>
-                            </TabContext>
-                        </Box> */}
-                        
 
                         {/* ADD COURSE MODAL */}
                         <ModalItem
@@ -365,7 +220,7 @@ const ProgrammeDetails = () => {
                                     data?.duration?.type?.toLowerCase() === 'years' ?
                                         Array(3).fill(1)?.map((_el, i) => `Trimester ${i + 1}`)?.map((el, i) => <MenuItem key={i} value={el}>{el}</MenuItem>)
                                         :
-                                        <MenuItem value={data?.duration?.type+' '+data?.duration?.number}>{`${data?.duration?.number} ${data?.duration?.type}`}</MenuItem>
+                                        <MenuItem value={data?.duration?.type + ' ' + data?.duration?.number}>{`${data?.duration?.number} ${data?.duration?.type}`}</MenuItem>
                                 }
                             </InputField>
                             <InputField
@@ -386,7 +241,7 @@ const ProgrammeDetails = () => {
                                 showTopLabel
                                 label='Credit' fullWidth
                                 size={'small'} type='number'
-                                value={input?.credit} inputProps={{min: 0}}
+                                value={input?.credit} inputProps={{ min: 0 }}
                                 onChange={(e) => setInput(prev => ({ ...prev, credit: e?.target?.value }))}
                             />
 

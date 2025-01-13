@@ -43,21 +43,33 @@ const FilterBar = ({ view, onViewChange, selectFieldOptions, filterOptions, filt
                         onChange={onKeywordChange}
                         size={'small'} fullWidth
                         label={'Departments'}
-                        showTopLabel isSelect
+                        showTopLabel isSelect sx={{ width: '14rem' }}
                         value={filterParams.value}
                     >
                         {selectFieldOptions?.map((el: any, i) => <MenuItem key={i} value={el?.id}>{el?.name}</MenuItem>)}
                     </InputField>
-                    :
-                    <InputField
-                        variant={'outlined'}
-                        onChange={onKeywordChange}
-                        size={'small'} fullWidth
-                        label={'Keyword'}
-                        showTopLabel
-                        value={filterParams.value}
 
-                    />
+                    : filterParams.label === 'Status' ?
+                        <InputField
+                            variant={'outlined'}
+                            onChange={onKeywordChange}
+                            size={'small'} fullWidth
+                            label={'Status'}
+                            showTopLabel isSelect sx={{ width: '14rem' }}
+                            value={filterParams.value}
+                        >
+                            {selectFieldOptions?.map((el: any, i) => <MenuItem key={i} value={el?.toLowerCase()}>{el}</MenuItem>)}
+                        </InputField>
+                        :
+                        <InputField
+                            variant={'outlined'}
+                            onChange={onKeywordChange}
+                            size={'small'} fullWidth
+                            label={'Keyword'}
+                            showTopLabel
+                            value={filterParams.value}
+
+                        />
                 }
                 <RoundButton
                     variant={'contained'} sx={{ borderRadius: '10px', py: .8, mt: 1 }}

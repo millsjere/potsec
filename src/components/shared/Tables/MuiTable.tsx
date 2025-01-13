@@ -46,7 +46,7 @@ const getTableColumns = (headers: string[], actionClick: (id: string, event?: Ev
             <Typography mt={2.2} variant='body2' noWrap>{
               el?.toLowerCase() === 'phone' ? params?.value?.mobile || params?.value || '--' :
                 el?.toLowerCase() === 'index no.' ? params?.row?.enrollment?.index || '--' :
-                  el?.toLowerCase() === 'programme' ? params?.row?.enrollment?.programme || params?.row?.academics?.programme :
+                  el?.toLowerCase() === 'programme' ? params?.row?.enrollment?.programme?.name || params?.row?.enrollment?.programme || params?.row?.academics?.programme :
                     el?.toLowerCase() === 'campus' ? params?.value || params?.row?.academics?.campus :
                       el?.toLowerCase() === 'year' ? params?.row?.enrollment?.year || '--' :
                         el?.toLowerCase() === 'department' ? params?.row?.department?.name || params?.row?.academics?.department?.name || '--' :

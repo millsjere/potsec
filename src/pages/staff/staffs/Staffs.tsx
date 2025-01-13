@@ -101,9 +101,9 @@ const Staffs = () => {
                 onSearch={onSearchHandler}
                 onReset={resetFilter}
                 onExport={() => { }}
-                onFilter={(e: any) => { setParams(prev => ({ ...prev, label: e?.target?.value })) }}
+                onFilter={(e: any) => { setParams({ label: e?.target?.value, value: '' }) }}
                 onKeywordChange={(e: any) => { setParams(prev => ({ ...prev, value: e?.target?.value })) }}
-                filterOptions={['Name', 'Staff ID', 'Email']}
+                filterOptions={['Name', 'StaffID', 'Email']}
             />
             {
                 isLoading ? <LoadingState state='staff' /> :
@@ -169,7 +169,7 @@ const Staffs = () => {
             }
 
             {/* ADD STAFF */}
-            <AddStaff open={open} onClose={() => { setOpen(false); setType(''); setStaffDetails(undefined) }} data={staffDetails} type={type} callBack={fetchData} />
+            <AddStaff open={open} onClose={() => { setOpen(false); setType(''); setStaffDetails(undefined) }} xdata={staffDetails} type={type} callBack={fetchData} />
         </div>
     )
 }

@@ -1,6 +1,4 @@
-name,years_months,duration
-Frontend Development,years,1
-Backend Development,years,2
-UI/UX Design,months,6
-
-
+name,years_months,duration,tuition,amount_in_words
+Cyber Security,years,1,2400,Two Thousand Four Hundred
+Quality Assurance (QA),years,2,2350,Two Thousand Three Hundred And Fifty
+Technical Support,months,6,2350,Two Thousand Three Hundred And Fifty

@@ -1140,7 +1140,7 @@ export const staffReducerFn = (state: typeof staffData, action: any) => {
         },
         address: action?.payload?.address || "",
         academics: {
-          department: action?.payload?.academics?.department || "",
+          department: action?.payload?.academics?.department?.name || "",
           staffID: action?.payload?.academics?.staffID || "",
           staffEmail: action?.payload?.academics?.staffEmail || "",
           campus: action?.payload?.academics?.campus || "",

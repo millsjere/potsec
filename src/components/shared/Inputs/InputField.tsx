@@ -38,9 +38,11 @@ type InputFieldProps = {
     fullWidth?: boolean,
     showTopLabel?: boolean
     isDisabled?: boolean
+    multiline?: boolean
+    rows?: Number
 }
 
-export const InputField = ({ showTopLabel = false, size = 'medium', sx, isSelect, variant, value, onChange, isRequired, label, error, children, type, InputProps, inputProps, placeholder, fullWidth, isDisabled }: InputFieldProps) => {
+export const InputField = ({ rows, multiline, showTopLabel = false, size = 'medium', sx, isSelect, variant, value, onChange, isRequired, label, error, children, type, InputProps, inputProps, placeholder, fullWidth, isDisabled }: InputFieldProps) => {
     return (
         <Box>
             {showTopLabel && <Typography variant='body2' textTransform={'capitalize'} fontSize={'.9rem'} mb={.5} color={'GrayText'}>{label}</Typography>}
@@ -54,7 +56,7 @@ export const InputField = ({ showTopLabel = false, size = 'medium', sx, isSelect
                         if (e.key === '-' || e?.key === '+') return swal('Invalid', 'You have entered an invalid input', 'warning')
                     }
                 }}
-                required={isRequired}
+                required={isRequired} multiline={multiline} rows={rows}
                 label={!showTopLabel ? label : null}
                 helperText={error?.text}
                 error={error?.isError}

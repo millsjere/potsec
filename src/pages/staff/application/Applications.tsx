@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import PageHeader from '../../../components/shared/PageHeader'
-import { Box, Chip, Grid, IconButton, Stack, Typography } from '@mui/material'
+import { Chip, IconButton, Stack, Typography } from '@mui/material'
 import { RoundButton } from '../../../components/shared'
 import NoStudent from '../../../assets/images/student_data.png'
 import { useNavigate } from 'react-router-dom'
@@ -8,13 +8,12 @@ import { AddCircleIcon, Delete02Icon, PencilEdit01Icon } from 'hugeicons-react'
 import { base } from '../../../config/appConfig'
 import swal from 'sweetalert'
 import FilterBar from '../../../components/filter/FilterBar'
-import UserCard from '../../../components/shared/Cards/UserCard'
 import LoadingState from '../../../components/shared/Loaders/LoadingState'
 import NullState from '../../../components/shared/NullState/NullState'
-import { DataGrid } from '@mui/x-data-grid'
 import { formatDateTime, reload } from '../../../utils'
 import { useLoader } from '../../../context/LoaderContext'
 import useAxiosFetch from '../../../hooks/useAxiosFetch'
+import MuiTable from '../../../components/shared/Tables/MuiTable'
 
 
 export const getTableColumns = (headers: string[], actionClick: (id: string) => void, onDelete?: (id: string) => void) => {
@@ -67,10 +66,9 @@ export const getTableColumns = (headers: string[], actionClick: (id: string) => 
 const Applications = () => {
     const navigate = useNavigate()
     const { startLoading, stopLoading } = useLoader()
-    const { isLoading, response: data } = useAxiosFetch('/api/all-applicants')
-    const [view, setView] = useState('list')
-    const [pageSize, setPageSize] = useState(20);
+    const { isLoading, response: data, setIsLoading, setResponse, fetchData } = useAxiosFetch('/api/all-applicants')
     const headers = ['Surname', 'Othernames', 'Phone', 'Date Applied', 'Year', 'Campus', 'Status', 'Action']
+    const [params, setParams] = useState({ label: '', value: '' })
 
 
     const onDeleteApplicant = (id: string) => {
@@ -91,81 +89,68 @@ const Applications = () => {
         })
     }
 
+    const onSearchHandler = async () => {
+        if (params.label === '' || params.value === '') return
+        console.log('params ==>', params)
+        try {
+            setIsLoading(true)
+            const { data: res } = await base.get(`/api/search/students?${params?.label?.toLowerCase()}=${params?.value}`)
+            if (res?.status === 'success') {
+                setResponse(res?.data)
+            }
+        } catch (error) {
+            swal({
+                title: 'Error',
+                text: 'Sorry, could not get data. Please refresh and try again',
+                icon: 'error'
+            }).then(reload)
+        } finally {
+            setIsLoading(false)
+        }
+
+    }
+
+    const resetFilter = async () => {
+        setParams({ label: '', value: '' })
+        await fetchData()
+    }
+
     return (
         <div>
             <PageHeader title={'All Applicants'} breadcrumbs={[{ label: 'Applicants', link: '#' }]} />
             <FilterBar
+                showView={false}
+                showExport={true}
                 isLoading={isLoading}
-                view={view}
-                onViewChange={(val) => setView(val)}
-                onSearch={() => { }}
-                showYear={false}
                 moreBtns={
                     <RoundButton
                         variant={'contained'} sx={{ borderRadius: '10px', py: .8, mt: 1 }}
                         color={'primary'} disableElevation
                         text='New Application' startIcon={<AddCircleIcon size={18} color='#fff' />}
-                        onClick={() => navigate('/staff/application')}
+                        onClick={() => { navigate('/staff/application') }}
+                        loading={isLoading}
                     />
                 }
+                filterParams={params}
+                onSearch={onSearchHandler}
+                onReset={resetFilter}
+                onExport={() => { }}
+                onFilter={(e: any) => { setParams({ label: e?.target?.value, value: '' }) }}
+                onKeywordChange={(e: any) => { setParams(prev => ({ ...prev, value: e?.target?.value })) }}
+                filterOptions={['Name', 'Status']}
+                selectFieldOptions={['Pending', 'Submitted']}
             />
 
             {
                 isLoading ? <LoadingState state='students' /> :
                     (!isLoading && data?.length > 0) ? (
                         <>
-                            {
-                                view === 'list' &&
-                                <Box sx={{ height: 400, width: '100%' }}>
-                                    <DataGrid
-                                        sx={{
-                                            bgcolor: "#fff", '& .MuiDataGrid-cell': {
-                                                verticalAlign: 'middle',
-                                                display: 'flex',
-                                                // alignItems: 'center'
-                                            }
-                                        }}
-                                        autoHeight={true}
-                                        isRowSelectable={() => true}
-                                        disableColumnFilter={true}
-                                        disableColumnMenu={true}
-                                        checkboxSelection={true}
-                                        pagination
-                                        rows={data || []}
-                                        pageSizeOptions={[20, 50, 100]}
-                                        rowHeight={60}
-                                        columns={getTableColumns(
-                                            headers,
-                                            (id: string) => navigate(`/staff/applicant/${id}/view`),
-                                            (id: string) => onDeleteApplicant(id)
-                                        ) || []
-                                        }
-                                        getRowId={(row: any) => row?.id}
-                                        columnHeaderHeight={80}
-                                        initialState={{
-                                            pagination: {
-                                                paginationModel: { page: 0, pageSize: pageSize },
-                                            },
-                                        }}
-                                        onPaginationMetaChange={(newSize: any) => setPageSize(newSize)}
-                                    />
-                                </Box>
-                            }
-                            {
-                                view === 'grid' && (
-                                    <Grid container spacing={3}>
-                                        {
-                                            data?.map((el: any, i: number) => {
-                                                return <Grid item sm={3} key={i}>
-                                                    <UserCard variant={view} user={el} onClick={
-                                                        () => navigate(`/staff/applicant/${el?.id}/view`)
-                                                    } />
-                                                </Grid>
-                                            })
-                                        }
-                                    </Grid>
-                                )
-                            }
+                            <MuiTable
+                                data={data}
+                                headers={headers}
+                                onEditClick={(id: string) => navigate(`/staff/applicant/${id}/view`)}
+                                onDeleteClick={(id: string) => onDeleteApplicant(id)}
+                            />
                         </>
 
                     ) :
