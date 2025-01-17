@@ -84,8 +84,8 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
     }
 
     const extraMenu: SideBarMenuProps[] = [
+        { name: 'Academic Results', icon: <StudentCardIcon size={20} />, path: '/staff/grading' },
         { name: 'Transcripts', icon: <File01Icon size={20} />, path: '/staff/documents' },
-        // { name: 'ID Cards', icon: <StudentCardIcon size={20} />, path: '/staff/cards' },
     ]
 
     const supportMenu: SideBarMenuProps[] = [

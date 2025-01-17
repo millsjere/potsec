@@ -40,7 +40,7 @@ const Settings = () => {
 
             setLoad(true)
             startLoading('Updating password. Please wait...')
-            await base.patch('/api/u/update-password', { password: value?.password, oldPassword: value?.old })
+            await base.patch('/api/staff/reset-password', { password: value?.password, oldPassword: value?.old })
             swal('Success', 'Password updated successfully', 'success').then(reload)
         } catch (error: any) {
             console.log(error)

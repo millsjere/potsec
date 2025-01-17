@@ -26,6 +26,7 @@ const Departments = lazy(() => import("../pages/staff/department/Departments"));
 const Transcripts = lazy(() => import("../pages/staff/transcript/Transcript"));
 const Ticketing = lazy(() => import("../pages/staff/support/Ticket"));
 const Settings = lazy(() => import("../pages/staff/support/Settings"));
+const Grading = lazy(() => import("../pages/staff/grading/AcademicResult"));
 
 // Routes
 const LoginRoute = {
@@ -124,6 +125,13 @@ const SettingsRoute = {
   role: "staff",
 };
 
+const GradingRoute = {
+  path: "/staff/grading",
+  component: Grading,
+  isAuth: "yes",
+  role: "staff",
+};
+
 // export all routes as array
 export const staffRoutes: RouteProps[] = [
   LoginRoute,
@@ -140,4 +148,5 @@ export const staffRoutes: RouteProps[] = [
   TicketRoute,
   SettingsRoute,
   DocumentRoute,
+  GradingRoute
 ];
