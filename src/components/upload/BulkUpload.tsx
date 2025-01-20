@@ -1,5 +1,5 @@
 import { Box, IconButton, MenuItem, Stack, Typography } from '@mui/material';
-import { AddTeamIcon, Building03Icon, Cancel01Icon, LibraryIcon, LicenseThirdPartyIcon, UserIdVerificationIcon } from 'hugeicons-react';
+import { AddTeamIcon, Building03Icon, Cancel01Icon, LibraryIcon, LicenseThirdPartyIcon, TaskEdit01Icon, UserIdVerificationIcon } from 'hugeicons-react';
 import React, { useState } from 'react'
 import { base } from '../../config/appConfig';
 import { InputField } from '../shared';
@@ -41,6 +41,7 @@ const BulkUpload = ({ onClose }: Props) => {
     const [allDepartments, setAllDepartments] = useState([])
     const [data, setData] = useState<any[]>()
     const [progSelect, setProgSelect] = useState('')
+    const [courseCode, setCourseCode] = useState('')
     const [deptSelect, setDeptSelect] = useState('')
     const [file, setFile] = useState<File>()
 
@@ -220,6 +221,40 @@ const BulkUpload = ({ onClose }: Props) => {
                 })
             }
         }
+        if (selected === 'grades' && file) {
+            const parseData: any[] = await readDataFn(file)
+            console.log('data ===>', parseData)
+            setCourseCode(parseData[0]?.course_code)
+            let bulkData: any[] = []
+            if (parseData!?.length > 0) {
+                for (let i = 0; i < parseData.length; i++) {
+                    const el: any = parseData[i];
+                    if (!el?.student_name) return swal('Empty Field', `Selected file has an empty field (student_name) on line ${i + 1}. Please check and upload again`, 'warning').then(resetFile)
+                    if (!el?.student_index) return swal('Empty Field', `Selected file has an empty field (student_index) on line ${i + 1}. Please check and upload again`, 'warning').then(resetFile)
+                    if (!el?.course_code) return swal('Empty Field', `Selected file has an empty field (course_code) on line ${i + 1}. Please check and upload again`, 'warning').then(resetFile)
+                    if (!el?.score) return swal('Empty Field', `Selected file has an empty field (score) on line ${i + 1}. Please check and upload again`, 'warning').then(resetFile)
+                    if (!el?.grade) return swal('Empty Field', `Selected file has an empty field (grade) on line ${i + 1}. Please check and upload again`, 'warning').then(resetFile)
+
+                    // create payload //
+                    const payload = {
+                        student: el?.student_index,
+                        course: el?.course_code,
+                        grade: el?.grade,
+                        score: el?.score
+                    }
+                    bulkData?.push(payload)
+                }
+                console.log('Grades payload ===>', bulkData)
+                setFile(file)
+                setData(bulkData)
+            } else {
+                swal({
+                    title: 'Error',
+                    text: 'Invalid, selected file has no data. Please download and fill the template provided.',
+                    icon: 'error'
+                })
+            }
+        }
     }
 
     const getApiRoute = (val: string) => {
@@ -232,6 +267,8 @@ const BulkUpload = ({ onClose }: Props) => {
                 return '/api/staff/programmes/bulk-upload'
             case 'departments':
                 return '/api/staff/departments/bulk-upload'
+            case 'grades':
+                return '/api/staff/grades/bulk-upload'
             default:
                 break;
         }
@@ -247,6 +284,8 @@ const BulkUpload = ({ onClose }: Props) => {
                 return { programmes: data }
             case 'departments':
                 return { departments: data }
+            case 'grades':
+                return { course_code: courseCode, grades: data }
             case 'students':
                 return { students: data }
             default:
@@ -260,6 +299,23 @@ const BulkUpload = ({ onClose }: Props) => {
         try {
             startLoading('Uploading data. Please wait...')
             const { data: res } = await base.post(getApiRoute(selected!)!, getApiPayload(selected!))
+
+            if (res?.status === 'success' && selected === 'grades') {
+                // upload results file 
+                const payload = new FormData()
+                payload.append('grades', file!)
+                payload.append('course_code', courseCode)
+                startLoading('Uploading result file. Please wait...')
+                await base.post(`/api/staff/results/files`, payload, {
+                    headers: { 'content-type': 'multipart/form-data' }
+                })
+                swal({
+                    title: 'Success',
+                    text: 'Grades uploaded successfully',
+                    icon: 'success',
+                    closeOnClickOutside: false,
+                }).then(reload)
+            }
             if (res?.status === 'success') {
                 swal({
                     title: 'Success',
@@ -318,6 +374,10 @@ const BulkUpload = ({ onClose }: Props) => {
                             icon={<LibraryIcon id='icon' style={{ transition: 'all .2s ease-in' }} color='#acacac' size={70} />}
                             title='COURSES'
                         />
+                        <UploadCard onClick={(val) => onUploadTypeSelect(val, 'excel')}
+                            icon={<TaskEdit01Icon id='icon' style={{ transition: 'all .2s ease-in' }} color='#acacac' size={70} />}
+                            title='GRADES'
+                        />
                         <UploadCard onClick={(val) => onUploadTypeSelect(val, 'image')}
                             icon={<UserIdVerificationIcon id='icon' style={{ transition: 'all .2s ease-in' }} color='#acacac' size={70} />}
                             title='STUDENTS PHOTO'
@@ -334,7 +394,7 @@ const BulkUpload = ({ onClose }: Props) => {
             {
                 uploadStage === 1 &&
                 <Box p={3} width={'80%'} m={'0 auto'}>
-                    {selected === 'courses' &&
+                    {(selected === 'courses') &&
                         <InputField
                             type='text' isSelect
                             variant={'outlined'}
