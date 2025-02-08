@@ -244,21 +244,21 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           type: "text",
           label: "Residence Address",
           action: "RESIDENCE",
-          isRequired: true,
+          isRequired: false,
           keys: ["address", "residence"],
         },
         {
           type: "text",
           label: "Town",
           action: "RESIDENCE_TOWN",
-          isRequired: true,
+          isRequired: false,
           keys: ["address", "town"],
         },
         {
           type: "text",
           label: "District",
           action: "RESIDENCE_DISTRICT",
-          isRequired: true,
+          isRequired: false,
           keys: ["address", "district"],
         },
         {
@@ -266,35 +266,8 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           label: "Region",
           action: "RESIDENCE_REGION",
           options: getRegions(),
-          isRequired: true,
+          isRequired: false,
           keys: ["address", "region"],
-        },
-      ],
-    },
-    {
-      title: "Payment Method",
-      fields: [
-        {
-          type: "select",
-          label: "Payment",
-          action: "PAYMENT",
-          options: ["Mobile Money", "Online"],
-          isRequired: true,
-          keys: ["payment", "type"],
-        },
-        {
-          type: "text",
-          label: "Reference",
-          action: "PAYMENT_REF",
-          isRequired: true,
-          keys: ["payment", "reference"],
-        },
-        {
-          type: "text",
-          label: "Transaction ID",
-          action: "PAYMENT_TRANSACTION_ID",
-          isRequired: true,
-          keys: ["payment", "transactionID"],
         },
       ],
     },
@@ -347,20 +320,77 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
       ],
     },
     {
+      title: "Programme & Certification",
+      fields: [
+        {
+          type: "select",
+          label: "Certification",
+          action: "ENROLL_CERTIFICATION",
+          options: ["HND/DIPLOMA", "ADVANCED CERTIFICATE", "CERTIFICATE"],
+          isRequired: true,
+          keys: ["enrollment", "certification"],
+        },
+        {
+          type: "select",
+          label: "Certification Level",
+          action: "ENROLL_CERTIFICATION_LEVEL",
+          options: [
+            "BEGINNER - Advanced(has no Foundation)",
+            "INTER-MEDIATE - Advanced(has the Basic knowledge)",
+            "ADVANCED - (has over 50% knowledge)",
+          ],
+          isRequired: true,
+          keys: ["enrollment", "certificationLevel"],
+        },
+        {
+          type: "select",
+          label: "Select Programme",
+          action: "ENROLL_PROGRAMME",
+          options: programmes || [],
+          isRequired: true,
+          keys: ["enrollment", "programme"],
+        },
+        {
+          type: "select",
+          label: "Mode of Education",
+          action: "ENROLL_TUITION_MODE",
+          options: programmeTrainings,
+          isRequired: true,
+          keys: ["enrollment", "modeofTuition"],
+        },
+        {
+          type: "select",
+          label: "Select Training session",
+          action: "ENROLL_SESSION",
+          options: programmeSessions,
+          isRequired: true,
+          keys: ["enrollment", "session"],
+        },
+        {
+          type: "select",
+          label: "Campus",
+          action: "CAMPUS",
+          options: ["Accra", "Kumasi"],
+          isRequired: true,
+          keys: ["campus"],
+        },
+      ],
+    },
+    {
       title: "Guardian",
       fields: [
         {
           type: "text",
           label: "Name",
           action: "GUARDIAN_NAME",
-          isRequired: true,
+          isRequired: false,
           keys: ["guardian", "name"],
         },
         {
           type: "text",
           label: "Phone Number",
           action: "GUARDIAN_PHONE",
-          isRequired: true,
+          isRequired: false,
           keys: ["guardian", "phone"],
         },
         {
@@ -418,63 +448,6 @@ export const getApplicationForm = (selectProgrammes?: any): FormDataProps[] => {
           keys: ["emergency", "phone"],
         },
         // { type: 'text', label: 'Location', action: 'EMERGENCY_LOCATION', isRequired: false },
-      ],
-    },
-    {
-      title: "Programme & Certification",
-      fields: [
-        {
-          type: "select",
-          label: "Certification",
-          action: "ENROLL_CERTIFICATION",
-          options: ["HND/DIPLOMA", "ADVANCED CERTIFICATE", "CERTIFICATE"],
-          isRequired: true,
-          keys: ["enrollment", "certification"],
-        },
-        {
-          type: "select",
-          label: "Certification Level",
-          action: "ENROLL_CERTIFICATION_LEVEL",
-          options: [
-            "BEGINNER - (has no Foundation)",
-            "INTER-MEDIATE - (has the Basic knowledge)",
-            "ADVANCED - (has at least 50% knowledge)",
-          ],
-          isRequired: true,
-          keys: ["enrollment", "certificationLevel"],
-        },
-        {
-          type: "select",
-          label: "Select Programme",
-          action: "ENROLL_PROGRAMME",
-          options: selectProgrammes || [],
-          isRequired: true,
-          keys: ["enrollment", "programme"],
-        },
-        {
-          type: "select",
-          label: "Mode of Education",
-          action: "ENROLL_TUITION_MODE",
-          options: programmeTrainings,
-          isRequired: true,
-          keys: ["enrollment", "modeofTuition"],
-        },
-        {
-          type: "select",
-          label: "Select Session",
-          action: "ENROLL_SESSION",
-          options: programmeSessions,
-          isRequired: true,
-          keys: ["enrollment", "session"],
-        },
-        {
-          type: "select",
-          label: "Campus",
-          action: "CAMPUS",
-          options: ["Accra", "Kumasi"],
-          isRequired: true,
-          keys: ["campus"],
-        },
       ],
     },
   ];
@@ -597,17 +570,40 @@ export const allMonths = [
   "December",
 ];
 export const programmes = [
-  "FASHION DESIGN AND TEXTILES SCHOOL",
-  "CATERING AND HOSPITALITY SCHOOL",
-  "COSMETOLOGY SCHOOL",
-  "BEAUTY THERAPY SCHOOL",
-  "BEAUTY SPECIALIST SCHOOL",
-  "HAIR TECHNOLOGY SCHOOL",
-  "ELECTRICAL AND ELECTRONICS SCHOOL",
-  "WELDING AND FABRICATION SCHOOL",
-  "ALUMINUM & GLASS FABRICATION SCHOOL",
-  "COMPUTER SCIENCE SCHOOL",
-  "PLUMBING AND TILLING ENGINEERING SCHOOL",
+  "CATERING AND HOSPITALITY",
+  "FASHION DESIGN AND TEXTILES",
+  "COSMETOLOGY (HAIR & BEAUTY)",
+  "HAIR TECHNOLOGY ONLY",
+  "BEAUTY THERAPY ONLY",
+  "COMPUTER SCIENCE",
+  "MECHANICAL ENGINEERING",
+  "ELECTRICAL AND ELECTRONIC ENGINEERING",
+  "WELDING AND FABRICATION",
+  "ALUMINIUM FABRICATION",
+  "PLUMBING & TILLING",
+  "INTEGRATED CATERING AND HOSPITALITY",
+  "INTEGRATED FASHION DESIGN AND TEXTILES SCHOOL",
+  "INTEGRATED COSMETOLOGY",
+  "CAKE PRODUCTION",
+  "EVENT DECORATION",
+  "BREAD PRODUCTION",
+  "PASTRIES PRODUCTION",
+  "MAKE-UP ARTISTRY",
+  "NAILS TECHNOLOGY",
+  "WIGS MAKING (HAND & MACHINE)",
+  "HAIR BRAIDING",
+  "BARBERING",
+  "GRAPHICS DESIGN",
+  "PHOTO-VIDEOGRAPHY",
+  "SOUND ENGINEERING",
+  "WEBSITE DEVELOPMENT",
+  "PHONE REPAIRS",
+  "COMPUTER REPAIRS",
+  "NETWORKING",
+  "SATELLITE TECH. (CCTV, MULTI-TV, DSTV, ETC)",
+  "SUIT DESIGN",
+  "BRIDAL WEAR DESIGN",
+  "SUIT DESIGN",
 ];
 
 export const programmeTrainings = [
@@ -617,8 +613,9 @@ export const programmeTrainings = [
 ];
 
 export const programmeSessions = [
-  "Regular (Monday-Friday)",
-  "Part-Time (3 Times A Week)",
+  "Regular (Monday - Friday)",
+  "Evening; 5pm-7:30pm (Monday -Thursday)",
+  "Weekends (Saturday evening & Sunday Afternoon)",
   "Private Tuition (Applicant Determines Time)",
 ];
 
@@ -1045,7 +1042,7 @@ export const studentReducerFn = (state: typeof initState, action: any) => {
           month: action?.payload?.enrollment?.month || "",
           year: action?.payload?.enrollment?.year || "",
           duration: action?.payload?.enrollment?.duration || "",
-          programme: action?.payload?.enrollment?.programme || "",
+          programme: action?.payload?.enrollment?.programme?.name || "",
           department: action?.payload?.enrollment?.department || "",
           modeofTuition: action?.payload?.enrollment?.modeofTuition || "",
           certification: action?.payload?.enrollment?.certification || "",
@@ -1193,7 +1190,20 @@ export const validateFile = (file: File, type: string) => {
       );
     if (fileSize > 1) return swal("Invalid", "File size exceeds 1MB.", "error");
   }
-  if (type === "pdf") {
+  if (type === "doc") {
+    if (
+      !(
+        ext[ext?.length - 1]?.startsWith("pdf") ||
+        ext[ext?.length - 1]?.startsWith("doc") ||
+        ext[ext?.length - 1]?.startsWith("docx")
+      )
+    )
+      return swal(
+        "Invalid",
+        "You have selected a wrong file. Only .doc, .docx and .pdf files are allowed",
+        "error"
+      );
+    if (fileSize > 1) return swal("Invalid", "File size exceeds 1MB.", "error");
   }
   return file;
 };
@@ -1224,25 +1234,15 @@ export const validateFormData = (formInput: typeof initState, photo: File) => {
     formInput?.language?.spoken === "" ||
     formInput?.language?.written === "" ||
     formInput?.nationalID?.type === "" ||
-    formInput?.nationalID?.number === "" ||
-    formInput?.address?.residence === "" ||
-    formInput?.address?.town === "" ||
-    formInput?.address?.district === "" ||
-    formInput?.address?.region === ""
+    formInput?.nationalID?.number === ""
+    // formInput?.address?.residence === "" ||
+    // formInput?.address?.town === "" ||
+    // formInput?.address?.district === "" ||
+    // formInput?.address?.region === ""
   )
     return swal(
       "Invalid",
       "Provide all required fields under Personal Details",
-      "error"
-    ).then(() => false);
-  if (
-    formInput?.payment?.type === "" ||
-    formInput?.payment?.reference === "" ||
-    formInput?.payment?.transaction_id === ""
-  )
-    return swal(
-      "Invalid",
-      "Provide all required fields under Payment",
       "error"
     ).then(() => false);
   if (
@@ -1264,22 +1264,7 @@ export const validateFormData = (formInput: typeof initState, photo: File) => {
       "Provide all required fields under Health",
       "error"
     ).then(() => false);
-  if (
-    formInput?.guardian?.name === "" ||
-    formInput?.guardian?.phone === "" ||
-    formInput?.guardian?.relationship === ""
-  )
-    return swal(
-      "Invalid",
-      "Provide all required fields under Guardian",
-      "error"
-    ).then(() => false);
-  if (formInput?.emergency?.name === "" || formInput?.emergency?.phone === "")
-    return swal(
-      "Invalid",
-      "Provide all required fields under Emergency",
-      "error"
-    ).then(() => false);
+
   if (
     formInput?.enrollment?.certification === "" ||
     formInput?.campus === "" ||

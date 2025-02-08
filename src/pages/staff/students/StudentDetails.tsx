@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import PageHeader from '../../../components/shared/PageHeader'
-import { Avatar, Box, Chip, Divider, Grid, IconButton, InputAdornment, List, ListItem, ListItemButton, MenuItem, Stack, Typography } from '@mui/material'
+import { Avatar, Box, Chip, Dialog, DialogContent, DialogTitle, Divider, Grid, IconButton, InputAdornment, List, ListItem, ListItemButton, MenuItem, Stack, Typography } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { InputField, RoundButton } from '../../../components/shared'
 import { Camera01Icon, Cancel01Icon, CancelCircleIcon, CheckmarkCircle02Icon, Delete02Icon, File01Icon, FloppyDiskIcon, MailSend01Icon, PencilEdit01Icon, PrinterIcon } from 'hugeicons-react'
@@ -11,6 +11,7 @@ import { useLoader } from '../../../context/LoaderContext'
 import { base } from '../../../config/appConfig'
 import swal from 'sweetalert'
 import ViewStudentProgrammes from './ViewStudentProgrammes'
+import UploadComp from '../../../components/upload/UploadComp'
 
 
 export const getFormValue = (obj: any, keys: string[]) => {
@@ -24,12 +25,15 @@ const StudentDetails = () => {
     const ref = useRef()
     const navigate = useNavigate()
     const { startLoading, stopLoading } = useLoader()
-    const { isLoading, response, fetchData } = useAxiosFetch(`/api/student/${id}`);
+    const { isLoading, response } = useAxiosFetch(`/api/student/${id}`);
     const [open, setOpen] = useState(false)
+    const [admit, setAdmit] = useState(false)
+    const [file, setFile] = useState()
     const [edit, setEdit] = useState<string | undefined>(undefined)
     const [password, setPassword] = useState({ new: '', confirm: '' })
     const menuList = getApplicationForm()?.map(el => el?.title)
     const formData = getApplicationForm();
+
 
 
     const getFormValue = (obj: any, keys: string[]) => {
@@ -119,75 +123,29 @@ const StudentDetails = () => {
         }
     }
 
-    const acceptHandler = () => {
-        swal({
-            title: 'Accept Application',
-            text: 'This action will admit this application. Applicant will be notified via email',
-            icon: 'warning',
-            buttons: ['Cancel', 'Admit'],
-            closeOnClickOutside: false
-        }).then(async (acc) => {
-            if (acc) {
-                try {
-                    startLoading('Processing application. Please wait...')
-                    const { data: res } = await base.post(`/api/applicant/admit/${response?.id}`)
-                    if (res?.responseCode === 200) {
-                        swal({
-                            title: 'Success',
-                            icon: 'success',
-                            text: 'New student admitted successfully',
-                            closeOnClickOutside: false
-                        }).then(() => navigate('/staff/all-students'))
-                    }
-                } catch (error: any) {
-                    console.log(error?.response)
-                    swal('Error', error?.response?.data?.message, 'error').then(() => window.location.reload())
-                } finally {
-                    stopLoading()
-                }
-
+    const acceptHandler = async () => {
+        try {
+            startLoading('Processing application. Please wait...')
+            const payload = new FormData()
+            payload.append('attachment', file!)
+            const { data: res } = await base.post(`/api/applicant/admit/${response?.id}`, payload, {
+                headers: { 'content-type': 'multipart/form-data' }
+            })
+            if (res?.responseCode === 200) {
+                swal({
+                    title: 'Success',
+                    icon: 'success',
+                    text: 'Admission letter sent successfully',
+                    closeOnClickOutside: false
+                }).then(() => navigate('/staff/all-students'))
             }
-        })
+        } catch (error: any) {
+            console.log(error?.response)
+            swal('Error', error?.response?.data?.message, 'error').then(() => window.location.reload())
+        } finally {
+            stopLoading()
+        }
     }
-
-    const rejectHandler = () => {
-
-    }
-
-    const sendAdmissionLetter = () => {
-        swal({
-            title: 'Send Admission Letter',
-            text: 'Do you want to send admission letter to applicant?',
-            icon: 'warning',
-            buttons: ['Cancel', 'Send'],
-            closeOnClickOutside: false
-        }).then(async (send) => {
-            if (send) {
-                try {
-                    startLoading('Sending admission letter. Please wait...')
-                    const { data: res } = await base.get(`/api/student/send-admission-letter/${id}`)
-                    if (res.responseCode === 200) {
-                        swal({
-                            title: 'Success',
-                            icon: 'success',
-                            text: 'Admission letter sent successfully'
-                        }).then(reload)
-                    }
-                } catch (error: any) {
-                    console.log(error?.response)
-                    swal({
-                        title: 'Error',
-                        icon: 'error',
-                        text: 'Sorry, could not send email. Please try again'
-                    }).then(reload)
-                } finally {
-                    stopLoading()
-                }
-
-            }
-        })
-    }
-
 
 
     return (
@@ -219,13 +177,13 @@ const StudentDetails = () => {
                                 {
                                     response?.applicationStatus === 'submitted' ?
                                         <Stack direction={'row'} gap={1.5}>
-                                            <RoundButton startIcon={<CheckmarkCircle02Icon size={20} />} disableElevation fullWidth variant={'contained'} color={'secondary'} text={'Admit'} onClick={acceptHandler} />
-                                            <RoundButton startIcon={<CancelCircleIcon size={20} />} disableElevation fullWidth variant={'contained'} color={'primary'} text={'Decline'} onClick={rejectHandler} />
+                                            <RoundButton startIcon={<CheckmarkCircle02Icon size={20} />} disableElevation fullWidth variant={'contained'} color={'secondary'} text={'Admit Applicant'} onClick={() => setAdmit(true)} />
+                                            {/* <RoundButton startIcon={<CancelCircleIcon size={20} />} disableElevation fullWidth variant={'contained'} color={'primary'} text={'Decline'} onClick={rejectHandler} /> */}
                                         </Stack>
                                         : response?.applicationStatus === 'pending' ? null
                                             :
                                             <Stack direction={'column'} gap={1}>
-                                                <RoundButton startIcon={<MailSend01Icon size={20} />} disableElevation fullWidth variant={'outlined'} color={'secondary'} text={'Admission Letter'} onClick={sendAdmissionLetter} />
+                                                <RoundButton startIcon={<MailSend01Icon size={20} />} disableElevation fullWidth variant={'outlined'} color={'secondary'} text={'Admission Letter'} onClick={() => setAdmit(true)} />
                                                 <RoundButton startIcon={<File01Icon size={20} />} disableElevation fullWidth variant={'contained'} color={'secondary'} text={'View Programme'} onClick={() => { setOpen(true) }} />
                                                 <RoundButton startIcon={<PrinterIcon size={20} />} disableElevation fullWidth variant={'contained'} color={'primary'} text={'Print PDF'} onClick={() => { }} />
                                             </Stack>
@@ -398,6 +356,36 @@ const StudentDetails = () => {
                 onClose={() => { setOpen(false) }}
                 programme={response?.enrollment?.programme!}
             />
+
+            {/* Send Admission Letter */}
+            <Dialog open={admit} onClose={() => {
+                setAdmit(false);
+                setFile(undefined);
+            }}>
+                <DialogTitle sx={{ fontWeight: 500 }}>Send Admission Letter</DialogTitle>
+                <DialogContent dividers>
+                    <Typography mb={3}>This action will send an admission letter to this student. Student will be notified via email. Please attach the student's admission letter below</Typography>
+                    <UploadComp
+                        type='doc'
+                        iconSize={60}
+                        showTitle={true}
+                        showCancelBtn={false}
+                        onCancel={() => { }}
+                        onUpload={(_file: any) => { setFile(_file) }}
+                        onSubmit={() => { }}
+                        fileName={file?.name}
+                    />
+                    <RoundButton
+                        sx={{ ml: 'auto', borderColor: grey[700], borderRadius: '6px', mt: 3 }}
+                        variant={'contained'} color={'secondary'}
+                        onClick={acceptHandler}
+                        disableElevation disable={!file}
+                        text='Send Admission'
+                        size={'medium'}
+                    />
+
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }

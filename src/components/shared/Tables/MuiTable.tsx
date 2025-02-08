@@ -58,7 +58,7 @@ const getTableColumns = (headers: string[], editLabel?: string, actionClick: (id
                             el?.toLowerCase() === 'staff id' ? params?.row?.academics?.staffID || '--' :
                               el?.toLowerCase() === 'courses' ? (params?.row?.courses?.length + ' Courses') || '--' :
                                 el?.toLowerCase() === 'programmes' ? (params?.row?.programmes?.length + ' Programme(s)') :
-                                  el?.toLowerCase() === 'duration' ? (params?.row?.duration?.number + ' ' + params?.row?.duration?.type) :
+                                  el?.toLowerCase() === 'duration' ? (params?.row?.duration?.number + ' ' + params?.row?.duration?.type) || '--' :
                                     (el?.toLowerCase() === 'date applied' || el?.toLowerCase() === 'date uploaded' || el?.toLowerCase() === 'date') ? formatDateTime(params?.row?.createdAt) || '--' :
                                       el?.toLowerCase() === 'file name' ? params?.value || '--' :
                                         el?.toLowerCase() === 'upload by' ? params?.row?.uploadBy?.fullname || '--' :
