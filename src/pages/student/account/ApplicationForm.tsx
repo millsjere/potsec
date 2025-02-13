@@ -36,7 +36,7 @@ const ApplicationForm = () => {
 
 
     const onFormSubmit = async () => {
-        console.log(formInput)
+        // console.log(formInput)
         const isValid = await validateFormData(formInput, photo!)
         if (isValid) {
             await swal({
@@ -60,8 +60,8 @@ const ApplicationForm = () => {
                             })
                             saveData('uid', res?.data)
                             await swal({
-                                title: 'Success', 
-                                text: 'Your application has been submitted successfully', 
+                                title: 'Success',
+                                text: 'Your application has been submitted successfully',
                                 icon: 'success',
                                 closeOnClickOutside: false
                             }).then(reload)
@@ -188,19 +188,19 @@ const ApplicationForm = () => {
                     :
                     <Box width={'100%'} alignItems={'center'} justifyContent={'center'} display={'flex'} flexDirection={'column'}>
                         <Box bgcolor={'#fff'} py={4} px={6} textAlign={'center'} sx={{
-                            width: {lg: '60%', md: '100%', sm: '100%', xs: '100%'},
+                            width: { lg: '60%', md: '100%', sm: '100%', xs: '100%' },
                         }}>
-                            <img src={SubmitForm} alt='submit-form' width={'12%'} style={{margin: '20px auto'}} />
+                            <img src={SubmitForm} alt='submit-form' width={'12%'} style={{ margin: '20px auto' }} />
                             <Typography variant='h6' mt={2} fontWeight={500}>Application Submitted</Typography>
                             <Typography variant='body1' mb={3} color={'GrayText'}>
-                                Thank you for submitting your application to POTSEC. 
-                                We have successfully received your application and are currently reviewing it. 
+                                Thank you for submitting your application to POTSEC.
+                                We have successfully received your application and are currently reviewing it.
                                 Our admissions team will review your application thoroughly, and we will notify you of the next steps via email at [{currentUser?.email}] or through our application portal. If additional information or documents are required, we will contact you directly.
                             </Typography>
-                            <Stack direction={'row'} gap={2} justifyContent={'center'}>
-                                <RoundButton onClick={()=>{}} text='Print Application' color={'secondary'} variant={'outlined'} disableElevation />
-                                <RoundButton onClick={()=>{}} text='Check Application Status' color={'secondary'} variant={'contained'} disableElevation />
-                            </Stack>
+                            {/* <Stack direction={'row'} gap={2} justifyContent={'center'}>
+                                <RoundButton onClick={() => { }} text='Print Application' color={'secondary'} variant={'outlined'} disableElevation />
+                                <RoundButton onClick={() => { }} text='Check Application Status' color={'secondary'} variant={'contained'} disableElevation />
+                            </Stack> */}
                         </Box>
                     </Box>
             }

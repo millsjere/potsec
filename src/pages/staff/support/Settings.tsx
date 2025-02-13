@@ -15,7 +15,7 @@ const Settings = () => {
     const { startLoading, stopLoading } = useLoader()
     const [value, setValue] = useState({ old: '', password: '', confirmPassword: '' })
     const [staffPass, setStaffPass] = useState({ id: '', password: '', confirmPassword: '' })
-    const [price, setPrice] = useState({ amount: 0, year: '', month: '', closingDate: ''})
+    const [price, setPrice] = useState({ amount: 0, year: '', month: '', closingDate: '' })
     const [letter, setLetter] = useState({ startDate: '', endDate: '', bank: '', accountNo: '', accountName: '', utilities: '' })
     const [load, setLoad] = useState(false)
 
@@ -150,16 +150,16 @@ const Settings = () => {
                                     startAdornment: <InputAdornment position='start'>GHS</InputAdornment>
                                 }}
                             />
-                            <Stack direction={'row'} gap={2} sx={{width: '100% '}}>
+                            <Stack direction={'row'} gap={2} sx={{ width: '100% ' }}>
                                 <InputField size={'small'} showTopLabel isRequired
                                     type={'text'} fullWidth label='Admission Month'
-                                    variant={'outlined'} sx={{width: '18rem'}}
+                                    variant={'outlined'} sx={{ width: '18rem' }}
                                     onChange={(e) => { setPrice(prev => ({ ...prev, month: e?.target?.value })) }}
                                     value={price?.month} isSelect
                                 >
                                     {allMonths?.map((el, i) => <MenuItem key={i} value={el}>{el}</MenuItem>)}
                                 </InputField>
-                                <InputField size={'small'} sx={{width: '18rem'}} showTopLabel isRequired
+                                <InputField size={'small'} sx={{ width: '18rem' }} showTopLabel isRequired
                                     type={'text'} fullWidth={true} label='Admission Year'
                                     variant={'outlined'} value={price?.year} isSelect
                                     onChange={(e) => { setPrice(prev => ({ ...prev, year: e?.target?.value })) }}
@@ -169,10 +169,10 @@ const Settings = () => {
                             </Stack>
                             <InputField size={'small'} showTopLabel isRequired
                                 type={'date'} fullWidth label='Closing Date' defaultValue={price?.closingDate}
-                                variant={'outlined'} placeholder={formPrice?.amount} inputProps={{min: new Date().toISOString().split('T')[0]}}
+                                variant={'outlined'} placeholder={formPrice?.amount} inputProps={{ min: new Date().toISOString().split('T')[0] }}
                                 onChange={(e) => { setPrice(prev => ({ ...prev, closingDate: e?.target?.value })) }}
                                 value={price?.closingDate}
-                                
+
                             />
                             <RoundButton loading={load}
                                 onClick={updateAdmissionDetails} sx={{ mb: 2 }}
@@ -187,7 +187,7 @@ const Settings = () => {
                 {/* Admission Letter */}
                 <Grid item xs={12} sm={12} md={12} lg={12}>
                     <Box bgcolor={'#fff'} borderRadius={'10px'} >
-                        <Typography mt={2} variant='h6' px={3} py={2} mb={2} fontWeight={600} bgcolor={'lightblue'} fontSize={'1.1rem'}>Admission Letter</Typography>
+                        <Typography mt={2} variant='h6' px={3} py={2} mb={2} fontWeight={600} bgcolor={'lightblue'} fontSize={'1.1rem'}>Admission Letter Details</Typography>
                         <Box sx={{ py: '1rem', mx: 4 }}>
                             <InputField size={'small'} showTopLabel isRequired
                                 type={'date'} fullWidth label='Admission Start Date'

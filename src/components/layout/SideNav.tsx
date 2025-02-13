@@ -39,6 +39,8 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
     const isStudent = currentUser?.role === 'student'
     const isStaff = currentUser?.role === 'staff' || currentUser?.role === 'admin'
 
+    console.log(currentUser?.role)
+
 
     const allMenu = {
         applicant: [
@@ -46,20 +48,13 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
             { name: 'Application', icon: <StudentCardIcon size={20} />, path: '/account/application', active: 'application' },
             { name: 'Setting', icon: <Settings01Icon size={20} />, path: '/account/settings', active: 'settings' },
         ],
+        student: [
+            { name: 'Dashboard', icon: <File01Icon size={20} />, path: '/account/dashboard', active: 'dashboard' },
+            { name: 'Application', icon: <StudentCardIcon size={20} />, path: '/account/application', active: 'application' },
+            { name: 'Setting', icon: <Settings01Icon size={20} />, path: '/account/settings', active: 'settings' },
+        ],
         staff: [
             { name: 'Dashboard', icon: <DashboardSquare01Icon size={20} />, path: '/staff/dashboard' },
-            {
-                name: 'Applications', icon: <LicenseThirdPartyIcon size={20} />, hasSubMenu: true, subMenus: [
-                    { name: 'All Applicants', icon: <TaskAdd02Icon size={20} />, path: '/staff/applicants' },
-                    { name: 'New Application', icon: <AddTeamIcon size={20} />, path: '/staff/application' },
-                ]
-            },
-            {
-                name: 'Students', icon: <UserAccountIcon size={20} />, path: '/staff/all-students'
-            },
-            {
-                name: 'Staff', icon: <UserGroupIcon size={20} />, path: '/staff/all-staff'
-            },
             { name: 'Programmes', icon: <LibraryIcon size={20} />, path: '/staff/programmes' },
             { name: 'Departments', icon: <Building03Icon size={20} />, path: '/staff/departments' },
         ],
@@ -79,8 +74,7 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
             },
             { name: 'Programmes', icon: <LibraryIcon size={20} />, path: '/staff/programmes' },
             { name: 'Departments', icon: <Building03Icon size={20} />, path: '/staff/departments' },
-        ],
-        student: []
+        ]
     }
 
     const extraMenu: SideBarMenuProps[] = [

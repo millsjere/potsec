@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { Album02Icon, Cancel01Icon, ClipboardIcon, Upload04Icon, File01Icon } from 'hugeicons-react';
+import { Album02Icon, Cancel01Icon, ClipboardIcon, Upload04Icon, File01Icon, DocumentAttachmentIcon } from 'hugeicons-react';
 import React, { useRef } from 'react'
 import { RoundButton } from '../shared';
 import { validateFile } from '../../utils';
@@ -25,22 +25,25 @@ const UploadComp = ({ type = 'image', onCancel, fileName, onUpload, onSubmit, ic
             }}
             borderRadius={'10px'} border={'1.5px dashed lightgrey'}
         >
-            <input type='file' accept={type === 'image' ? '.jpg,.jpeg,.png' : '.xlsx,.xls,.numbers,.csv'} style={{ display: 'none' }} ref={ref} onChange={(e) => onUpload(validateFile(e?.target?.files![0], type))} />
-            { 
-                type === 'excel' ? 
-                (fileName ? <File01Icon size={iconSize} color='#acacac' style={{ margin: '0 auto' }} /> : <ClipboardIcon size={iconSize} color='#acacac' style={{ margin: '0 auto' }} /> )
-                : 
-                (fileName ? <File01Icon size={iconSize} color='#acacac' style={{ margin: '0 auto' }} /> : <Album02Icon size={iconSize} color='#acacac' style={{ margin: '0 auto' }} /> )
+            <input type='file' accept={type === 'image' ? '.jpg,.jpeg,.png' : type === 'doc' ? '.pdf,.doc,.docx' : '.xlsx,.xls,.numbers,.csv'} style={{ display: 'none' }} ref={ref} onChange={(e) => onUpload(validateFile(e?.target?.files![0], type))} />
+            {
+                type === 'excel' ?
+                    (fileName ? <File01Icon size={iconSize} color='#acacac' style={{ margin: '0 auto' }} /> : <ClipboardIcon size={iconSize} color='#acacac' style={{ margin: '0 auto' }} />)
+                    :
+                    type === 'doc' ?
+                        (fileName ? <DocumentAttachmentIcon size={iconSize} color='#acacac' style={{ margin: '0 auto' }} /> : <ClipboardIcon size={iconSize} color='#acacac' style={{ margin: '0 auto' }} />)
+                        :
+                        (fileName ? <File01Icon size={iconSize} color='#acacac' style={{ margin: '0 auto' }} /> : <Album02Icon size={iconSize} color='#acacac' style={{ margin: '0 auto' }} />)
             }
-            {showTitle && <Typography mt={3}>{ fileName || 'Browse or Click to upload file'}</Typography>}
-            <Typography mt={showTitle ? 0 : 2} color={'GrayText'} variant='body2'>Accepted files are {type === 'excel' ? ' xlsx, csv, numbers' : 'jpg, png, jpeg'}</Typography>
+            {showTitle && <Typography mt={3}>{fileName || 'Browse or Click to upload file'}</Typography>}
+            <Typography mt={showTitle ? 0 : 2} color={'GrayText'} variant='body2'>Accepted files are {type === 'excel' ? ' xlsx, csv, numbers' : type === 'doc' ? 'pdf, doc, docx' : 'jpg, png, jpeg'}</Typography>
             <Typography mb={2} color={'GrayText'} variant='body2'>Maximum file size - 1MB</Typography>
             <RoundButton
                 text={fileName ? 'Upload Data' : 'Browse File'} sx={{ padding: '.5rem .8rem' }} color={'secondary'}
                 onClick={(e) => {
                     e.stopPropagation();
                     fileName ? onSubmit() : ref?.current?.click()
-                    
+
                 }} variant={'contained'}
                 disableElevation size={'small'} startIcon={<Upload04Icon size={18} />}
             />

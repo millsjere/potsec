@@ -1,7 +1,7 @@
 import { Box, Divider, Drawer, IconButton, Stack, Typography } from '@mui/material'
 import { Cancel01Icon } from 'hugeicons-react'
-import React, { useEffect, useState } from 'react'
-import { trimesters } from '../programmes/ProgrammeDetails'
+import React, { } from 'react'
+import { semesters } from '../programmes/ProgrammeDetails'
 import CourseItem from '../../../components/shared/Cards/CourseItem'
 import NullState from '../../../components/shared/NullState/NullState'
 import Empty from '../../../assets/images/folders.png'
@@ -56,15 +56,15 @@ const ViewStudentProgrammes = ({ open, onClose, programme }: Props) => {
 
                                     </Stack>
                                     {
-                                        trimesters?.map((trm, index) => (
+                                        semesters?.map((trm, index) => (
                                             <Box key={index} sx={{ minHeight: '20rem', mb: 2, border: '1px solid lightgrey', borderRadius: '0 0 8px 8px' }}>
                                                 <Box bgcolor={'#ededed'} p={1.5}>
                                                     <Typography variant='h6' fontSize={'1.1rem'}>{trm}</Typography>
                                                 </Box>
                                                 <Box sx={{ p: 2 }}>
                                                     {
-                                                        getCourseYear(i + 1)!.filter((el: { trimester: string }) => el?.trimester === trm)?.length > 0 ?
-                                                            getCourseYear(i + 1)?.filter((el: { trimester: string }) => el?.trimester === trm)?.map((course: any, i: number) => (
+                                                        getCourseYear(i + 1)!.filter((el: { semester: string }) => el?.semester === trm)?.length > 0 ?
+                                                            getCourseYear(i + 1)?.filter((el: { semester: string }) => el?.semester === trm)?.map((course: any, i: number) => (
                                                                 <Stack key={i}>
                                                                     <CourseItem course={course} showAction={false} />
                                                                 </Stack>

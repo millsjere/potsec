@@ -1,6 +1,6 @@
-name,code,year,trimester,credit
-Introduction to Software Engineering,SWE101,1,Trimester 1,3
-Programming Fundamentals,SWE102,1,Trimester 1,3
-Data Structures and Algorithms,SWE201,2,Trimester 1,3
-Database Systems,SWE202,2,Trimester 2,3
-Software Requirements Engineering,SWE203,2,Trimester 3,3
+name,code,year,semester,credit
+Introduction to Software Engineering,SWE101,1,Semester 1,3
+Programming Fundamentals,SWE102,1,Semester 1,3
+Data Structures and Algorithms,SWE201,2,Semester 1,3
+Database Systems,SWE202,2,Semester 2,3
+Software Requirements Engineering,SWE202,2,Semester 2,3

@@ -73,12 +73,12 @@ const TopNav = ({ drawerWidth, handleDrawerToggle }: { drawerWidth: number, hand
               />
             }
             {
-              isApplicant &&
-              <RoundButton variant={'contained'}
-                text={'Check Application Status'} sx={{ padding: '.3rem .8rem', borderRadius: '8px' }}
-                color={'primary'} onClick={() => { setCheck(true) }}
-                disableElevation
-              />
+              isApplicant && null
+              // <RoundButton variant={'contained'}
+              //   text={'Check Application Status'} sx={{ padding: '.3rem .8rem', borderRadius: '8px' }}
+              //   color={'primary'} onClick={() => { setCheck(true) }}
+              //   disableElevation
+              // />
             }
             <IconButton disableRipple
               onClick={() => {

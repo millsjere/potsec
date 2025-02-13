@@ -27,7 +27,7 @@ const Programmes = () => {
     const [name, setName] = useState('')
     const [department, setDepartment] = useState('')
     const [duration, setDuration] = useState({ type: '', number: 0 })
-    const [tuition, setTuition] = useState({ words: '', amount: 0 })
+    const [tuition, setTuition] = useState({ words: '', amount: 0, semester: 0 })
     const [id, setId] = useState<string>()
     const [view, setView] = useState('list')
     const headers = ['Name', 'Department', 'Duration', 'Courses', 'Action']
@@ -39,7 +39,7 @@ const Programmes = () => {
         setDepartment('');
         setType({ label: 'add', value: 1 })
         setDuration({ type: '', number: 0 })
-        setTuition({ words: '', amount: 0 })
+        setTuition({ words: '', amount: 0, semester: 0 })
     }
 
     const onFormSubmit = async () => {
@@ -47,15 +47,16 @@ const Programmes = () => {
         if (department === '') return swal('Invalid', 'Please select a department', 'warning')
         if (tuition?.amount === 0) return swal('Invalid', 'Tuition amount cannot be zero(0)', 'warning')
         if (tuition?.words === '') return swal('Invalid', 'Provide tuition amount in words', 'warning')
+        if (tuition?.semester === 0) return swal('Invalid', 'Tuition per semester cannot be zero(0)', 'warning')
         if (duration?.type === '' || duration?.number === 0) return swal('Invalid', 'Please select a duration. Year/Month cannot be zero(0)', 'warning')
         try {
             startLoading('Creating new department. Please wait..')
-            const { data: res } = type?.label === 'add' ? 
+            const { data: res } = type?.label === 'add' ?
                 await base.post('/api/staff/programmes/new', { name, department, duration, tuition }) :
                 await base.patch(`/api/staff/programmes/${id}`, { name, department, duration, tuition })
             if (res?.status === 'success') {
                 resetForm()
-                swal('Success', `Programme ${type?.label === 'edit' ? 'updated' : 'created' } successfully`, 'success').then(fetchData)
+                swal('Success', `Programme ${type?.label === 'edit' ? 'updated' : 'created'} successfully`, 'success').then(fetchData)
             }
         } catch (error: any) {
             console.log(error?.response)
@@ -91,14 +92,14 @@ const Programmes = () => {
         await fetchData()
     }
 
-    const onEditClick = (e, el: any)=>{
+    const onEditClick = (e, el: any) => {
         e.stopPropagation()
         setId(el?.id);
         setName(el?.name);
         setDepartment(el?.department?.id);
         setType({ label: 'add', value: 1 })
         setDuration({ type: el?.duration?.type, number: el?.duration?.number })
-        setTuition({ words: el?.tuition?.words, amount: el?.tuition?.amount })
+        setTuition({ words: el?.tuition?.words, amount: el?.tuition?.amount, semester: el?.tuition?.amount })
         setType({ label: 'edit', value: 1 });
         setOpen(true)
     }
@@ -144,7 +145,7 @@ const Programmes = () => {
                                                         subText={`Dept - ${el?.department?.name}`}
                                                         extraText={`${el?.duration?.number} ${el?.duration?.type}`}
                                                         onDelete={() => onDeleteHandler(el?.id, 'Programme', 'programmes', startLoading, stopLoading, fetchData)}
-                                                        onClick={(e)=>onEditClick(e, el)}
+                                                        onClick={(e) => onEditClick(e, el)}
                                                         addCourse={() => navigate(`/staff/programmes/${el?.id}/edit`)}
                                                     />
                                                 </Grid>
@@ -212,7 +213,7 @@ const Programmes = () => {
                         <InputField
                             showTopLabel
                             label='Tuition Fee' fullWidth
-                            size={'small'} type='number' inputProps={{min: 0}}
+                            size={'small'} type='number' inputProps={{ min: 0 }}
                             value={tuition?.amount}
                             onChange={(e) => setTuition(prev => ({ ...prev, amount: e?.target?.value }))}
                             InputProps={{
@@ -221,10 +222,20 @@ const Programmes = () => {
                         />
                         <InputField
                             showTopLabel
-                            label='Amount In Words' fullWidth
+                            label='Amount In Words (Tuition Fee)' fullWidth
                             size={'small'} type='text' multiline rows={2}
                             value={tuition?.words}
                             onChange={(e) => setTuition(prev => ({ ...prev, words: e?.target?.value }))}
+                        />
+                        <InputField
+                            showTopLabel
+                            label='Tuition Per Semester' fullWidth
+                            size={'small'} type='number' inputProps={{ min: 0 }}
+                            value={tuition?.semester}
+                            onChange={(e) => setTuition(prev => ({ ...prev, semester: e?.target?.value }))}
+                            InputProps={{
+                                startAdornment: <InputAdornment position='start'>GHS</InputAdornment>
+                            }}
                         />
                         <InputField
                             showTopLabel type='select'

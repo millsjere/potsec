@@ -5,6 +5,9 @@ import { base, saveData } from '../../../config/appConfig';
 import { ArrowRight01Icon, SquareLock02Icon, UserCircleIcon } from 'hugeicons-react';
 import { AuthWrapper, InputField, RoundButton } from '../../../components/shared'
 import { useAlert } from '../../../context/AlertContext';
+// import { PDFViewer } from '@react-pdf/renderer';
+// import ResultTranscript from '../transcript/TranscriptTemplate';
+// import { results, sems, student } from '../transcript/Transcript';
 
 
 const Login = () => {
@@ -12,21 +15,6 @@ const Login = () => {
     const { successAlert, errorAlert } = useAlert()
     const [load, setLoad] = React.useState(false)
     const [value, setValue] = React.useState({ email: '', password: '' })
-
-    // console.log(getData('uid'))
-    // const newStaff = async() => {
-    //     try {
-    //         const { data: res } = await base.post('/api/staff/create', value)
-    //         console.log(res)
-    //         alert('Staff created')
-    //     } catch (error) {
-    //         console.log(error?.response)
-    //     }
-
-    // }
-    // useEffect(()=>{
-    //     newStaff()
-    // },[])
 
     const onFormSubmit = async () => {
         if (value.email === '' || !value?.email?.includes('@')) return errorAlert('Invalid staff email')
@@ -81,6 +69,10 @@ const Login = () => {
 
                 </div>
             </AuthWrapper>
+
+            {/* <PDFViewer style={{ width: "100%", height: "1000px" }}>
+                <ResultTranscript student={student} semesters={sems} />
+            </PDFViewer> */}
         </>
 
     )
