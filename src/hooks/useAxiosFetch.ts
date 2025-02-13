@@ -16,7 +16,7 @@ const useAxiosFetch = (url: string) => {
       setError(error?.response);
       swal({
         title: "Error",
-        text: "Sorry, coould not fetch data. Please reload",
+        text: "Sorry, could not fetch data. Please reload",
         icon: "error",
       });
     } finally {

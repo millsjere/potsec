@@ -19,11 +19,11 @@ export interface DetailsProps {
     courses: any[],
     department: object,
     duration: { number: number, type: string },
-    tuition: { amount: number, words: string },
+    tuition: { amount: number, words: string, semester: number },
     name: string,
     id: string
 }
-export const trimesters = ['Trimester 1', 'Trimester 2', 'Trimester 3']
+export const semesters = ['Semester 1', 'Semester 2']
 
 export const getCourseYear = (data: DetailsProps, n: number) => {
     switch (n) {
@@ -44,7 +44,7 @@ const ProgrammeDetails = () => {
     const { isLoading, response, fetchData } = useAxiosFetch(`/api/staff/programmes/${params?.id}`);
     const [data, setData] = useState<DetailsProps>()
     const [open, setOpen] = useState(false)
-    const [input, setInput] = useState({ name: '', code: '', trimester: '', credit: 0, year: 0 })
+    const [input, setInput] = useState({ name: '', code: '', semester: '', credit: 0, year: 0 })
 
     const months = data?.courses!?.length > 0 ? data?.courses?.filter((el => el?.level?.includes('Months'))) : []
 
@@ -57,7 +57,7 @@ const ProgrammeDetails = () => {
     }, [isLoading])
 
     const onFormSubmit = async () => {
-        if (input?.trimester === '') return swal('Invalid', 'Please select a trimester', 'warning')
+        if (input?.semester === '') return swal('Invalid', 'Please select a semester', 'warning')
         if (input?.name === '') return swal('Invalid', 'Please provide a course name', 'warning')
         if (input?.code === '') return swal('Invalid', 'Please select a course code', 'warning')
         if (input?.credit === 0) return swal('Invalid', 'Course credit cannot be zero', 'warning')
@@ -78,7 +78,7 @@ const ProgrammeDetails = () => {
 
     const resetForm = () => {
         setOpen(false)
-        setInput({ name: '', code: '', trimester: '', credit: 0, year: 0 })
+        setInput({ name: '', code: '', semester: '', credit: 0, year: 0 })
     }
 
     const removeCourse = (course: any) => {
@@ -115,7 +115,8 @@ const ProgrammeDetails = () => {
                             <span>
                                 <Typography mt={-.5} mb={-.5} variant='h6' noWrap>{data?.name}</Typography>
                                 <Typography mb={0} color={'GrayText'}>Department: {data?.department?.name}</Typography>
-                                <Typography mb={0} color={'GrayText'}>Tuition: GHS {data?.tuition?.amount || 0}</Typography>
+                                <Typography mb={0} color={'GrayText'}>Tuition Fee: GHS {data?.tuition?.amount || 0}</Typography>
+                                <Typography mb={0} color={'GrayText'}>Tuition Per Semester: GHS {data?.tuition?.semester || 0}</Typography>
                             </span>
                             <span style={{ marginLeft: 'auto' }} >
                                 <Chip size='medium' label={<Typography variant='body2'>{data?.duration?.number + ' ' + data?.duration?.type}</Typography>} />
@@ -136,7 +137,7 @@ const ProgrammeDetails = () => {
 
                                     </Stack>
                                     {
-                                        trimesters?.map((trm, index) => (
+                                        semesters?.map((trm, index) => (
                                             <Box key={index} sx={{ minHeight: '20rem', mb: 2, border: '1px solid lightgrey', borderRadius: '0 0 8px 8px' }}>
                                                 <Box bgcolor={'#ededed'} p={1.5}>
                                                     <Typography variant='h6' fontSize={'1.1rem'}>{trm}</Typography>
@@ -146,8 +147,8 @@ const ProgrammeDetails = () => {
                                                         data?.duration?.type?.toLowerCase() === 'years' ?
                                                             <>
                                                                 {
-                                                                    getCourseYear(data, i + 1)!.filter(el => el?.trimester === trm)?.length > 0 ?
-                                                                        getCourseYear(data, i + 1)?.filter(el => el?.trimester === trm)?.map((course: any, i: number) => (
+                                                                    getCourseYear(data, i + 1)!.filter(el => el?.semester === trm)?.length > 0 ?
+                                                                        getCourseYear(data, i + 1)?.filter(el => el?.semester === trm)?.map((course: any, i: number) => (
                                                                             <Stack key={i}>
                                                                                 <CourseItem course={course} onRemove={() => removeCourse(course)} />
                                                                             </Stack>
@@ -211,14 +212,14 @@ const ProgrammeDetails = () => {
                         >
                             <InputField
                                 showTopLabel type='select'
-                                label='Trimester' fullWidth
+                                label='Semester' fullWidth
                                 size={'small'}
-                                value={input?.trimester} isSelect
-                                onChange={(e) => setInput(prev => ({ ...prev, trimester: e?.target?.value }))}
+                                value={input?.semester} isSelect
+                                onChange={(e) => setInput(prev => ({ ...prev, semester: e?.target?.value }))}
                             >
                                 {
                                     data?.duration?.type?.toLowerCase() === 'years' ?
-                                        Array(3).fill(1)?.map((_el, i) => `Trimester ${i + 1}`)?.map((el, i) => <MenuItem key={i} value={el}>{el}</MenuItem>)
+                                        Array(3).fill(1)?.map((_el, i) => `Semester ${i + 1}`)?.map((el, i) => <MenuItem key={i} value={el}>{el}</MenuItem>)
                                         :
                                         <MenuItem value={data?.duration?.type + ' ' + data?.duration?.number}>{`${data?.duration?.number} ${data?.duration?.type}`}</MenuItem>
                                 }

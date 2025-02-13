@@ -40,9 +40,10 @@ type InputFieldProps = {
     isDisabled?: boolean
     multiline?: boolean
     rows?: Number
+    defaultValue?: string
 }
 
-export const InputField = ({ rows, multiline, showTopLabel = false, size = 'medium', sx, isSelect, variant, value, onChange, isRequired, label, error, children, type, InputProps, inputProps, placeholder, fullWidth, isDisabled }: InputFieldProps) => {
+export const InputField = ({ rows, multiline, showTopLabel = false, size = 'medium', sx, isSelect, variant, value, onChange, isRequired, label, error, children, type, InputProps, inputProps, placeholder, fullWidth, isDisabled, defaultValue }: InputFieldProps) => {
     return (
         <Box>
             {showTopLabel && <Typography variant='body2' textTransform={'capitalize'} fontSize={'.9rem'} mb={.5} color={'GrayText'}>{label}</Typography>}
@@ -65,8 +66,9 @@ export const InputField = ({ rows, multiline, showTopLabel = false, size = 'medi
                 InputProps={InputProps}
                 inputProps={inputProps}
                 placeholder={placeholder}
-                defaultValue={isSelect && ''}
+                defaultValue={isSelect ? '' : defaultValue}
                 disabled={isDisabled}
+                
             >
                 {children}
             </StyledInputField>

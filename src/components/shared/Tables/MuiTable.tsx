@@ -8,12 +8,14 @@ import { formatDateTime } from '../../../utils'
 interface Props {
   data: any
   headers: string[]
-  onEditClick: (val: string, event?: Event, data?: any) => void
-  onDeleteClick: (val: string, event?: Event) => void,
+  onEditClick?: (val: string, event?: Event, data?: any) => void
+  onDeleteClick?: (val: string, event?: Event) => void,
   editLabel?: string
+  viewLabel?: string
+  onViewClick?: (val: string, event?: Event, data?: any) => void
 }
 
-const getTableColumns = (headers: string[], editLabel?: string, actionClick: (id: string, event?: Event, rowData?: any) => void, onDelete?: (id: string, event?: Event) => void) => {
+const getTableColumns = (headers: string[], editLabel?: string, actionClick: (id: string, event?: Event, rowData?: any) => void, onDelete?: (id: string, event?: Event) => void, viewLabel?: string, onViewClick: (id: string, event?: Event, rowData?: any) => void) => {
   return headers?.map((el: string) => (
     {
       field: (
@@ -37,6 +39,13 @@ const getTableColumns = (headers: string[], editLabel?: string, actionClick: (id
           :
           el?.toLowerCase() === 'action' ?
             <Stack direction={'row'} justifyContent={'center'} alignItems={'center'} gap={1}>
+              {
+                viewLabel && (
+                <IconButton onClick={(e: any) => onViewClick(params.row.id, e, params?.row)} size='small' disableFocusRipple sx={{ borderRadius: '6px', gap: 0.5 }}>
+                  <Typography variant='body2' fontSize={'.8rem'}>{viewLabel || 'View'}</Typography>
+                </IconButton>
+                )
+              }
               <IconButton onClick={(e: any) => actionClick(params.row.id, e, params?.row)} size='small' disableFocusRipple sx={{ borderRadius: '6px', gap: 0.5 }}>
                 <PencilEdit01Icon size={18} />
                 <Typography variant='body2' fontSize={'.8rem'}>{editLabel || 'Edit'}</Typography>
@@ -71,7 +80,7 @@ const getTableColumns = (headers: string[], editLabel?: string, actionClick: (id
   ))
 }
 
-const MuiTable = ({ data, headers, onDeleteClick, editLabel, onEditClick }: Props) => {
+const MuiTable = ({ data, headers, onDeleteClick, editLabel, onEditClick, viewLabel, onViewClick }: Props) => {
   const [pageSize, setPageSize] = useState(20);
 
   return (
@@ -97,8 +106,10 @@ const MuiTable = ({ data, headers, onDeleteClick, editLabel, onEditClick }: Prop
         columns={getTableColumns(
           headers,
           editLabel,
-          (id: string, event, rowData) => onEditClick(id, event, rowData),
-          (id: string, event) => onDeleteClick(id, event)
+          (id: string, event, rowData) => onEditClick!(id, event, rowData),
+          (id: string, event) => onDeleteClick!(id, event),
+          viewLabel,
+          (id: string, event, rowData) => onViewClick!(id, event, rowData),
         ) || []
         }
         getRowId={(row: any) => row?.id}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PageHeader from '../../../components/shared/PageHeader'
-import { Box, Grid, InputAdornment, MenuItem, Typography } from '@mui/material'
+import { Box, Grid, InputAdornment, MenuItem, Stack, Typography } from '@mui/material'
 import { InputField, RoundButton } from '../../../components/shared'
 import { base } from '../../../config/appConfig'
 import swal from 'sweetalert'
@@ -15,13 +15,13 @@ const Settings = () => {
     const { startLoading, stopLoading } = useLoader()
     const [value, setValue] = useState({ old: '', password: '', confirmPassword: '' })
     const [staffPass, setStaffPass] = useState({ id: '', password: '', confirmPassword: '' })
-    const [price, setPrice] = useState({ amount: 0, year: '', month: '' })
+    const [price, setPrice] = useState({ amount: 0, year: '', month: '', closingDate: '' })
     const [letter, setLetter] = useState({ startDate: '', endDate: '', bank: '', accountNo: '', accountName: '', utilities: '' })
     const [load, setLoad] = useState(false)
 
     useEffect(() => {
         if (formPrice) {
-            setPrice({ amount: formPrice?.amount, month: formPrice?.month, year: formPrice?.year })
+            setPrice({ amount: formPrice?.amount, month: formPrice?.month, year: formPrice?.year, closingDate: formPrice?.year })
         }
     }, [formPrice])
     useEffect(() => {
@@ -55,9 +55,10 @@ const Settings = () => {
         if (price?.amount === 0) return swal('Error', 'Please provide an amount for admission forms ', 'error')
         if ((price?.month === '')) return swal('Error', 'Sorry, admission month cannot be empty', 'error')
         if ((price?.year === '')) return swal('Error', 'Sorry, admission year cannot be empty', 'error')
+        if ((price?.closingDate === '')) return swal('Error', 'Sorry, admission close date be empty', 'error')
         try {
             startLoading('Updating admission form details. Please wait...')
-            await base.patch('/api/admission/details', { amount: price?.amount, month: price?.month, year: price?.year })
+            await base.patch('/api/admission/details', { amount: price?.amount, month: price?.month, year: price?.year, closingDate: price?.closingDate })
             swal('Success', 'Admission forms details updated successfully', 'success').then(reload)
         } catch (error: any) {
             swal('Error', error?.response?.data?.message || 'Sorry, could not update admission forms details', 'error').then(reload)
@@ -149,21 +150,30 @@ const Settings = () => {
                                     startAdornment: <InputAdornment position='start'>GHS</InputAdornment>
                                 }}
                             />
+                            <Stack direction={'row'} gap={2} sx={{ width: '100% ' }}>
+                                <InputField size={'small'} showTopLabel isRequired
+                                    type={'text'} fullWidth label='Admission Month'
+                                    variant={'outlined'} sx={{ width: '18rem' }}
+                                    onChange={(e) => { setPrice(prev => ({ ...prev, month: e?.target?.value })) }}
+                                    value={price?.month} isSelect
+                                >
+                                    {allMonths?.map((el, i) => <MenuItem key={i} value={el}>{el}</MenuItem>)}
+                                </InputField>
+                                <InputField size={'small'} sx={{ width: '18rem' }} showTopLabel isRequired
+                                    type={'text'} fullWidth={true} label='Admission Year'
+                                    variant={'outlined'} value={price?.year} isSelect
+                                    onChange={(e) => { setPrice(prev => ({ ...prev, year: e?.target?.value })) }}
+                                >
+                                    {getYearRange(2024)?.map((el, i) => <MenuItem key={i} value={el}>{el}</MenuItem>)}
+                                </InputField>
+                            </Stack>
                             <InputField size={'small'} showTopLabel isRequired
-                                type={'text'} fullWidth label='Admission Month'
-                                variant={'outlined'}
-                                onChange={(e) => { setPrice(prev => ({ ...prev, month: e?.target?.value })) }}
-                                value={price?.month} isSelect
-                            >
-                                {allMonths?.map((el, i) => <MenuItem key={i} value={el}>{el}</MenuItem>)}
-                            </InputField>
-                            <InputField size={'small'} showTopLabel isRequired
-                                type={'text'} fullWidth label='Admission Year'
-                                variant={'outlined'} value={price?.year} isSelect
-                                onChange={(e) => { setPrice(prev => ({ ...prev, year: e?.target?.value })) }}
-                            >
-                                {getYearRange(2023)?.map((el, i) => <MenuItem key={i} value={el}>{el}</MenuItem>)}
-                            </InputField>
+                                type={'date'} fullWidth label='Closing Date' defaultValue={price?.closingDate}
+                                variant={'outlined'} placeholder={formPrice?.amount} inputProps={{ min: new Date().toISOString().split('T')[0] }}
+                                onChange={(e) => { setPrice(prev => ({ ...prev, closingDate: e?.target?.value })) }}
+                                value={price?.closingDate}
+
+                            />
                             <RoundButton loading={load}
                                 onClick={updateAdmissionDetails} sx={{ mb: 2 }}
                                 text='Update Details' color={'secondary'}
@@ -177,7 +187,7 @@ const Settings = () => {
                 {/* Admission Letter */}
                 <Grid item xs={12} sm={12} md={12} lg={12}>
                     <Box bgcolor={'#fff'} borderRadius={'10px'} >
-                        <Typography mt={2} variant='h6' px={3} py={2} mb={2} fontWeight={600} bgcolor={'lightblue'} fontSize={'1.1rem'}>Admission Letter</Typography>
+                        <Typography mt={2} variant='h6' px={3} py={2} mb={2} fontWeight={600} bgcolor={'lightblue'} fontSize={'1.1rem'}>Admission Letter Details</Typography>
                         <Box sx={{ py: '1rem', mx: 4 }}>
                             <InputField size={'small'} showTopLabel isRequired
                                 type={'date'} fullWidth label='Admission Start Date'
