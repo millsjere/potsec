@@ -24,7 +24,7 @@ const ProgrammeDetail = lazy(
 );
 const Departments = lazy(() => import("../pages/staff/department/Departments"));
 const Transcripts = lazy(() => import("../pages/staff/transcript/Transcript"));
-const Ticketing = lazy(() => import("../pages/staff/support/Ticket"));
+const Videos = lazy(() => import("../pages/staff/support/Videos"));
 const Settings = lazy(() => import("../pages/staff/support/Settings"));
 const Grading = lazy(() => import("../pages/staff/grading/AcademicResult"));
 
@@ -111,9 +111,9 @@ const DocumentRoute = {
   role: "staff",
 };
 
-const TicketRoute = {
-  path: "/staff/ticketing",
-  component: Ticketing,
+const VideosRoute = {
+  path: "/staff/videos",
+  component: Videos,
   isAuth: "yes",
   role: "staff",
 };
@@ -145,8 +145,8 @@ export const staffRoutes: RouteProps[] = [
   ProgrammeRoute,
   ProgrammeDetailRoute,
   DepartmentRoute,
-  TicketRoute,
+  VideosRoute,
   SettingsRoute,
   DocumentRoute,
-  GradingRoute
+  GradingRoute,
 ];

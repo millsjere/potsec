@@ -17,8 +17,18 @@ const AdmissionDocument = ({ student, enrollment, bankDetails }: { student: any,
     const { accountName, accountNo, bank, startDate, endDate, utilities } = bankDetails
 
     const formatDate = (date: string) => {
-        return new Date(date)?.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+        return new Date(date)?.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
     }
+
+    function getCurrentMonthYear() {
+        const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+        const now = new Date();
+        const month = months[now.getMonth()]; // Get month abbreviation
+        const year = now.getFullYear().toString().slice(-2); // Get last two digits of the year
+
+        return `/${month}/${year}`;
+    }
+
     const styles = StyleSheet.create({
         page: { fontFamily: "Roboto", padding: 30, fontSize: 12 },
         header: { fontFamily: "Roboto", fontSize: 11, fontWeight: 'extrabold', lineHeight: 1.3 },
@@ -54,7 +64,7 @@ const AdmissionDocument = ({ student, enrollment, bankDetails }: { student: any,
 
                 <View style={styles.section}>
                     <View style={styles.stack}>
-                        <Text style={styles.text}>POTSEC/ADMS/JAN/25</Text>
+                        <Text style={styles.text}>POTSEC/ADMS{getCurrentMonthYear()}</Text>
                         <Text style={styles.text}></Text>
                     </View>
                 </View>
@@ -73,13 +83,13 @@ const AdmissionDocument = ({ student, enrollment, bankDetails }: { student: any,
                     </Text>
                     <Text style={[styles.title, styles.boldText, styles.underlineText]}>ADMISSION TO POTSEC – {enrollment?.year} ACADEMIC YEAR</Text>
                     <Text style={styles.text}>
-                        <Text style={styles.boldText}>1.</Text> We are pleased to inform you that the admission board for Prince Osei-Tutu Skills and Entrepreneurial College, <Text style={styles.boldText}>{student?.campus || '--'}</Text> Campus has offered you admission to pursue <Text style={styles.boldText}>{programme?.duration?.number || 0} {programme?.duration?.type || 'Years'}</Text> in <Text style={styles.boldText}>{programme?.name || '--'}</Text> Programme on <Text style={styles.boldText}>{session || '--'}</Text> option starting from <Text style={styles.boldText}>{formatDate(startDate)}</Text>. Our Tuition is 85% practical; you are informed to prepare both in finance and in mind for active participation
+                        <Text style={styles.boldText}>1.</Text> We are pleased to inform you that the admission board for Prince Osei-Tutu Skills and Entrepreneurial College, <Text style={styles.boldText}>{student?.campus || '--'}</Text> Campus has offered you admission to pursue <Text style={styles.boldText}>{programme?.duration?.number || 0} {(programme?.duration?.type === 'years' ? 'year(s)' : 'month(s)') || 'Year(s)'}</Text> in <Text style={styles.boldText}>{programme?.name || '--'}</Text> Programme on <Text style={styles.boldText}>{session || '--'}</Text> option starting from <Text style={styles.boldText}>{formatDate(startDate)}</Text>. Our Tuition is 85% practical; you are informed to prepare both in finance and in mind for active participation
                     </Text>
                     <Text style={styles.text}>
-                        <Text style={styles.boldText}>2.</Text> You are required to make nonrefundable Fees payment of <Text style={styles.boldText}>{programme?.tuition?.words || '--'} (GHS{programme?.tuition?.amount || 0})</Text> before <Text style={styles.boldText}>{formatDate(endDate)}</Text>, if you accept this offer of admission. The Amount covers your Admission Fees and Tuition Fees for the First Semester. Payment must be made at any <Text style={styles.boldText}>{bank}</Text> branch into the college account <Text style={styles.boldText}>{accountNo}</Text> all bearing the name <Text style={styles.boldText}>{accountName}</Text>, where there is no <Text style={styles.boldText}>{bank}</Text>, you may buy Bankers drafts at any Bank except rural banks or may pay into College MTN Mobile Money account <Text style={styles.boldText}>0549262879</Text> with the name <Text style={styles.boldText}>PRINCE OSEI-TUTU</Text>. Your Tuition fees for each of the subsequence Semester is <Text style={styles.boldText}>GHS700</Text>. Attached is the copy your prospectus
+                        <Text style={styles.boldText}>2.</Text> You are required to make non-refundable fees payment of <Text style={styles.boldText}>{programme?.tuition?.words || '--'} (GHS {programme?.tuition?.amount || 0.00})</Text> before <Text style={styles.boldText}>{formatDate(endDate)}</Text>, if you accept this offer of admission. The Amount covers your Admission Fees and Tuition Fees for the First Semester. <Text style={styles.boldText}>Payment must be made at any {bank} branch into the college account {accountNo}</Text> all bearing the name <Text style={styles.boldText}>{accountName}</Text>, where there is no <Text style={styles.boldText}>{bank}</Text>, you may buy Bankers drafts at any Bank except rural banks or may pay into College <Text style={styles.boldText}>MTN Mobile Money account 0549262879</Text> with the name <Text style={styles.boldText}>PRINCE OSEI-TUTU</Text>. Your Tuition fees for each of the subsequence Semester is <Text style={styles.boldText}>GHS {programme?.tuition?.semester || '0.00'}</Text>. Attached is the copy your prospectus
                     </Text>
                     <Text style={styles.text}>
-                        <Text style={styles.boldText}>3.</Text> Note that, the space for accommodation on campus for students is limited. Contact the College administrator on 0247142800 if you wish to be considered for accommodation. {utilities}
+                        <Text style={styles.boldText}>3.</Text> Note that, the space for accommodation on campus for students is limited. Contact the College administrator on 0247142800 if you wish to be considered for accommodation. <Text style={styles.boldText}>{utilities}</Text>
                     </Text>
                     <Text style={styles.text}>
                         <Text style={styles.boldText}>4.</Text> The College reserves the right to revise its fees and other arrangements without prior notice, and this letter may be corrected or revoked if a mistake is detected or if it was issued in error

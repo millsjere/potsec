@@ -389,14 +389,14 @@ const StudentDetails = () => {
                     <Stack direction={'row'} justifyContent={'space-between'} mb={2}>
                         <Typography>Preview Admission Letter</Typography>
                         <Stack direction={'row'} gap={1}>
-                            <RoundButton
+                            {response?.role === 'applicant' && <RoundButton
                                 sx={{ borderColor: grey[700], borderRadius: '6px' }}
                                 variant={'contained'} color={'secondary'}
                                 onClick={() => acceptHandler('admit')}
                                 disableElevation
                                 text='Admit Applicant'
                                 size={'small'}
-                            />
+                            />}
                             <RoundButton
                                 sx={{ borderColor: grey[700], borderRadius: '6px' }}
                                 variant={'contained'} color={'primary'}

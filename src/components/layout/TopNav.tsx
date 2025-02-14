@@ -67,7 +67,7 @@ const TopNav = ({ drawerWidth, handleDrawerToggle }: { drawerWidth: number, hand
             {
               isStaff &&
               <RoundButton variant={'contained'} startIcon={<TaskAdd02Icon size={18} />}
-                text={'Upload'} sx={{ padding: '.3rem .8rem', borderRadius: '8px' }}
+                text={'Bulk Upload'} sx={{ padding: '.3rem .8rem', borderRadius: '8px' }}
                 color={'primary'} onClick={() => { setOpenSearch(true) }}
                 disableElevation
               />

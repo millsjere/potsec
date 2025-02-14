@@ -21,12 +21,12 @@ const Settings = () => {
 
     useEffect(() => {
         if (formPrice) {
-            setPrice({ amount: formPrice?.amount, month: formPrice?.month, year: formPrice?.year, closingDate: formPrice?.year })
+            setPrice({ amount: formPrice?.amount, month: formPrice?.month, year: formPrice?.year, closingDate: formPrice?.closingDate })
         }
     }, [formPrice])
     useEffect(() => {
         if (admissionLetter) {
-            setLetter({ startDate: admissionLetter?.startDate, endDate: admissionLetter?.endDate, bank: admissionLetter?.bank, accountNo: admissionLetter?.accountNo, accountName: admissionLetter?.accountName, utilities: admissionLetter?.utilities })
+            setLetter({ startDate: admissionLetter?.startDate?.split('T')[0], endDate: admissionLetter?.endDate?.split('T')[0], bank: admissionLetter?.bank, accountNo: admissionLetter?.accountNo, accountName: admissionLetter?.accountName, utilities: admissionLetter?.utilities })
         }
     }, [admissionLetter])
 
@@ -40,7 +40,7 @@ const Settings = () => {
 
             setLoad(true)
             startLoading('Updating password. Please wait...')
-            await base.patch('/api/staff/reset-password', { password: value?.password, oldPassword: value?.old })
+            await base.post('/api/staff/password-reset', { password: value?.password, oldPassword: value?.old })
             swal('Success', 'Password updated successfully', 'success').then(reload)
         } catch (error: any) {
             console.log(error)
@@ -168,7 +168,7 @@ const Settings = () => {
                                 </InputField>
                             </Stack>
                             <InputField size={'small'} showTopLabel isRequired
-                                type={'date'} fullWidth label='Closing Date' defaultValue={price?.closingDate}
+                                type={'date'} fullWidth label={`Closing Date`} defaultValue={price?.closingDate}
                                 variant={'outlined'} placeholder={formPrice?.amount} inputProps={{ min: new Date().toISOString().split('T')[0] }}
                                 onChange={(e) => { setPrice(prev => ({ ...prev, closingDate: e?.target?.value })) }}
                                 value={price?.closingDate}
@@ -220,7 +220,7 @@ const Settings = () => {
                                 onChange={(e) => { setLetter(prev => ({ ...prev, accountName: e?.target?.value })) }}
                             />
                             <InputField size={'small'} showTopLabel isRequired
-                                type={'text'} fullWidth label='Utilities'
+                                type={'text'} fullWidth label='Utility Details'
                                 variant={'outlined'} placeholder={''} multiline rows={4}
                                 value={letter?.utilities}
                                 onChange={(e) => { setLetter(prev => ({ ...prev, utilities: e?.target?.value })) }}

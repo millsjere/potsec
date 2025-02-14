@@ -3,14 +3,16 @@ import PageHeader from '../../../components/shared/PageHeader'
 import { Avatar, Box, Grid, MenuItem, Stack, Typography } from '@mui/material'
 import { InputField, RoundButton } from '../../../components/shared'
 import { certifications, getApplicationForm, initState, studentReducerFn, validateFile } from '../../../utils'
-import UploadComp from '../../../components/upload/UploadComp'
+// import UploadComp from '../../../components/upload/UploadComp'
 import swal from 'sweetalert'
 import { useLoader } from '../../../context/LoaderContext'
 import { base } from '../../../config/appConfig'
 import { useNavigate } from 'react-router-dom'
+import useAxiosFetch from '../../../hooks/useAxiosFetch'
 
 
 const NewApplication = () => {
+    const { response: allProgrammes } = useAxiosFetch('/api/staff/programmes')
     const ref = useRef()
     const navigate = useNavigate()
     const { startLoading, stopLoading } = useLoader()
@@ -101,7 +103,7 @@ const NewApplication = () => {
                                 headers: { 'content-type': 'multipart/form-data' }
                             })
                             await swal('Success', 'Applicant account created successfully', 'success').then(() => navigate('/staff/applicants'))
-                        }else{
+                        } else {
                             await swal('Success', 'Applicant account created successfully', 'success').then(() => navigate('/staff/applicants'))
                         }
                     } catch (error: any) {
@@ -149,7 +151,10 @@ const NewApplication = () => {
                                                                     }}
                                                                 >
                                                                     {
-                                                                        el?.options?.map((item, i) => <MenuItem key={i} value={item}>{item}</MenuItem>)
+                                                                        (el?.label === 'Select Programme') ?
+                                                                            allProgrammes?.map((item: any, i: number) => <MenuItem key={i} value={item?.id}>{item?.name}</MenuItem>)
+                                                                            :
+                                                                            el?.options?.map((item, i) => <MenuItem key={i} value={item}>{item}</MenuItem>)
                                                                     }
                                                                 </InputField>
                                                             </Grid>
@@ -187,7 +192,7 @@ const NewApplication = () => {
                             </Box>
                         </Box>
 
-                        <Box bgcolor={'#fff'} borderRadius={'10px'} mb={4}>
+                        {/* <Box bgcolor={'#fff'} borderRadius={'10px'} mb={4}>
                             <Typography mt={2} variant='h6' px={3} py={2} mb={2} fontWeight={600} bgcolor={'lightblue'} fontSize={'1.1rem'}>Documents</Typography>
                             <Box p={3}>
                                 <UploadComp
@@ -199,7 +204,7 @@ const NewApplication = () => {
                                     onUpload={(_file: any) => { }}
                                 />
                             </Box>
-                        </Box>
+                        </Box> */}
 
                         <Stack direction={'row'} gap={2}>
                             {/* <RoundButton onClick={onFormReset} fullWidth text='Reset Form' color={'secondary'} variant={'outlined'} disableElevation /> */}

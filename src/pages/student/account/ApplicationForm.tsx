@@ -2,7 +2,7 @@ import React, { useEffect, useReducer, useRef, useState } from 'react'
 import PageHeader from '../../../components/shared/PageHeader'
 import { Avatar, Box, Grid, MenuItem, Stack, Typography } from '@mui/material'
 import { InputField, RoundButton } from '../../../components/shared'
-import UploadComp from '../../../components/upload/UploadComp'
+// import UploadComp from '../../../components/upload/UploadComp'
 import { useNavigate } from 'react-router-dom'
 import { useLoader } from '../../../context/LoaderContext'
 import { certifications, getApplicationForm, initState, reload, studentReducerFn, uploadPhoto, validateFormData } from '../../../utils'
@@ -12,6 +12,8 @@ import useAxiosFetch from '../../../hooks/useAxiosFetch'
 import SubmitForm from '../../../assets/images/submit-file.png'
 
 const ApplicationForm = () => {
+    const { response: formData } = useAxiosFetch('/api/admission/form')
+    const { response: allProgrammes } = useAxiosFetch('/api/staff/programmes')
     const ref = useRef()
     const currentUser = getData('uid')
     const navigate = useNavigate()
@@ -19,7 +21,6 @@ const ApplicationForm = () => {
     const [selectProgrammes, setSelectProgrammes] = useState<string[]>([])
     const [preview, setPreview] = useState<any>(null)
     const [photo, setPhoto] = useState<File>()
-    const { response: formData } = useAxiosFetch('/api/admission/form')
     const [formInput, dispatch] = useReducer(studentReducerFn, initState)
 
     useEffect(() => {
@@ -116,7 +117,10 @@ const ApplicationForm = () => {
                                                                             }}
                                                                         >
                                                                             {
-                                                                                el?.options?.map((item, i) => <MenuItem key={i} value={item}>{item}</MenuItem>)
+                                                                                (el?.label === 'Select Programme') ?
+                                                                                    allProgrammes?.map((item: any, i: number) => <MenuItem key={i} value={item?.id}>{item?.name}</MenuItem>)
+                                                                                    :
+                                                                                    el?.options?.map((item, i) => <MenuItem key={i} value={item}>{item}</MenuItem>)
                                                                             }
                                                                         </InputField>
                                                                     </Grid>
@@ -163,7 +167,7 @@ const ApplicationForm = () => {
                                     </Box>
                                 </Box>
 
-                                <Box bgcolor={'#fff'} borderRadius={'10px'} mb={4}>
+                                {/* <Box bgcolor={'#fff'} borderRadius={'10px'} mb={4}>
                                     <Typography mt={2} variant='h6' px={3} py={2} mb={2} fontWeight={600} bgcolor={'lightblue'} fontSize={'1.1rem'}>Documents</Typography>
                                     <Box p={3}>
                                         <UploadComp
@@ -175,7 +179,7 @@ const ApplicationForm = () => {
                                             onUpload={(_file: any) => { }}
                                         />
                                     </Box>
-                                </Box>
+                                </Box> */}
 
                                 <Stack direction={'row'} gap={2}>
                                     {/* <RoundButton onClick={onFormReset} fullWidth text='Reset Form' color={'secondary'} variant={'outlined'} disableElevation /> */}

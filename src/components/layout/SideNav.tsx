@@ -1,5 +1,5 @@
 import { Avatar, Box, Collapse, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, styled, Toolbar, Typography } from '@mui/material'
-import { AddTeamIcon, ArrowDown01Icon, ArrowRight01Icon, Building03Icon, DashboardSquare01Icon, File01Icon, LibraryIcon, LicenseThirdPartyIcon, LogoutCircle01Icon, Settings01Icon, StudentCardIcon, TaskAdd02Icon, Ticket02Icon, UserAccountIcon, UserGroupIcon, VideoReplayIcon } from 'hugeicons-react';
+import { AddTeamIcon, ArrowDown01Icon, ArrowRight01Icon, Building03Icon, DashboardSquare01Icon, File01Icon, LibraryIcon, LicenseThirdPartyIcon, LogoutCircle01Icon, Settings01Icon, StudentCardIcon, TaskAdd02Icon, Ticket02Icon, UserAccountIcon, UserGroupIcon, Video01Icon, VideoReplayIcon } from 'hugeicons-react';
 import React from 'react'
 import Logo from '../../assets/images/logo.png'
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -39,7 +39,7 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
     const isStudent = currentUser?.role === 'student'
     const isStaff = currentUser?.role === 'staff' || currentUser?.role === 'admin'
 
-    console.log(currentUser?.role)
+    // console.log(currentUser?.role)
 
 
     const allMenu = {
@@ -84,7 +84,7 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
 
     const supportMenu: SideBarMenuProps[] = [
         { name: 'Settings', icon: <Settings01Icon size={20} />, path: '/staff/settings' },
-        // { name: 'Tickets', icon: <Ticket02Icon size={20} />, path: '/staff/ticketing' },
+        { name: 'How To Videos', icon: <Video01Icon size={20} />, path: '/staff/videos' },
     ]
 
     const drawer = (

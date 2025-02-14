@@ -13,7 +13,7 @@ import { useUploader } from '../../../context/UploadContext'
 const AcademicResult = () => {
   const { openUpload } = useUploader()
   const { isLoading, response: data } = useAxiosFetch('/api/staff/results/files')
-  const headers = ['File Name', 'Upload By', 'Date Uploaded', 'Programme', 'Course', 'Year', 'Action']
+  const headers = ['File Name', 'Upload By', 'Date Uploaded', 'Programme', 'Course', 'Year']
   const [params, setParams] = useState({ label: '', value: '' })
 
 
@@ -52,7 +52,7 @@ const AcademicResult = () => {
                 headers={headers}
                 onEditClick={(id: string) => { }}
                 onDeleteClick={(id: string) => { }}
-                editLabel='Download'
+              // editLabel='Download'
               />
             </>
 

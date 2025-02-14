@@ -336,6 +336,25 @@ const BulkUpload = ({ onClose }: Props) => {
         }
     }
 
+    // download template files //
+    const getDownloadLink = (key: string) => {
+        switch (key) {
+            case 'staff':
+                return '/files/staff_template.csv'
+            case 'courses':
+                return '/files/course_template.csv'
+            case 'programmes':
+                return '/files/programmes_template.csv'
+            case 'departments':
+                return '/files/department_template.csv'
+            case 'students':
+                return '/files/department_template.csv'
+            case 'grades':
+                return '/files/grade_template.csv'
+            default:
+                break;
+        }
+    }
 
 
     return (
@@ -354,10 +373,10 @@ const BulkUpload = ({ onClose }: Props) => {
                 uploadStage === 0 &&
                 <Box m={'0 auto'} width={'70%'} height={'100%'} display={'flex'} flexDirection={'column'} justifyContent={'flex-start'} alignItems={'center'}>
                     <Stack direction={'row'} gap={4} flexWrap={'wrap'} justifyContent={'center'}>
-                        <UploadCard onClick={(val) => onUploadTypeSelect(val, 'excel')}
+                        {/* <UploadCard onClick={(val) => onUploadTypeSelect(val, 'excel')}
                             icon={<LicenseThirdPartyIcon id='icon' style={{ transition: 'all .2s ease-in' }} color='#acacac' size={70} />}
                             title='STUDENTS'
-                        />
+                        /> */}
 
                         <UploadCard onClick={(val) => onUploadTypeSelect(val, 'excel')}
                             icon={<AddTeamIcon id='icon' style={{ transition: 'all .2s ease-in' }} color='#acacac' size={70} />}
@@ -379,14 +398,14 @@ const BulkUpload = ({ onClose }: Props) => {
                             icon={<TaskEdit01Icon id='icon' style={{ transition: 'all .2s ease-in' }} color='#acacac' size={70} />}
                             title='GRADES'
                         />
-                        <UploadCard onClick={(val) => onUploadTypeSelect(val, 'image')}
+                        {/* <UploadCard onClick={(val) => onUploadTypeSelect(val, 'image')}
                             icon={<UserIdVerificationIcon id='icon' style={{ transition: 'all .2s ease-in' }} color='#acacac' size={70} />}
                             title='STUDENTS PHOTO'
                         />
                         <UploadCard onClick={(val) => onUploadTypeSelect(val, 'image')}
                             icon={<UserIdVerificationIcon id='icon' style={{ transition: 'all .2s ease-in' }} color='#acacac' size={70} />}
                             title='STAFF PHOTO'
-                        />
+                        /> */}
 
                     </Stack>
                 </Box>
@@ -432,6 +451,10 @@ const BulkUpload = ({ onClose }: Props) => {
                         fileName={file?.name}
                         onSubmit={onFormSubmit}
                     />
+                    <div style={{ color: 'blue', textAlign: 'center', textDecoration: 'underline', textTransform: 'capitalize', margin: '2rem' }}>
+                        <a href={getDownloadLink(selected!)} download>Download {selected} Template File</a>
+                    </div>
+                    <Typography paragraph sx={{ width: '50%', margin: '0 auto', textAlign: 'center' }}>Please download and use the template for bulk uploads. <br /><b>Note: Do not change/edit the table headers, only replace the data within</b></Typography>
                 </Box>
             }
         </>

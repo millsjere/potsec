@@ -67,7 +67,7 @@ const ResultTranscript = ({ student, semesters }: { student: any, semesters: any
                     <View>
                         <Text style={styles.studentInfo}><Text style={[styles.bold]}>Name:</Text> {student.name}</Text>
                         <Text style={styles.studentInfo}><Text style={[styles.bold]}>Index Number:</Text> {student.indexNumber}</Text>
-                        <Text style={styles.studentInfo}><Text style={[styles.bold]}>Programme:</Text> {student.program}</Text>
+                        <Text style={styles.studentInfo}><Text style={[styles.bold]}>Programme:</Text> {student.programme}</Text>
                         <Text style={styles.studentInfo}><Text style={[styles.bold]}>Academic Year:</Text> {student.year}</Text>
                     </View>
                     <View>
@@ -79,7 +79,7 @@ const ResultTranscript = ({ student, semesters }: { student: any, semesters: any
                 {/* Results for Each Semester */}
                 {semesters?.map((semester: any, index: number) => (
                     <View key={index} style={{ marginBottom: 5 }}>
-                        <Text style={styles.semesterTitle}>{semester?.name} - 2025 </Text>
+                        <Text style={styles.semesterTitle}>{semester?.name} </Text>
                         <View style={styles.table}>
                             <View style={[styles.row, styles.bold]}>
                                 <Text style={styles.cell}>Course Code</Text>

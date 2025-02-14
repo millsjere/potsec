@@ -219,7 +219,7 @@ const ProgrammeDetails = () => {
                             >
                                 {
                                     data?.duration?.type?.toLowerCase() === 'years' ?
-                                        Array(3).fill(1)?.map((_el, i) => `Semester ${i + 1}`)?.map((el, i) => <MenuItem key={i} value={el}>{el}</MenuItem>)
+                                        Array(2).fill(1)?.map((_el, i) => `Semester ${i + 1}`)?.map((el, i) => <MenuItem key={i} value={el}>{el}</MenuItem>)
                                         :
                                         <MenuItem value={data?.duration?.type + ' ' + data?.duration?.number}>{`${data?.duration?.number} ${data?.duration?.type}`}</MenuItem>
                                 }

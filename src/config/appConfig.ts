@@ -2,11 +2,11 @@ import CryptoJS from "crypto-js";
 import axios from "axios";
 
 const LIVEURL = "https://api.potsec.edu.gh/";
-const DEVURL = "http://localhost:5000/";
+const DEVURL = "http://localhost:8000/";
 const uniqueBaseKey = "POTSECAPP0632KEY";
 
 export const base = axios.create({
-  baseURL: LIVEURL,
+  baseURL: DEVURL,
   headers: {
     "Content-Type": "application/json",
     "Accept-Language": "en-US,en;q=0.9",

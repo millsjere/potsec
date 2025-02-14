@@ -222,7 +222,7 @@ const AddStaff = ({ open, onClose, type, callBack, xdata }: Props) => {
                                                                     el?.label === 'Department' ?
                                                                         allDepartments?.map((item: any, i: number) => <MenuItem key={i} value={item?.id}>{item?.name}</MenuItem>)
                                                                         :
-                                                                        el?.options?.map((item, i) => <MenuItem key={i} value={item}>{item}</MenuItem>)
+                                                                        el?.options?.map((item, i) => <MenuItem key={i} value={item?.toLowerCase()}>{item}</MenuItem>)
                                                                 }
                                                             </InputField>
                                                         </Grid>

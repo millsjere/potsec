@@ -41,9 +41,9 @@ const getTableColumns = (headers: string[], editLabel?: string, actionClick: (id
             <Stack direction={'row'} justifyContent={'center'} alignItems={'center'} gap={1}>
               {
                 viewLabel && (
-                <IconButton onClick={(e: any) => onViewClick(params.row.id, e, params?.row)} size='small' disableFocusRipple sx={{ borderRadius: '6px', gap: 0.5 }}>
-                  <Typography variant='body2' fontSize={'.8rem'}>{viewLabel || 'View'}</Typography>
-                </IconButton>
+                  <IconButton onClick={(e: any) => onViewClick(params.row.id, e, params?.row)} size='small' disableFocusRipple sx={{ borderRadius: '6px', gap: 0.5 }}>
+                    <Typography variant='body2' fontSize={'.8rem'}>{viewLabel || 'View'}</Typography>
+                  </IconButton>
                 )
               }
               <IconButton onClick={(e: any) => actionClick(params.row.id, e, params?.row)} size='small' disableFocusRipple sx={{ borderRadius: '6px', gap: 0.5 }}>
@@ -67,7 +67,7 @@ const getTableColumns = (headers: string[], editLabel?: string, actionClick: (id
                             el?.toLowerCase() === 'staff id' ? params?.row?.academics?.staffID || '--' :
                               el?.toLowerCase() === 'courses' ? (params?.row?.courses?.length + ' Courses') || '--' :
                                 el?.toLowerCase() === 'programmes' ? (params?.row?.programmes?.length + ' Programme(s)') :
-                                  el?.toLowerCase() === 'duration' ? (params?.row?.duration?.number + ' ' + params?.row?.duration?.type) || '--' :
+                                  el?.toLowerCase() === 'duration' ? (params?.row?.duration?.number + ' ' + (params?.row?.duration?.type === 'years' ? 'year(s)' : 'month(s)')) || '--' :
                                     (el?.toLowerCase() === 'date applied' || el?.toLowerCase() === 'date uploaded' || el?.toLowerCase() === 'date') ? formatDateTime(params?.row?.createdAt) || '--' :
                                       el?.toLowerCase() === 'file name' ? params?.value || '--' :
                                         el?.toLowerCase() === 'upload by' ? params?.row?.uploadBy?.fullname || '--' :

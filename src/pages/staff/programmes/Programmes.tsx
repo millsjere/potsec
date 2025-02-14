@@ -99,7 +99,7 @@ const Programmes = () => {
         setDepartment(el?.department?.id);
         setType({ label: 'add', value: 1 })
         setDuration({ type: el?.duration?.type, number: el?.duration?.number })
-        setTuition({ words: el?.tuition?.words, amount: el?.tuition?.amount, semester: el?.tuition?.amount })
+        setTuition({ words: el?.tuition?.words, amount: el?.tuition?.amount, semester: el?.tuition?.semester })
         setType({ label: 'edit', value: 1 });
         setOpen(true)
     }
