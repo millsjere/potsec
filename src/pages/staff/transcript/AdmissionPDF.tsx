@@ -7,8 +7,8 @@ import Logo from '../../../assets/images/logo.png'
 Font.register({
     family: "Roboto",
     fonts: [
-        { src: "/fonts/Roboto-Regular.ttf" }, // Regular font
-        { src: "/fonts/Roboto-Bold.ttf", fontWeight: "bold" }, // Bold font
+        { src: "/public/fonts/Roboto-Regular.ttf" }, // Regular font
+        { src: "/public/fonts/Roboto-Bold.ttf", fontWeight: "bold" }, // Bold font
     ],
 });
 

@@ -340,17 +340,17 @@ const BulkUpload = ({ onClose }: Props) => {
     const getDownloadLink = (key: string) => {
         switch (key) {
             case 'staff':
-                return '/files/staff_template.csv'
+                return '/public/files/staff_template.csv'
             case 'courses':
-                return '/files/course_template.csv'
+                return '/public/files/course_template.csv'
             case 'programmes':
-                return '/files/programmes_template.csv'
+                return '/public/files/programmes_template.csv'
             case 'departments':
-                return '/files/department_template.csv'
+                return '/public/files/department_template.csv'
             case 'students':
-                return '/files/department_template.csv'
+                return '/public/files/department_template.csv'
             case 'grades':
-                return '/files/grade_template.csv'
+                return '/public/files/grade_template.csv'
             default:
                 break;
         }

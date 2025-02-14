@@ -1,10 +1,11 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin");
 const Dotenv = require('dotenv-webpack');
 const deps = require("./package.json").dependencies;
 module.exports = (_, argv) => ({
   output: {
-    publicPath: "http://localhost:8001/", //"https://portal.potsec.edu.gh/"
+    publicPath: "https://portal.potsec.edu.gh/", //"https://portal.potsec.edu.gh/"
     filename: '[name].[contenthash].js'
   },
 
@@ -70,6 +71,11 @@ module.exports = (_, argv) => ({
     new HtmlWebPackPlugin({
       template: "./src/index.html",
     }),
-    new Dotenv()
+    new Dotenv(),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: "public", to: "public" } // Adjust paths if necessary
+      ]
+    })
   ],
 });

@@ -10,22 +10,22 @@ const Videos = () => {
 
     const vid = useRef()
     const vidList = [
-        { title: 'Admit a Student', link: '/vids/admit_student.mov' },
-        { title: 'Print or Download Admission Letter', link: '/vids/print_letter.mov' },
-        { title: 'Edit Admission Letter Details', link: '/vids/edit_letter.mov' },
-        { title: 'Generate Student Transcript', link: '/vids/gen_transcript.mov' },
-        { title: 'Add a Staff', link: '/vids/new_staff.mov' },
-        { title: 'Add a Department', link: '/vids/add_dept.mov' },
-        { title: 'Edit a Department', link: '/vids/edit_dept.mov' },
-        { title: 'Delete a Department', link: '/vids/delete_dept.mov' },
-        { title: 'Add a Programme', link: '/vids/add_prog.mov' },
-        { title: 'Edit a Programme', link: '/vids/edit_prog.mov' },
-        { title: 'Bulk Upload - Programmes', link: '/vids/prog_bulk.mov' },
-        { title: 'Add a Course', link: '/vids/add_course.mov' },
-        { title: 'Delete a Course', link: '/vids/del_course.mov' },
-        { title: 'Bulk Upload - Courses', link: '/vids/bulk_courses.mov' },
-        { title: 'Search & Filter', link: '/vids/search_filter.mov' },
-        { title: 'Reset a New Password', link: '/vids/update_pass.mov' },
+        { title: 'Admit a Student', link: 'https://res.cloudinary.com/hiveafrika/video/upload/v1739538584/potsec/videos/admit_student_stwj5m.mov' },
+        { title: 'Print or Download Admission Letter', link: 'https://res.cloudinary.com/hiveafrika/video/upload/v1739538673/potsec/videos/print_letter_qx7bab.mov' },
+        { title: 'Edit Admission Letter Details', link: 'https://res.cloudinary.com/hiveafrika/video/upload/v1739538681/potsec/videos/edit_letter_fquf0i.mov' },
+        { title: 'Generate Student Transcript', link: 'https://res.cloudinary.com/hiveafrika/video/upload/v1739538622/potsec/videos/gen_transcript_zstx41.mov' },
+        { title: 'Add a Staff', link: 'https://res.cloudinary.com/hiveafrika/video/upload/v1739538644/potsec/videos/new_staff_do9eqh.mov' },
+        { title: 'Add a Department', link: 'https://res.cloudinary.com/hiveafrika/video/upload/v1739538466/potsec/videos/add_dept_jpancz.mov' },
+        { title: 'Edit a Department', link: 'https://res.cloudinary.com/hiveafrika/video/upload/v1739538510/potsec/videos/edit_dept_ttwnuu.mov' },
+        { title: 'Delete a Department', link: 'https://res.cloudinary.com/hiveafrika/video/upload/v1739538513/potsec/videos/delete_dept_rmr5li.mov' },
+        { title: 'Add a Programme', link: 'https://res.cloudinary.com/hiveafrika/video/upload/v1739538480/potsec/videos/add_prog_ofhjpi.mov' },
+        { title: 'Edit a Programme', link: 'https://res.cloudinary.com/hiveafrika/video/upload/v1739538625/potsec/videos/edit_prog_bdzw03.mov' },
+        { title: 'Bulk Upload - Programmes', link: 'https://res.cloudinary.com/hiveafrika/video/upload/v1739538624/potsec/videos/prog_bulk_kiyw97.mov' },
+        { title: 'Add a Course', link: 'https://res.cloudinary.com/hiveafrika/video/upload/v1739538457/potsec/videos/add_course_aelv5m.mov' },
+        { title: 'Delete a Course', link: 'https://res.cloudinary.com/hiveafrika/video/upload/v1739538513/potsec/videos/del_course_lzzjwv.mov' },
+        { title: 'Bulk Upload - Courses', link: 'https://res.cloudinary.com/hiveafrika/video/upload/v1739538557/potsec/videos/bulk_courses_yhyovb.mov' },
+        { title: 'Search & Filter', link: 'https://res.cloudinary.com/hiveafrika/video/upload/v1739538621/potsec/videos/search_filter_bkq6mc.mov' },
+        { title: 'Reset a New Password', link: 'https://res.cloudinary.com/hiveafrika/video/upload/v1739538611/potsec/videos/update_pass_vf4b3n.mov' },
     ]
     const playToggle = () => {
         if (play) {
