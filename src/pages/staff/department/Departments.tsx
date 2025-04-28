@@ -78,7 +78,7 @@ const Departments = () => {
             <PageHeader title={'All Departments'} breadcrumbs={[{ label: 'Departments', link: '#' }]} />
             <FilterBar
                 showView={false}
-                showExport={true}
+                showExport={false}
                 isLoading={isLoading}
                 moreBtns={
                     <RoundButton
@@ -155,13 +155,13 @@ const Departments = () => {
                     showTopLabel
                     label='Name' fullWidth
                     size={'small'} value={value?.name}
-                    onChange={(e) => setValue(prev => ({ ...prev, name: e?.target?.value }))}
+                    onChange={(e) => setValue(prev => ({ ...prev, name: e?.target?.value?.toUpperCase() }))}
                 />
                 <InputField
                     showTopLabel
                     label='Head of Department' fullWidth
                     size={'small'} value={value?.head || ''}
-                    onChange={(e) => setValue(prev => ({ ...prev, head: e?.target?.value }))}
+                    onChange={(e) => setValue(prev => ({ ...prev, head: e?.target?.value?.toUpperCase() }))}
                 />
             </ModalItem>
 

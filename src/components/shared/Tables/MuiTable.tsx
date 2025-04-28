@@ -60,8 +60,8 @@ const getTableColumns = (headers: string[], editLabel?: string, actionClick: (id
               el?.toLowerCase() === 'phone' ? params?.value?.mobile || params?.value || '--' :
                 el?.toLowerCase() === 'index no.' ? params?.row?.enrollment?.index || '--' :
                   el?.toLowerCase() === 'programme' ? params?.row?.enrollment?.programme?.name || params?.row?.enrollment?.programme || params?.row?.academics?.programme || params?.row?.course?.program?.name || '--' :
-                    el?.toLowerCase() === 'campus' ? params?.value || params?.row?.academics?.campus :
-                      el?.toLowerCase() === 'year' ? params?.row?.enrollment?.year || `Year ${params?.row?.course?.year}` || '--' :
+                    el?.toLowerCase() === 'campus' ? params?.value || params?.row?.academics?.campus || '--' :
+                      el?.toLowerCase() === 'year' ? params?.row?.enrollment?.year || `Year ${params?.row?.course?.year || '--'}` || '--' :
                         el?.toLowerCase() === 'department' ? params?.row?.department?.name || params?.row?.academics?.department?.name || '--' :
                           el?.toLowerCase() === 'head of dept' ? params?.row?.head || '--' :
                             el?.toLowerCase() === 'staff id' ? params?.row?.academics?.staffID || '--' :

@@ -1,7 +1,7 @@
 import { Box, Divider, Drawer, IconButton, Stack, Typography } from '@mui/material'
 import { Cancel01Icon } from 'hugeicons-react'
 import React, { } from 'react'
-import { semesters } from '../programmes/ProgrammeDetails'
+import { trimesters } from '../programmes/ProgrammeDetails'
 import CourseItem from '../../../components/shared/Cards/CourseItem'
 import NullState from '../../../components/shared/NullState/NullState'
 import Empty from '../../../assets/images/folders.png'
@@ -56,7 +56,7 @@ const ViewStudentProgrammes = ({ open, onClose, programme }: Props) => {
 
                                     </Stack>
                                     {
-                                        semesters?.map((trm, index) => (
+                                        trimesters?.map((trm, index) => (
                                             <Box key={index} sx={{ minHeight: '20rem', mb: 2, border: '1px solid lightgrey', borderRadius: '0 0 8px 8px' }}>
                                                 <Box bgcolor={'#ededed'} p={1.5}>
                                                     <Typography variant='h6' fontSize={'1.1rem'}>{trm}</Typography>

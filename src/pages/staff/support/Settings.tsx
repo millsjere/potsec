@@ -169,7 +169,7 @@ const Settings = () => {
                             </Stack>
                             <InputField size={'small'} showTopLabel isRequired
                                 type={'date'} fullWidth label={`Closing Date`} defaultValue={price?.closingDate}
-                                variant={'outlined'} placeholder={formPrice?.amount} inputProps={{ min: new Date().toISOString().split('T')[0] }}
+                                variant={'outlined'} placeholder={formPrice?.amount} inputProps={{}}
                                 onChange={(e) => { setPrice(prev => ({ ...prev, closingDate: e?.target?.value })) }}
                                 value={price?.closingDate}
 

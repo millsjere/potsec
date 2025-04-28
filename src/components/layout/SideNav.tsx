@@ -38,6 +38,7 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
     const isApplicant = currentUser?.role === 'applicant'
     const isStudent = currentUser?.role === 'student'
     const isStaff = currentUser?.role === 'staff' || currentUser?.role === 'admin'
+    const isAdmin = currentUser?.role === 'admin'
 
     // console.log(currentUser?.role)
 
@@ -76,6 +77,22 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
             { name: 'Departments', icon: <Building03Icon size={20} />, path: '/staff/departments' },
         ]
     }
+
+    const accountMenu: SideBarMenuProps[] = [
+        {
+            name: 'Institutions', icon: <LicenseThirdPartyIcon size={20} />, hasSubMenu: true, subMenus: [
+                { name: 'Campuses', icon: <TaskAdd02Icon size={20} />, path: '#' },
+                { name: 'Fees', icon: <AddTeamIcon size={20} />, path: '#' },
+            ]
+        },
+        {
+            name: 'Stores', icon: <LicenseThirdPartyIcon size={20} />, hasSubMenu: true, subMenus: [
+                { name: 'Income', icon: <TaskAdd02Icon size={20} />, path: '#' },
+                { name: 'Expenses', icon: <AddTeamIcon size={20} />, path: '#' },
+            ]
+        },
+        { name: 'Report Statement', icon: <File01Icon size={20} />, path: '#' },
+    ]
 
     const extraMenu: SideBarMenuProps[] = [
         { name: 'Academic Results', icon: <StudentCardIcon size={20} />, path: '/staff/grading' },
@@ -133,6 +150,7 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
                 }
                 )}
             </List>
+
             {
                 isStaff && (
                     <>
@@ -148,6 +166,56 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
                                 </ListItem>
                             ))}
                         </List>
+                    </>
+                )
+            }
+            {
+                isAdmin && (
+                    <>
+                        <Divider sx={{ my: 2, bgcolor: '#ffffff30' }} />
+                        <List>
+                            <StyledMenuTitle>ACCOUNTS</StyledMenuTitle>
+                            {accountMenu?.map((menu, index) => (
+                                menu?.hasSubMenu ?
+                                    <div key={index}>
+                                        <ListItem disablePadding sx={{ color: '#fff', bgcolor: menu?.active === path ? '#c2b5ff4a' : 'transparent', ':hover': { bgcolor: '#c2b5ff4a' } }}>
+                                            <ListItemButton disableRipple onClick={() => setOpen({ status: !open.status, name: menu?.name })}>
+                                                <ListItemIcon sx={{ minWidth: '40px', color: '#ffffff90' }}>{menu?.icon}</ListItemIcon>
+                                                <ListItemText sx={{ '& span': { fontSize: '1rem' } }} primary={menu?.name} />
+                                                {(open.status && open.name === menu?.name) ? <ArrowDown01Icon size={18} /> : <ArrowRight01Icon size={18} />}
+                                            </ListItemButton>
+                                        </ListItem>
+                                        <Collapse in={open.status && open.name === menu?.name} timeout='auto'>
+                                            <List >
+                                                {
+                                                    menu?.subMenus?.map((sub, i) => (
+                                                        <ListItem sx={{ color: '#fff', ':hover': { bgcolor: '#c2b5ff4a' } }} key={i} dense onClick={() => navigate(sub?.path)}>
+                                                            <ListItemButton disableRipple>
+                                                                <ListItemIcon sx={{ minWidth: '30px', color: '#ffffff90' }}>{sub?.icon}</ListItemIcon>
+                                                                <ListItemText sx={{ '& span': { fontSize: '1rem' } }} primary={sub?.name} />
+                                                            </ListItemButton>
+                                                        </ListItem>
+                                                    ))
+                                                }
+                                            </List>
+                                        </Collapse>
+                                    </div>
+                                    :
+                                    <ListItem key={index} disablePadding sx={{ color: '#fff', ':hover': { bgcolor: '#c2b5ff4a' } }}>
+                                        <ListItemButton disableRipple onClick={() => navigate(menu?.path!)}>
+                                            <ListItemIcon sx={{ minWidth: '40px', color: '#ffffff90' }}>{menu?.icon}</ListItemIcon>
+                                            <ListItemText sx={{ '& span': { fontSize: '1rem' } }} primary={menu?.name} />
+                                        </ListItemButton>
+                                    </ListItem>
+                            ))}
+                        </List>
+
+                    </>
+                )
+            }
+            {
+                isStaff && (
+                    <>
                         <Divider sx={{ my: 2, bgcolor: '#ffffff30' }} />
                         <List>
                             <StyledMenuTitle>SUPPORT</StyledMenuTitle>
@@ -163,8 +231,10 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
                     </>
                 )
             }
+
+
             {/* User Profile */}
-            <Stack direction={'row'} gap={0} m={'.8rem'} mt={'auto'} borderRadius='10px' overflow={'hidden'} mb={2} sx={{}}>
+            {/* <Stack direction={'row'} gap={0} m={'.8rem'} mt={'auto'} borderRadius='10px' overflow={'hidden'} mb={2} sx={{}}>
                 <Box padding='.6rem .8rem' bgcolor='#c2b5ff4a' color='#fff' sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
                     <Avatar variant='rounded' sx={{ width: '2rem', height: '2rem', borderRadius: '8px', border: '1px solid #fff' }} src={currentUser?.photo || null} alt='user-img' />
                     <span style={{ width: '80%' }}>
@@ -188,7 +258,7 @@ const SideNav = ({ drawerWidth, handleDrawerClose, handleDrawerTransitionEnd, mo
                         })
                     }} size={19} color='#fff' style={{ cursor: 'pointer' }} />
                 </Box>
-            </Stack>
+            </Stack> */}
 
 
         </Box>

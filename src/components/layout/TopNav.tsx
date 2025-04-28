@@ -1,14 +1,16 @@
 
-import { Menu02Icon, MessageNotification01Icon, TaskAdd02Icon } from 'hugeicons-react'
+import { LogoutCircle01Icon, Menu02Icon, MessageNotification01Icon, TaskAdd02Icon } from 'hugeicons-react'
 import { AppBar, Toolbar, IconButton, Badge, Dialog, DialogContent, Slide, SlideProps, Stack, Avatar, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { RoundButton } from '../shared'
 import { grey } from '@mui/material/colors'
 import BulkUpload from '../upload/BulkUpload'
 import NotificationBar from '../shared/Notify/NotificationBar'
-import { base, getData, saveData } from '../../config/appConfig'
+import { base, getData, saveData, sessionTimeout } from '../../config/appConfig'
 import SearchImg from '../../assets/images/search.gif'
 import { useUploader } from '../../context/UploadContext'
+import swal from 'sweetalert'
+import { useNavigate } from 'react-router-dom'
 
 
 const SlideTransition = (props: React.JSX.IntrinsicAttributes & SlideProps) => {
@@ -23,8 +25,10 @@ const TopNav = ({ drawerWidth, handleDrawerToggle }: { drawerWidth: number, hand
   const [check, setCheck] = useState(false)
   const currentUser = getData('uid')
   const notifications = getData('unf')
+  const navigate = useNavigate()
   const isStaff = currentUser?.role === 'staff' || currentUser?.role === 'admin'
   const isApplicant = currentUser?.role === 'applicant'
+  const isStudent = currentUser?.role === 'student'
   const getIsRead = notifications?.filter((el: any) => !el?.isRead)?.length
 
   console.log(currentUser)
@@ -92,7 +96,24 @@ const TopNav = ({ drawerWidth, handleDrawerToggle }: { drawerWidth: number, hand
                 <MessageNotification01Icon />
               </Badge>
             </IconButton>
-            <Avatar src={currentUser?.photo || null} sx={{ cursor: 'pointer', width: '2rem', height: '2rem', border: '1px solid #fff' }} alt='user-img' />
+            <IconButton sx={{ bgcolor: grey[100] }}>
+              <LogoutCircle01Icon onClick={() => {
+                swal({
+                  icon: 'warning',
+                  title: 'Logout',
+                  text: 'Do you want to logout?',
+                  buttons: ['Cancel', 'Logout'],
+                  dangerMode: true,
+                  closeOnClickOutside: false
+                }).then((logout) => {
+                  if (logout) {
+                    sessionTimeout();
+                    (isStudent || isApplicant) ? navigate('/') : navigate('/staff')
+                  }
+                })
+              }} size={25} color='red' style={{ cursor: 'pointer' }} />
+            </IconButton>
+            {/* <Avatar src={currentUser?.photo || null} sx={{ cursor: 'pointer', width: '2rem', height: '2rem', border: '1px solid #fff' }} alt='user-img' /> */}
           </Stack>
         </Toolbar>
       </AppBar>

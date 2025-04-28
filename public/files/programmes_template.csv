@@ -1,2 +1,2 @@
-name,years_months,duration,tuition,amount_in_words,semester_fee
-PACKAGING DESIGN,years,1,2500,Two Thousand Five Hundred Cedis,650
+name,type,years_months,duration,tuition,amount_in_words,trimester_fee
+PACKAGING DESIGN,major,years,1,2500,Two Thousand Five Hundred Cedis,650

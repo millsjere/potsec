@@ -26,34 +26,37 @@ const Programmes = () => {
     const [type, setType] = useState({ label: 'edit', value: 2 })
     const [name, setName] = useState('')
     const [department, setDepartment] = useState('')
+    const [progType, setProgType] = useState('')
     const [duration, setDuration] = useState({ type: '', number: 0 })
-    const [tuition, setTuition] = useState({ words: '', amount: 0, semester: 0 })
+    const [tuition, setTuition] = useState({ words: '', amount: 0, trimester: 0 })
     const [id, setId] = useState<string>()
     const [view, setView] = useState('list')
-    const headers = ['Name', 'Department', 'Duration', 'Courses', 'Action']
+    const headers = ['Name', 'Department', 'Duration', 'Courses', 'Type', 'Action']
     const [params, setParams] = useState({ label: '', value: '' })
 
     const resetForm = () => {
         setOpen(false);
         setName('');
         setDepartment('');
+        setProgType('');
         setType({ label: 'add', value: 1 })
         setDuration({ type: '', number: 0 })
-        setTuition({ words: '', amount: 0, semester: 0 })
+        setTuition({ words: '', amount: 0, trimester: 0 })
     }
 
     const onFormSubmit = async () => {
         if (name === '') return swal('Invalid', 'Please provide a name', 'warning')
+        if (progType === '') return swal('Invalid', 'Please select a program type', 'warning')
         if (department === '') return swal('Invalid', 'Please select a department', 'warning')
         if (tuition?.amount === 0) return swal('Invalid', 'Tuition amount cannot be zero(0)', 'warning')
         if (tuition?.words === '') return swal('Invalid', 'Provide tuition amount in words', 'warning')
-        if (tuition?.semester === 0) return swal('Invalid', 'Tuition per semester cannot be zero(0)', 'warning')
+        if (tuition?.trimester === 0) return swal('Invalid', 'Tuition per trimester cannot be zero(0)', 'warning')
         if (duration?.type === '' || duration?.number === 0) return swal('Invalid', 'Please select a duration. Year/Month cannot be zero(0)', 'warning')
         try {
             startLoading('Creating new department. Please wait..')
             const { data: res } = type?.label === 'add' ?
-                await base.post('/api/staff/programmes/new', { name, department, duration, tuition }) :
-                await base.patch(`/api/staff/programmes/${id}`, { name, department, duration, tuition })
+                await base.post('/api/staff/programmes/new', { name, department, duration, tuition, type: progType }) :
+                await base.patch(`/api/staff/programmes/${id}`, { name, department, duration, tuition, type: progType })
             if (res?.status === 'success') {
                 resetForm()
                 swal('Success', `Programme ${type?.label === 'edit' ? 'updated' : 'created'} successfully`, 'success').then(fetchData)
@@ -97,9 +100,10 @@ const Programmes = () => {
         setId(el?.id);
         setName(el?.name);
         setDepartment(el?.department?.id);
+        setProgType(el?.type);
         setType({ label: 'add', value: 1 })
         setDuration({ type: el?.duration?.type, number: el?.duration?.number })
-        setTuition({ words: el?.tuition?.words, amount: el?.tuition?.amount, semester: el?.tuition?.semester })
+        setTuition({ words: el?.tuition?.words, amount: el?.tuition?.amount, trimester: el?.tuition?.trimester })
         setType({ label: 'edit', value: 1 });
         setOpen(true)
     }
@@ -125,7 +129,7 @@ const Programmes = () => {
                 onExport={() => { }}
                 onFilter={(e: any) => { setParams({ label: e?.target?.value, value: '' }) }}
                 onKeywordChange={(e: any) => { setParams(prev => ({ ...prev, value: e?.target?.value })) }}
-                filterOptions={['Name', 'Department']}
+                filterOptions={['Name', 'Department', 'Type']}
                 selectFieldOptions={depts}
             />
             {
@@ -171,7 +175,7 @@ const Programmes = () => {
                             subtext={`Oops. No programme records were found`}
                             image={Empty}
                             btnText={'Add Programme'}
-                            onClick={() => { setOpen(true) }}
+                            onClick={() => { setType({ label: 'add', value: 1 }); setOpen(true) }}
                             opacity={0.2}
                         />
             }
@@ -199,8 +203,17 @@ const Programmes = () => {
                             label='Name' fullWidth
                             size={'small'}
                             value={name}
-                            onChange={(e) => setName(e?.target?.value)}
+                            onChange={(e) => setName(e?.target?.value?.toUpperCase())}
                         />
+                        <InputField
+                            showTopLabel isSelect
+                            label='Type of Programme' fullWidth
+                            size={'small'} type='select'
+                            onChange={(e) => setProgType(e?.target?.value)}
+                            value={progType}
+                        >
+                            {['Major', 'Special', 'Short']?.map((el: any, i: number) => <MenuItem key={i} value={el}>{el}</MenuItem>)}
+                        </InputField>
                         <InputField
                             showTopLabel isSelect
                             label='Department' fullWidth
@@ -229,10 +242,10 @@ const Programmes = () => {
                         />
                         <InputField
                             showTopLabel
-                            label='Tuition Per Semester' fullWidth
+                            label='Tuition Per Trimester' fullWidth
                             size={'small'} type='number' inputProps={{ min: 0 }}
-                            value={tuition?.semester}
-                            onChange={(e) => setTuition(prev => ({ ...prev, semester: e?.target?.value }))}
+                            value={tuition?.trimester}
+                            onChange={(e) => setTuition(prev => ({ ...prev, trimester: e?.target?.value }))}
                             InputProps={{
                                 startAdornment: <InputAdornment position='start'>GHS</InputAdornment>
                             }}
