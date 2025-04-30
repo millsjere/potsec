@@ -50,7 +50,7 @@ const Programmes = () => {
         if (department === '') return swal('Invalid', 'Please select a department', 'warning')
         if (tuition?.amount === 0) return swal('Invalid', 'Tuition amount cannot be zero(0)', 'warning')
         if (tuition?.words === '') return swal('Invalid', 'Provide tuition amount in words', 'warning')
-        if (tuition?.trimester === 0) return swal('Invalid', 'Tuition per trimester cannot be zero(0)', 'warning')
+        // if (tuition?.trimester === 0) return swal('Invalid', 'Tuition per trimester cannot be zero(0)', 'warning')
         if (duration?.type === '' || duration?.number === 0) return swal('Invalid', 'Please select a duration. Year/Month cannot be zero(0)', 'warning')
         try {
             startLoading('Creating new department. Please wait..')
@@ -225,7 +225,7 @@ const Programmes = () => {
                         </InputField>
                         <InputField
                             showTopLabel
-                            label='Tuition Fee' fullWidth
+                            label='Admision Fees' fullWidth
                             size={'small'} type='number' inputProps={{ min: 0 }}
                             value={tuition?.amount}
                             onChange={(e) => setTuition(prev => ({ ...prev, amount: e?.target?.value }))}
@@ -235,7 +235,7 @@ const Programmes = () => {
                         />
                         <InputField
                             showTopLabel
-                            label='Amount In Words (Tuition Fee)' fullWidth
+                            label='Amount In Words (Admission Fees)' fullWidth
                             size={'small'} type='text' multiline rows={2}
                             value={tuition?.words}
                             onChange={(e) => setTuition(prev => ({ ...prev, words: e?.target?.value }))}

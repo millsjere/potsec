@@ -67,7 +67,7 @@ const Applications = () => {
     const navigate = useNavigate()
     const { startLoading, stopLoading } = useLoader()
     const { isLoading, response: data, setIsLoading, setResponse, fetchData } = useAxiosFetch('/api/all-applicants')
-    const headers = ['Surname', 'Othernames', 'Phone', 'Date Applied', 'Year', 'Campus', 'Status', 'Action']
+    const headers = ['Surname', 'Othernames', 'Phone', 'Date Applied', 'Status', 'Action',]
     const [params, setParams] = useState({ label: '', value: '' })
 
 

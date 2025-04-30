@@ -11,6 +11,48 @@ import { useNavigate } from 'react-router-dom'
 import useAxiosFetch from '../../../hooks/useAxiosFetch'
 
 
+export const validateFormData = (formInput: any) => {
+    if (formInput?.enrollment?.type === ''
+        || formInput?.enrollment?.month === ''
+        || formInput?.enrollment?.year === ''
+        || formInput?.enrollment?.index === ''
+    ) return swal('Invalid', 'Provide all required fields under Application', 'error').then(() => false)
+    if (formInput?.surname === ''
+        || formInput?.othernames === ''
+        || (formInput?.email === '' || !formInput?.email?.includes('@'))
+        || formInput?.phone?.mobile === '' || formInput?.phone?.whatsapp === ''
+        || formInput?.gender === '' || formInput?.dob === '' || formInput?.age === '' || formInput?.educationalLevel === ''
+        || formInput?.language?.spoken === '' || formInput?.language?.written === ''
+        || formInput?.nationalID?.type === '' || formInput?.nationalID?.number === ''
+    ) return swal('Invalid', 'Provide all required fields under Personal Details', 'error').then(() => false)
+    // if (formInput?.payment?.type === ''
+    //     || formInput?.payment?.reference === ''
+    //     || formInput?.payment?.transaction_id === ''
+    // ) return swal('Invalid', 'Provide all required fields under Payment', 'error').then(() => false)
+    if (formInput?.employment?.isEmployed === ''
+        || formInput?.employment?.currentJob === ''
+        || formInput?.employment?.afterCompletion === ''
+    ) return swal('Invalid', 'Provide all required fields under Employment', 'error').then(() => false)
+    if (
+        formInput?.health?.anyCondition === ''
+        || formInput?.employment?.currentJob === ''
+    ) return swal('Invalid', 'Provide all required fields under Health', 'error').then(() => false)
+    // if (formInput?.guardian?.name === ''
+    //     || formInput?.guardian?.phone === ''
+    //     || formInput?.guardian?.relationship === ''
+    // ) return swal('Invalid', 'Provide all required fields under Guardian', 'error').then(() => false)
+    // if (formInput?.emergency?.name === ''
+    //     || formInput?.emergency?.phone === ''
+    // ) return swal('Invalid', 'Provide all required fields under Emergency', 'error').then(() => false)
+    if (formInput?.enrollment?.certification === '' || formInput?.campus === ''
+        || formInput?.enrollment?.certificationLevel === '' || formInput?.enrollment?.programme === ''
+        || formInput?.enrollment?.session === '' || formInput?.enrollment?.modeofTuition === ''
+    ) return swal('Invalid', 'Provide all required fields under Programme & Certification', 'error').then(() => false)
+    // if (!photo) return swal('Invalid', 'Provide profile photo', 'error').then(() => false)
+
+    return true
+}
+
 const NewApplication = () => {
     const { response: allProgrammes } = useAxiosFetch('/api/staff/programmes')
     const ref = useRef()
@@ -36,52 +78,9 @@ const NewApplication = () => {
         }
     }
 
-    const validateFormData = () => {
-        if (formInput?.enrollment?.type === ''
-            || formInput?.enrollment?.month === ''
-            || formInput?.enrollment?.year === ''
-            || formInput?.enrollment?.index === ''
-        ) return swal('Invalid', 'Provide all required fields under Application', 'error').then(() => false)
-        if (formInput?.surname === ''
-            || formInput?.othernames === ''
-            || (formInput?.email === '' || !formInput?.email?.includes('@'))
-            || formInput?.phone?.mobile === '' || formInput?.phone?.whatsapp === ''
-            || formInput?.gender === '' || formInput?.dob === '' || formInput?.age === '' || formInput?.educationalLevel === ''
-            || formInput?.language?.spoken === '' || formInput?.language?.written === ''
-            || formInput?.nationalID?.type === '' || formInput?.nationalID?.number === ''
-            || formInput?.address?.residence === '' || formInput?.address?.town === '' || formInput?.address?.district === '' || formInput?.address?.region === ''
-        ) return swal('Invalid', 'Provide all required fields under Personal Details', 'error').then(() => false)
-        if (formInput?.payment?.type === ''
-            || formInput?.payment?.reference === ''
-            || formInput?.payment?.transaction_id === ''
-        ) return swal('Invalid', 'Provide all required fields under Payment', 'error').then(() => false)
-        if (formInput?.employment?.isEmployed === ''
-            || formInput?.employment?.currentJob === ''
-            || formInput?.employment?.afterCompletion === ''
-        ) return swal('Invalid', 'Provide all required fields under Employment', 'error').then(() => false)
-        if (
-            formInput?.health?.anyCondition === ''
-            || formInput?.employment?.currentJob === ''
-        ) return swal('Invalid', 'Provide all required fields under Health', 'error').then(() => false)
-        if (formInput?.guardian?.name === ''
-            || formInput?.guardian?.phone === ''
-            || formInput?.guardian?.relationship === ''
-        ) return swal('Invalid', 'Provide all required fields under Guardian', 'error').then(() => false)
-        if (formInput?.emergency?.name === ''
-            || formInput?.emergency?.phone === ''
-        ) return swal('Invalid', 'Provide all required fields under Emergency', 'error').then(() => false)
-        if (formInput?.enrollment?.certification === '' || formInput?.campus === ''
-            || formInput?.enrollment?.certificationLevel === '' || formInput?.enrollment?.programme === ''
-            || formInput?.enrollment?.session === '' || formInput?.enrollment?.modeofTuition === ''
-        ) return swal('Invalid', 'Provide all required fields under Programme & Certification', 'error').then(() => false)
-        // if (!photo) return swal('Invalid', 'Provide profile photo', 'error').then(() => false)
-
-        return true
-    }
-
     const onFormSubmit = async () => {
         // console.log(formInput)
-        const isValid = await validateFormData()
+        const isValid = await validateFormData(formInput)
         if (isValid) {
             await swal({
                 title: 'Create Account',
@@ -99,7 +98,7 @@ const NewApplication = () => {
                             const payload = new FormData()
                             payload.append('photo', photo!)
                             startLoading('Uploading profile photo..')
-                            await base.patch(`/api/student/photo/${res?.data?.enrollment?.index}`, payload, {
+                            await base.patch(`/api/student/photo/${res?.data?.surname}`, payload, {
                                 headers: { 'content-type': 'multipart/form-data' }
                             })
                             await swal('Success', 'Applicant account created successfully', 'success').then(() => navigate('/staff/applicants'))

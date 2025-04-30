@@ -2,9 +2,12 @@ import React from 'react'
 import { getData } from '../../../config/appConfig'
 import { Box, Card, CardContent, Grid, Typography } from '@mui/material'
 import { CheckmarkCircle02Icon, CreditCardValidationIcon, DocumentValidationIcon, File01Icon, UserSwitchIcon } from 'hugeicons-react'
+import { useNavigate } from 'react-router-dom'
+import { RoundButton } from '../../../components/shared'
 
 const Dashboard = () => {
     const currentUser = getData('uid')
+    const navigate = useNavigate()
     const stage = currentUser?.applicationStage || 1
     const steps = [
         { icon: stage > 0 ? <CheckmarkCircle02Icon size={40} color='red' /> : <CreditCardValidationIcon size={40} color='lightgrey' />, title: 'Purchase Form', copy: 'Start your journey with us by securing your admission form today! Your future begins with a single step.' },
@@ -28,6 +31,8 @@ const Dashboard = () => {
                                         {el?.icon}
                                         <Typography mt={3} variant='h6'>{el?.title}</Typography>
                                         <Typography variant='body1' fontWeight={400}>{el?.copy}</Typography>
+                                        <RoundButton onClick={() => navigate('/account/application')} text='Application Form' size={'small'} color={'primary'} variant={'contained'} disableElevation />
+
                                     </CardContent>
                                 </Card>
                             </Grid>

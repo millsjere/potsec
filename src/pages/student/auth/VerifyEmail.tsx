@@ -42,7 +42,7 @@ const VerifyEmail = () => {
             if (res?.status === 'success') {
                 saveData('uid', res?.data?.user)
                 successAlert('Account verification successful')
-                navigate('/dashboard', { replace: true })
+                navigate('/application', { replace: true })
             }
         } catch (error) {
             errorAlert(error?.response?.data?.message)

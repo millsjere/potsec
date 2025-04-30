@@ -32,12 +32,13 @@ const StudentDetails = () => {
     const { startLoading, stopLoading } = useLoader()
     const { isLoading, response } = useAxiosFetch(`/api/student/${id}`);
     const { response: bankDetails } = useAxiosFetch('/api/admission/letter')
+    const { response: allProgrammes } = useAxiosFetch('/api/staff/programmes')
     const [open, setOpen] = useState(false)
     const [preview, setPreview] = useState(false)
     const [edit, setEdit] = useState<string | undefined>(undefined)
     const [password, setPassword] = useState({ new: '', confirm: '' })
     const menuList = getApplicationForm()?.map(el => el?.title)
-    const formData = getApplicationForm();
+    const formData = getApplicationForm(allProgrammes);
 
 
 
@@ -182,7 +183,23 @@ const StudentDetails = () => {
                         {/* Side Menu */}
                         <Grid item sm={2.5}>
                             <Box position={'sticky'} top={90}>
-                                <Box bgcolor={'#fff'} borderRadius={'10px'} p={2} mb={3}>
+                                {
+                                    response?.applicationStatus === 'submitted' ?
+                                        <Stack direction={'column'} gap={1.5}>
+                                            <RoundButton startIcon={<CheckmarkCircle02Icon size={20} />} disableElevation fullWidth variant={'contained'} color={'secondary'} text={'Admit'} onClick={() => acceptHandler('admit')} />
+                                            <RoundButton startIcon={<CancelCircleIcon size={20} />} disableElevation fullWidth variant={'contained'} color={'primary'} text={'Decline'} onClick={denyAdmission} />
+                                            <RoundButton startIcon={<PrinterIcon size={20} />} disableElevation fullWidth variant={'outlined'} color={'secondary'} text={'Preview Letter'} onClick={() => { setPreview(true) }} />
+                                        </Stack>
+                                        : response?.applicationStatus === 'pending' ? <RoundButton startIcon={<CheckmarkCircle02Icon size={20} />} disableElevation fullWidth variant={'contained'} color={'secondary'} text={'Submit Applicant Forms'} onClick={onFormSubmit} />
+                                            :
+                                            <Stack direction={'column'} gap={1}>
+                                                <RoundButton startIcon={<MailSend01Icon size={20} />} disableElevation fullWidth variant={'outlined'} color={'secondary'} text={'Admission Letter'} onClick={() => acceptHandler('send')} />
+                                                <RoundButton startIcon={<File01Icon size={20} />} disableElevation fullWidth variant={'contained'} color={'secondary'} text={'View Programme'} onClick={() => { setOpen(true) }} />
+                                                <RoundButton startIcon={<PrinterIcon size={20} />} disableElevation fullWidth variant={'outlined'} color={'secondary'} text={'Print PDF'} onClick={() => { setPreview(true) }} />
+                                            </Stack>
+
+                                }
+                                <Box bgcolor={'#fff'} borderRadius={'10px'} p={2} mt={3}>
                                     <List>
                                         {
                                             [...menuList, 'Account Settings']?.map((menu, i) => (
@@ -199,22 +216,7 @@ const StudentDetails = () => {
                                         }
                                     </List>
                                 </Box>
-                                {
-                                    response?.applicationStatus === 'submitted' ?
-                                        <Stack direction={'column'} gap={1.5}>
-                                            <RoundButton startIcon={<CheckmarkCircle02Icon size={20} />} disableElevation fullWidth variant={'contained'} color={'secondary'} text={'Admit'} onClick={() => acceptHandler('admit')} />
-                                            <RoundButton startIcon={<CancelCircleIcon size={20} />} disableElevation fullWidth variant={'contained'} color={'primary'} text={'Decline'} onClick={denyAdmission} />
-                                            <RoundButton startIcon={<PrinterIcon size={20} />} disableElevation fullWidth variant={'outlined'} color={'secondary'} text={'Preview Letter'} onClick={() => { setPreview(true) }} />
-                                        </Stack>
-                                        : response?.applicationStatus === 'pending' ? null
-                                            :
-                                            <Stack direction={'column'} gap={1}>
-                                                <RoundButton startIcon={<MailSend01Icon size={20} />} disableElevation fullWidth variant={'outlined'} color={'secondary'} text={'Admission Letter'} onClick={() => acceptHandler('send')} />
-                                                <RoundButton startIcon={<File01Icon size={20} />} disableElevation fullWidth variant={'contained'} color={'secondary'} text={'View Programme'} onClick={() => { setOpen(true) }} />
-                                                <RoundButton startIcon={<PrinterIcon size={20} />} disableElevation fullWidth variant={'outlined'} color={'secondary'} text={'Print PDF'} onClick={() => { setPreview(true) }} />
-                                            </Stack>
 
-                                }
                             </Box>
                         </Grid>
 
@@ -254,7 +256,7 @@ const StudentDetails = () => {
                                                                 <RoundButton
                                                                     variant={'contained'} startIcon={<FloppyDiskIcon size={15} />} color={'secondary'}
                                                                     onClick={onFormSubmit}
-                                                                    disableElevation text='Save' size={'small'}
+                                                                    disableElevation text='Submit' size={'small'}
                                                                 />
                                                                 <RoundButton sx={{ borderColor: grey[400] }}
                                                                     variant={'contained'} startIcon={<Cancel01Icon size={12} />} color={'primary'}
@@ -286,11 +288,15 @@ const StudentDetails = () => {
                                                                             isDisabled={edit !== formatLabel(data?.title)}
                                                                             value={value || ''}
                                                                             onChange={(e) => {
+                                                                                console.log(e)
                                                                                 dispatch({ type: el?.action, payload: e?.target?.value })
                                                                             }}
                                                                         >
                                                                             {
-                                                                                el?.options?.map((item, i) => <MenuItem key={i} value={item}>{item}</MenuItem>)
+                                                                                (el?.label === 'Select Programme') ?
+                                                                                    allProgrammes?.map((item: any, i: number) => <MenuItem key={i} value={item?.id}>{item?.name}</MenuItem>)
+                                                                                    :
+                                                                                    el?.options?.map((item, i) => <MenuItem key={i} value={item}>{item}</MenuItem>)
                                                                             }
                                                                         </InputField>
                                                                     </Grid>
